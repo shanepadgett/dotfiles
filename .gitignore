@@ -1,0 +1,73 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Logs and backups
+*.log
+.mac-setup.log
+.config-backup-*
+backup/
+backups/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.nova/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+secrets/
+credentials/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Build and dependency directories
+node_modules/
+vendor/
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# Local configuration overrides
+*.local
+local/
+.local/
+
+# Test coverage
+coverage/
+.coverage
+*.lcov
+
+# Cache
+.cache/
+cache/
+
+# Custom local settings that shouldn't be tracked
+dotfiles/*.local
+dotfiles/**/*.local
+config.local.json
+
+# Installation artifacts
+install.lock
+.installed
