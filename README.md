@@ -53,14 +53,9 @@ curl -fsSL https://raw.githubusercontent.com/username/mac-setup/main/install.sh 
 ./install.sh --skip-apps
 ```
 
-## Manual Setup
+## AI Coding Tools
 
-Some applications may require manual installation if not available via Homebrew:
-- Claude Code
-- VoiceInk
-- OpenCode
-
-Follow the links in the installation output for manual setup instructions.
+Claude Code and OpenCode are installed automatically via their official installation scripts during setup. These tools use curl-based installers that are executed by the setup process.
 
 ## Customization
 

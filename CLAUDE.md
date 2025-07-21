@@ -62,7 +62,7 @@ brew bundle list --file=Brewfile
 
 1. **Symlink Strategy**: Dotfiles are stored without leading dots in `dotfiles/` and symlinked to their proper locations with dots.
 
-2. **Manual Installations**: Claude Code, VoiceInk, and OpenCode are marked for manual installation as they're not in Homebrew.
+2. **AI Tool Installations**: Claude Code and OpenCode are installed via curl commands in `scripts/install-ai-tools.sh`. VoiceInk is installed via Homebrew cask.
 
 3. **Logging**: All operations log to `~/.mac-setup.log` with timestamps.
 

@@ -33,8 +33,8 @@ cask "brave-browser" # Privacy-focused web browser based on Chromium
 
 # GUI Applications - Utilities
 cask "logi-options-plus"  # Logitech device configuration and management
+cask "voiceink"          # Voice note application
 
-# Manual Installation Required (not available via Homebrew)
-# - Claude Code: AI coding assistant
-# - VoiceInk: Voice note application
-# - OpenCode: Code collaboration tool
+# AI Coding Tools (installed via curl in setup script)
+# - Claude Code: AI coding assistant (curl -fsSL claude.ai/install.sh | bash)
+# - OpenCode: Code collaboration tool (curl -fsSL https://opencode.ai/install | bash)
