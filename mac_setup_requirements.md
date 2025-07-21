@@ -40,12 +40,12 @@
 - [x] Add progress indicators and clear output messages
 
 ## Phase 4: Main Setup Script
-- [ ] Create `scripts/setup.sh` for main installation logic
-- [ ] Run `brew bundle install` with error handling
-- [ ] Handle manual installations for apps not in Homebrew
-- [ ] Call dotfiles setup script
-- [ ] Add option flags (--dry-run, --skip-dotfiles, --skip-apps)
-- [ ] Create installation log with timestamp
+- [x] Create `scripts/setup.sh` for main installation logic
+- [x] Run `brew bundle install` with error handling
+- [x] Handle manual installations for apps not in Homebrew
+- [x] Call dotfiles setup script
+- [x] Add option flags (--dry-run, --skip-dotfiles, --skip-apps)
+- [x] Create installation log with timestamp
 
 ## Phase 5: Dotfiles Management
 - [ ] Create `scripts/setup-dotfiles.sh`
