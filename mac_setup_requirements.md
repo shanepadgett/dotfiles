@@ -1,43 +1,43 @@
 # Mac Setup Repository Implementation Checklist
 
 ## Phase 1: Repository Structure Setup
-- [ ] Create repository with initial structure
-- [ ] Add `README.md` with usage instructions
-- [ ] Create `install.sh` bootstrap script (curl-able entry point)
-- [ ] Create `scripts/` directory for utility scripts
-- [ ] Create `dotfiles/` directory for configuration files
-- [ ] Create `Brewfile` for package management
+- [x] Create repository with initial structure
+- [x] Add `README.md` with usage instructions
+- [x] Create `install.sh` bootstrap script (curl-able entry point)
+- [x] Create `scripts/` directory for utility scripts
+- [x] Create `dotfiles/` directory for configuration files
+- [x] Create `Brewfile` for package management
 
 ## Phase 2: Brewfile Creation
-- [ ] Add CLI tools to Brewfile:
-  - [ ] `zsh` (shell)
-  - [ ] `zoxide` (better cd command)
-  - [ ] `gh` (GitHub CLI)
-  - [ ] `bruno` (API testing tool)
-- [ ] Add GUI applications to Brewfile (via casks):
-  - [ ] `raycast` (launcher/productivity)
-  - [ ] `ghostty` (terminal emulator)
-  - [ ] `zed` (code editor)
-  - [ ] `visual-studio-code` (VS Code)
-  - [ ] `discord` (communication)
-  - [ ] `brave-browser` (web browser)
-  - [ ] `rectangle` (window management)
-  - [ ] `obsidian` (note-taking)
-  - [ ] `1password` (password manager)
-  - [ ] `logi-options-plus` (Logitech device management)
-  - [ ] `claude-code` (if available via brew, otherwise manual install)
-  - [ ] `voiceink` (if available via brew, otherwise manual install)
-  - [ ] `opencode` (if available via brew, otherwise manual install)
-- [ ] Add comments explaining each package's purpose
-- [ ] Group packages by category (CLI tools, productivity, development, etc.)
+- [x] Add CLI tools to Brewfile:
+  - [x] `zsh` (shell)
+  - [x] `zoxide` (better cd command)
+  - [x] `gh` (GitHub CLI)
+  - [x] `bruno` (API testing tool)
+- [x] Add GUI applications to Brewfile (via casks):
+  - [x] `raycast` (launcher/productivity)
+  - [x] `ghostty` (terminal emulator)
+  - [x] `zed` (code editor)
+  - [x] `visual-studio-code` (VS Code)
+  - [x] `discord` (communication)
+  - [x] `brave-browser` (web browser)
+  - [x] `rectangle` (window management)
+  - [x] `obsidian` (note-taking)
+  - [x] `1password` (password manager)
+  - [x] `logi-options-plus` (Logitech device management)
+  - [x] `claude-code` (if available via brew, otherwise manual install)
+  - [x] `voiceink` (if available via brew, otherwise manual install)
+  - [x] `opencode` (if available via brew, otherwise manual install)
+- [x] Add comments explaining each package's purpose
+- [x] Group packages by category (CLI tools, productivity, development, etc.)
 
 ## Phase 3: Bootstrap Script (`install.sh`)
-- [ ] Add macOS detection and exit if not macOS
-- [ ] Install Homebrew if not present
-- [ ] Install Git if not present
-- [ ] Clone repository to `~/.mac-setup` or update if exists
-- [ ] Call main setup script with proper error handling
-- [ ] Add progress indicators and clear output messages
+- [x] Add macOS detection and exit if not macOS
+- [x] Install Homebrew if not present
+- [x] Install Git if not present
+- [x] Clone repository to `~/.mac-setup` or update if exists
+- [x] Call main setup script with proper error handling
+- [x] Add progress indicators and clear output messages
 
 ## Phase 4: Main Setup Script
 - [ ] Create `scripts/setup.sh` for main installation logic
@@ -77,17 +77,17 @@
 - [ ] Add dry-run functionality to preview changes
 
 ## Phase 8: Error Handling & Logging
-- [ ] Add comprehensive error messages for common failures
+- [x] Add comprehensive error messages for common failures
 - [ ] Continue processing if individual items fail
-- [ ] Log all changes to `~/.mac-setup.log`
+- [x] Log all changes to `~/.mac-setup.log`
 - [ ] Add retry mechanism for network-dependent installations
 
 ## Phase 9: Documentation
-- [ ] Write comprehensive README with:
-  - [ ] One-line install command
-  - [ ] Manual setup steps for apps not in Homebrew
-  - [ ] Configuration customization guide
-  - [ ] Troubleshooting section
+- [x] Write comprehensive README with:
+  - [x] One-line install command
+  - [x] Manual setup steps for apps not in Homebrew
+  - [x] Configuration customization guide
+  - [x] Troubleshooting section
 - [ ] Document all configuration files and their purposes
 - [ ] Add examples of customizing the setup for different use cases
 
