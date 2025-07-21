@@ -48,19 +48,19 @@
 - [x] Create installation log with timestamp
 
 ## Phase 5: Dotfiles Management
-- [ ] Create `scripts/setup-dotfiles.sh`
-- [ ] Create backup directory (`~/.config-backup-YYYY-MM-DD`)
-- [ ] Add dotfiles with symlink mapping:
-  - [ ] `.zshrc` → `dotfiles/zshrc`
-  - [ ] `.bashrc` → `dotfiles/bashrc`
-  - [ ] `~/.config/zoxide/` → `dotfiles/zoxide/`
-  - [ ] VS Code settings → `dotfiles/vscode/`
-  - [ ] Zed settings → `dotfiles/zed/`
-  - [ ] Ghostty config → `dotfiles/ghostty/`
-  - [ ] Claude Code config → `dotfiles/claude-code/` (if applicable)
-  - [ ] OpenCode config → `dotfiles/opencode/` (if applicable)
-- [ ] Create symlinks with conflict detection
-- [ ] Handle broken symlinks cleanup
+- [x] Create `scripts/setup-dotfiles.sh`
+- [x] Create backup directory (`~/.config-backup-YYYY-MM-DD`)
+- [x] Add dotfiles with symlink mapping:
+  - [x] `.zshrc` → `dotfiles/zshrc`
+  - [x] `.bashrc` → `dotfiles/bashrc`
+  - [x] `~/.config/zoxide/` → `dotfiles/zoxide/`
+  - [x] VS Code settings → `dotfiles/vscode/`
+  - [x] Zed settings → `dotfiles/zed/`
+  - [x] Ghostty config → `dotfiles/ghostty/`
+  - [x] Claude Code config → `dotfiles/claude-code/` (if applicable)
+  - [x] OpenCode config → `dotfiles/opencode/` (if applicable)
+- [x] Create symlinks with conflict detection
+- [x] Handle broken symlinks cleanup
 
 ## Phase 6: Configuration Templates
 - [ ] Create `.zshrc` with zoxide integration and common aliases
