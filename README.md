@@ -7,7 +7,7 @@ A comprehensive macOS setup automation repository for quickly configuring a new 
 Run this command to bootstrap your Mac setup:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/username/mac-setup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/shanepadgett/mac-setup/main/install.sh | bash
 ```
 
 ## What's Included
