@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Development environment management command
-# Handles Docker Compose and OrbStack Linux machines
+# Handles Docker Compose workflows for containerized development
 
 set -euo pipefail
 
@@ -11,48 +11,34 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Source common utilities
 source "$SCRIPT_DIR/common.sh"
 
-# Install language-specific tools in OrbStack machine
-install_language_tools() {
-    local project_name="$1"
-    local project_type="$2"
+# Check if Docker and Docker Compose are available
+check_docker() {
+    if ! command -v docker &> /dev/null; then
+        print_error "Docker is not installed or not in PATH"
+        print_info "Please install Docker Desktop or OrbStack"
+        return 1
+    fi
     
-    case "$project_type" in
-        "Deno")
-            print_info "Detected Deno project, installing Deno..."
-            orb run "$project_name" -- curl -fsSL https://deno.land/install.sh | sh
-            orb run "$project_name" -- echo 'export PATH="$HOME/.deno/bin:$PATH"' >> ~/.bashrc
-            ;;
-        "Node.js")
-            print_info "Detected Node.js project, installing Node.js..."
-            orb run "$project_name" -- curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            orb run "$project_name" -- sudo apt install -y nodejs
-            ;;
-        "Python")
-            print_info "Detected Python project, installing Python..."
-            orb run "$project_name" -- sudo apt install -y python3 python3-pip python3-venv
-            ;;
-        "Elixir"|"Elixir Phoenix")
-            print_info "Detected Elixir project, installing Elixir and Erlang..."
-            orb run "$project_name" -- sudo apt install -y erlang elixir
-            orb run "$project_name" -- mix local.hex --force
-            orb run "$project_name" -- mix local.rebar --force
-            
-            if [[ "$project_type" == "Elixir Phoenix" ]]; then
-                print_info "Detected Phoenix project, installing Node.js for assets..."
-                orb run "$project_name" -- curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-                orb run "$project_name" -- sudo apt install -y nodejs
-                orb run "$project_name" -- sudo apt install -y inotify-tools
-            fi
-            ;;
-        "Rust")
-            print_info "Detected Rust project, installing Rust..."
-            orb run "$project_name" -- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-            ;;
-        "Go")
-            print_info "Detected Go project, installing Go..."
-            orb run "$project_name" -- sudo apt install -y golang-go
-            ;;
-    esac
+    if ! docker compose version &> /dev/null; then
+        print_error "Docker Compose is not available"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Find compose file in current directory
+find_compose_file() {
+    local compose_files=("docker-compose.yml" "docker-compose.yaml" "compose.yml" "compose.yaml")
+    
+    for file in "${compose_files[@]}"; do
+        if [[ -f "$file" ]]; then
+            echo "$file"
+            return 0
+        fi
+    done
+    
+    return 1
 }
 
 # Handle Docker Compose workflow
@@ -65,7 +51,6 @@ handle_docker_compose() {
             print_info "Starting Docker Compose services..."
             if docker compose up -d; then
                 print_success "Services started successfully"
-                print_info "Services are running with automatic domain names"
                 print_info "Use 'dev logs' to view logs"
                 print_info "Use 'dev stop' to stop services"
             else
@@ -86,212 +71,352 @@ handle_docker_compose() {
             docker compose down
             print_success "Services stopped"
             ;;
+        "restart")
+            print_info "Restarting Docker Compose services..."
+            docker compose restart
+            print_success "Services restarted"
+            ;;
+        "build")
+            print_info "Building Docker Compose services..."
+            docker compose build
+            print_success "Build complete"
+            ;;
+        "ps"|"status")
+            docker compose ps
+            ;;
     esac
 }
 
-# Handle OrbStack Linux machine workflow
-handle_linux_machine() {
-    local action="$1"
-    local project_name="$2"
-    local project_type="$3"
+# Show help information
+show_help() {
+    echo "Development environment management with Docker Compose"
+    echo
+    echo "Usage: dev <command> [options]"
+    echo
+    echo "Commands:"
+    echo "  start               Start Docker Compose services"
+    echo "  stop                Stop Docker Compose services"
+    echo "  restart             Restart Docker Compose services"
+    echo "  build               Build Docker Compose services"
+    echo "  logs [service]      Show container logs"
+    echo "  ps                  Show running containers"
+    echo "  create              Interactive stack selection menu"
+    echo "  help                Show this help message"
+    echo
+    echo "Available stacks:"
+    echo "  • Elixir Phoenix app with PostgreSQL database"
+    echo "  • Deno app with SQLite database"
+    echo "  • Rust app with SQLite database"
+    echo
+    echo "Examples:"
+    echo "  dev start           # Start services defined in docker-compose.yml"
+    echo "  dev create          # Interactive menu to create a new stack"
+    echo "  dev logs app        # Show logs for 'app' service"
+}
+
+# Interactive stack selection menu
+select_stack() {
+    local stacks=("elixir-phoenix" "deno-sqlite" "rust-sqlite")
+    local descriptions=("Elixir Phoenix + PostgreSQL" "Deno + SQLite" "Rust + SQLite")
+    local selected=0
+    local total=${#stacks[@]}
     
-    case "$action" in
-        "setup")
-            print_info "Setting up development environment for: $project_name"
-            
-            if orb list | grep -q "$project_name"; then
-                print_warning "Machine '$project_name' already exists"
-                print_info "Use 'dev shell $project_name' to connect"
-                return 0
-            fi
-            
-            print_info "Creating new Ubuntu machine: $project_name"
-            if ! orb create ubuntu "$project_name"; then
-                print_error "Failed to create machine"
-                return 1
-            fi
-            print_success "Machine '$project_name' created"
-            
-            print_info "Installing development tools..."
-            orb run "$project_name" -- sudo apt update
-            orb run "$project_name" -- sudo apt install -y git curl wget build-essential
-            
-            # Install language-specific tools
-            install_language_tools "$project_name" "$project_type"
-            
-            print_success "Development environment setup complete"
-            print_info "To connect: dev shell $project_name"
-            ;;
-        "shell")
-            if orb list | grep -q "$project_name"; then
-                print_info "Connecting to development environment: $project_name"
-                print_info "Note: OrbStack machines are persistent and stay running"
-                orb shell "$project_name"
+    # Hide cursor
+    tput civis
+    
+    # Function to cleanup on exit
+    cleanup() {
+        tput cnorm  # Show cursor
+        echo
+    }
+    trap cleanup EXIT
+    
+    while true; do
+        # Clear screen and move to top
+        clear
+        
+        print_header "Select Development Stack"
+        echo "Use ↑/↓ arrow keys to navigate, Enter to select, q/Esc to quit"
+        echo
+        
+        # Display options
+        for i in "${!stacks[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo "  → ${descriptions[$i]}"
             else
-                print_error "Machine '$project_name' not found"
-                print_info "Available machines:"
-                orb list
-                echo
-                print_info "Create with: dev setup $project_name"
-                print_info "Or run 'dev' to auto-detect and create if needed"
-                return 1
+                echo "    ${descriptions[$i]}"
             fi
+        done
+        
+        # Read single character
+        read -rsn1 key
+        
+        # Handle special keys (arrow keys send 3 characters: ESC [ A/B)
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case $key in
+                '[A') # Up arrow
+                    ((selected--))
+                    if [[ $selected -lt 0 ]]; then
+                        selected=$((total - 1))
+                    fi
+                    ;;
+                '[B') # Down arrow
+                    ((selected++))
+                    if [[ $selected -ge $total ]]; then
+                        selected=0
+                    fi
+                    ;;
+            esac
+        elif [[ $key == '' ]]; then # Enter key
+            clear
+            echo "${stacks[$selected]}"
+            return 0
+        elif [[ $key == 'q' || $key == 'Q' || $key == $'\x1b' ]]; then # Quit (q, Q, or Esc)
+            clear
+            return 1
+        fi
+    done
+}
+
+# Create predefined stack configurations
+create_stack() {
+    local stack="$1"
+    
+    if [[ -f "docker-compose.yml" || -f "compose.yml" ]]; then
+        print_warning "Compose file already exists"
+        return 1
+    fi
+    
+    case "$stack" in
+        "elixir-phoenix")
+            print_info "Creating Elixir Phoenix + PostgreSQL stack..."
+            cat > docker-compose.yml << 'EOF'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: app_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=ecto://postgres:postgres@db/app_dev
+      - PHX_HOST=localhost
+    depends_on:
+      - db
+    command: mix phx.server
+
+volumes:
+  postgres_data:
+EOF
+            
+            cat > Dockerfile << 'EOF'
+FROM elixir:1.15-alpine
+
+RUN apk add --no-cache build-base npm git python3 curl inotify-tools
+
+WORKDIR /app
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+COPY mix.exs mix.lock ./
+RUN mix deps.get
+
+COPY assets/package*.json assets/
+RUN cd assets && npm install
+
+COPY . .
+RUN mix deps.compile
+
+EXPOSE 4000
+
+CMD ["mix", "phx.server"]
+EOF
+            print_success "Created Elixir Phoenix + PostgreSQL stack"
             ;;
-        "destroy")
-            if orb list | grep -q "$project_name"; then
-                print_warning "This will permanently delete the machine: $project_name"
-                read -p "Are you sure? (y/N): " -n 1 -r
-                echo
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    orb delete "$project_name"
-                    print_success "Machine '$project_name' deleted"
-                else
-                    print_info "Cancelled"
-                fi
-            else
-                print_error "Machine '$project_name' not found"
-                return 1
-            fi
+        "deno-sqlite")
+            print_info "Creating Deno + SQLite stack..."
+            cat > docker-compose.yml << 'EOF'
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - sqlite_data:/app/data
+    command: deno run --allow-net --allow-read --allow-write --watch main.ts
+
+volumes:
+  sqlite_data:
+EOF
+            
+            cat > Dockerfile << 'EOF'
+FROM denoland/deno:alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN deno cache main.ts
+
+EXPOSE 8000
+
+CMD ["deno", "run", "--allow-net", "--allow-read", "--allow-write", "main.ts"]
+EOF
+            print_success "Created Deno + SQLite stack"
+            ;;
+        "rust-sqlite")
+            print_info "Creating Rust + SQLite stack..."
+            cat > docker-compose.yml << 'EOF'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - sqlite_data:/app/data
+      - cargo_cache:/usr/local/cargo/registry
+    command: cargo run
+
+volumes:
+  sqlite_data:
+  cargo_cache:
+EOF
+            
+            cat > Dockerfile << 'EOF'
+FROM rust:1.75-alpine
+
+RUN apk add --no-cache musl-dev sqlite-dev
+
+WORKDIR /app
+
+COPY Cargo.toml Cargo.lock ./
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build --release
+RUN rm src/main.rs
+
+COPY . .
+RUN cargo build --release
+
+EXPOSE 8080
+
+CMD ["cargo", "run", "--release"]
+EOF
+            print_success "Created Rust + SQLite stack"
+            ;;
+        *)
+            print_error "Unknown stack: $stack"
+            echo "Available stacks: elixir-phoenix, deno-sqlite, rust-sqlite"
+            return 1
             ;;
     esac
+    
+    print_info "Stack created successfully!"
+    print_info "Use 'dev start' to run the services"
 }
 
 # Main dev command logic
 dev_command() {
-    local action="${1:-auto}"
-    local project_name="${2:-}"
-    
-    # Check if OrbStack is available
-    check_orbstack || return 1
-    
-    # Auto-detect project name from current directory if not provided
-    if [[ -z "$project_name" && "$action" != "status" ]]; then
-        project_name=$(get_project_name)
-    fi
+    local action="${1:-help}"
+    local arg="${2:-}"
     
     case "$action" in
-        "auto"|"")
-            print_header "Development Environment"
+        "start"|"up")
+            # Check if Docker is available
+            check_docker || return 1
             
-            if has_project_files; then
-                local project_type=$(get_project_type)
-                print_info "Detected $project_type project: $project_name"
-                
-                if should_use_docker; then
-                    # Use Docker/Docker Compose workflow
-                    if [[ -f "docker-compose.yml" || -f "docker-compose.yaml" || -f "compose.yml" || -f "compose.yaml" ]]; then
-                        handle_docker_compose "start"
-                    else
-                        print_info "Dockerfile detected. Build and run manually:"
-                        echo "  docker build -t $project_name ."
-                        echo "  docker run -it --rm $project_name"
-                    fi
-                else
-                    # Use Linux machine workflow for non-Docker projects
-                    if orb list | grep -q "$project_name"; then
-                        print_info "Development environment exists for: $project_name"
-                        print_info "Connecting to development environment..."
-                        orb shell "$project_name"
-                    else
-                        print_info "No development environment found for: $project_name"
-                        read -p "Create development environment? (Y/n): " -n 1 -r
-                        echo
-                        if [[ $REPLY =~ ^[Nn]$ ]]; then
-                            print_info "Cancelled"
-                            return 0
-                        fi
-                        handle_linux_machine "setup" "$project_name" "$project_type"
-                        if [[ $? -eq 0 ]]; then
-                            print_info "Setup complete. Connecting to environment..."
-                            orb shell "$project_name"
-                        fi
-                    fi
-                fi
+            local compose_file
+            if compose_file=$(find_compose_file); then
+                print_info "Found $compose_file"
+                handle_docker_compose "start"
             else
-                # No project files detected, show status
-                print_info "No project files detected in current directory"
-                print_info "OrbStack status:"
-                orb status
-                print_info "Available machines:"
-                orb list
-                echo
-                print_info "To create a development environment: dev setup [project-name]"
-                print_info "To connect to existing environment: dev shell [project-name]"
-            fi
-            ;;
-        "status")
-            print_header "Development Environment Status"
-            print_info "OrbStack status:"
-            orb status
-            print_info "Available machines:"
-            orb list
-            ;;
-        "setup")
-            print_header "Setting Up Development Environment"
-            
-            if [[ -z "$project_name" ]]; then
-                print_error "Project name is required"
-                echo "Usage: dev setup <project-name>"
+                print_error "No docker-compose file found in current directory"
+                print_info "Use 'dev create <stack>' to create a new stack"
                 return 1
             fi
-            
-            local project_type=$(get_project_type)
-            handle_linux_machine "setup" "$project_name" "$project_type"
-            ;;
-        "shell")
-            if [[ -z "$project_name" ]]; then
-                print_error "Project name is required"
-                echo "Usage: dev shell <project-name>"
-                return 1
-            fi
-            
-            handle_linux_machine "shell" "$project_name" ""
             ;;
         "logs")
-            if [[ -f "docker-compose.yml" || -f "docker-compose.yaml" || -f "compose.yml" || -f "compose.yaml" ]]; then
-                handle_docker_compose "logs" "$project_name"
+            check_docker || return 1
+            if find_compose_file > /dev/null; then
+                handle_docker_compose "logs" "$arg"
             else
                 print_error "No docker-compose file found in current directory"
                 return 1
             fi
             ;;
-        "stop")
-            if [[ -f "docker-compose.yml" || -f "docker-compose.yaml" || -f "compose.yml" || -f "compose.yaml" ]]; then
+        "stop"|"down")
+            check_docker || return 1
+            if find_compose_file > /dev/null; then
                 handle_docker_compose "stop"
             else
                 print_error "No docker-compose file found in current directory"
                 return 1
             fi
             ;;
-        "destroy")
-            if [[ -z "$project_name" ]]; then
-                print_error "Project name is required for destroy action"
-                echo "Usage: dev destroy <project-name>"
+        "restart")
+            check_docker || return 1
+            if find_compose_file > /dev/null; then
+                handle_docker_compose "restart"
+            else
+                print_error "No docker-compose file found in current directory"
                 return 1
             fi
-            
-            handle_linux_machine "destroy" "$project_name" ""
+            ;;
+        "build")
+            check_docker || return 1
+            if find_compose_file > /dev/null; then
+                handle_docker_compose "build"
+            else
+                print_error "No docker-compose file found in current directory"
+                return 1
+            fi
+            ;;
+        "ps"|"status")
+            check_docker || return 1
+            if find_compose_file > /dev/null; then
+                handle_docker_compose "ps"
+            else
+                print_error "No docker-compose file found in current directory"
+                return 1
+            fi
+            ;;
+        "create")
+            check_docker || return 1
+            if [[ -n "$arg" ]]; then
+                # Direct stack specification (for backwards compatibility)
+                create_stack "$arg"
+            else
+                # Interactive selection
+                local selected_stack
+                if selected_stack=$(select_stack); then
+                    create_stack "$selected_stack"
+                else
+                    print_info "Stack creation cancelled"
+                    return 0
+                fi
+            fi
+            ;;
+        "help"|"--help"|"-h")
+            show_help
             ;;
         *)
-            print_error "Unknown action: $action"
-            echo "Available actions:"
-            echo "  (no args)           - Smart detection: start Docker Compose or connect to machine"
-            echo "  status              - Show OrbStack status and machines"
-            echo "  setup <project>     - Create and setup development environment"
-            echo "  shell <project>     - Connect to development environment"
-            echo "  logs [service]      - Show Docker Compose logs (for containerized projects)"
-            echo "  stop                - Stop Docker Compose services (for containerized projects)"
-            echo "  destroy <project>   - Delete development environment"
+            print_error "Unknown command: $action"
             echo
-            echo "Supported project types:"
-            echo "  - Docker Compose (docker-compose.yml) - Preferred for containerized apps"
-            echo "  - Docker (Dockerfile)"
-            echo "  - Deno (deno.json, deno.jsonc)"
-            echo "  - Node.js (package.json)"
-            echo "  - Python (requirements.txt, pyproject.toml, setup.py)"
-            echo "  - Elixir/Phoenix (mix.exs)"
-            echo "  - Rust (Cargo.toml)"
-            echo "  - Go (go.mod)"
+            show_help
             return 1
             ;;
     esac

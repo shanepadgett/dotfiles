@@ -21,13 +21,6 @@ HISTFILESIZE=10000
 shopt -s histappend
 shopt -s checkwinsize
 
-
-
-# Prompt
-PS1='\[\e[36m\]\u@\h\[\e[0m\]:\[\e[33m\]\w\[\e[0m\]$ '
-
-
-
 # Machine-specific configs (if they exist)
 if [ -f ~/.bashrc.local ]; then
     source ~/.bashrc.local

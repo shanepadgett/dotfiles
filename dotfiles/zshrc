@@ -28,8 +28,6 @@ setopt PROMPT_SUBST
 # Prompt
 PROMPT='%F{cyan}%n@%m%f:%F{yellow}%~%f%# '
 
-
-
 # Machine-specific configs (if they exist)
 if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
