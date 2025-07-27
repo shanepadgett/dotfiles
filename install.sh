@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Default installation directory (can be overridden by config.env later)
+INSTALL_DIR="$HOME/.dotfiles"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -11,7 +14,6 @@ NC='\033[0m' # No Color
 
 # Configuration
 REPO_URL="https://github.com/shanepadgett/dotfiles.git"
-INSTALL_DIR="$HOME/.dotfiles"  # Default, can be overridden by config.env
 
 # Functions
 print_header() {
