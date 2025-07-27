@@ -17,7 +17,7 @@ LOG_FILE="$HOME/.dotfiles.log"
 
 # Options
 DRY_RUN=false
-SKIP_DOTFILES=false
+SKIP_SHELL=false
 SKIP_APPS=false
 
 # Functions
@@ -54,8 +54,8 @@ parse_options() {
                 DRY_RUN=true
                 shift
                 ;;
-            --skip-dotfiles)
-                SKIP_DOTFILES=true
+            --skip-shell)
+                SKIP_SHELL=true
                 shift
                 ;;
             --skip-apps)
@@ -66,7 +66,7 @@ parse_options() {
                 echo "Usage: $0 [OPTIONS]"
                 echo "Options:"
                 echo "  --dry-run        Show what would be done without making changes"
-                echo "  --skip-dotfiles  Skip dotfiles setup"
+                echo "  --skip-shell     Skip shell configuration setup"
                 echo "  --skip-apps      Skip application installation"
                 echo "  -h, --help       Show this help message"
                 exit 0
@@ -85,7 +85,7 @@ init_log() {
     echo "===========================================" >> "$LOG_FILE"
     echo "Mac Setup Installation - $(date)" >> "$LOG_FILE"
     echo "===========================================" >> "$LOG_FILE"
-    log "Starting installation with options: DRY_RUN=$DRY_RUN, SKIP_DOTFILES=$SKIP_DOTFILES, SKIP_APPS=$SKIP_APPS"
+    log "Starting installation with options: DRY_RUN=$DRY_RUN, SKIP_SHELL=$SKIP_SHELL, SKIP_APPS=$SKIP_APPS"
 }
 
 # Install Homebrew packages
@@ -205,37 +205,37 @@ create_development_directories() {
     print_success "Development directories created"
 }
 
-# Setup dotfiles
-setup_dotfiles() {
-    print_header "Setting Up Dotfiles"
+# Setup shell configurations
+setup_shell() {
+    print_header "Setting Up Shell Configurations"
 
-    if [[ "$SKIP_DOTFILES" == true ]]; then
-        print_info "Skipping dotfiles setup (--skip-dotfiles flag)"
-        log "Skipped dotfiles setup due to --skip-dotfiles flag"
+    if [[ "$SKIP_SHELL" == true ]]; then
+        print_info "Skipping shell setup (--skip-shell flag)"
+        log "Skipped shell setup due to --skip-shell flag"
         return 0
     fi
 
     if [[ "$DRY_RUN" == true ]]; then
-        print_info "DRY RUN: Would setup dotfiles"
+        print_info "DRY RUN: Would setup shell configurations"
         return 0
     fi
 
-    # Check if dotfiles setup script exists
-    if [[ -f "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
-        print_info "Running dotfiles setup..."
-        chmod +x "$SCRIPT_DIR/setup-dotfiles.sh"
-        if "$SCRIPT_DIR/setup-dotfiles.sh"; then
-            print_success "Dotfiles setup completed"
-            log "Dotfiles setup completed successfully"
+    # Check if shell setup script exists
+    if [[ -f "$SCRIPT_DIR/setup-shell.sh" ]]; then
+        print_info "Running shell setup..."
+        chmod +x "$SCRIPT_DIR/setup-shell.sh"
+        if "$SCRIPT_DIR/setup-shell.sh"; then
+            print_success "Shell setup completed"
+            log "Shell setup completed successfully"
         else
-            print_error "Dotfiles setup failed"
-            log "ERROR: Dotfiles setup failed"
+            print_error "Shell setup failed"
+            log "ERROR: Shell setup failed"
             return 1
         fi
     else
-        print_warning "Dotfiles setup script not found"
-        print_info "Run './scripts/setup-dotfiles.sh' when it's created"
-        log "WARNING: setup-dotfiles.sh not found at $SCRIPT_DIR/setup-dotfiles.sh"
+        print_warning "Shell setup script not found"
+        print_info "Run './scripts/setup-shell.sh' when it's created"
+        log "WARNING: setup-shell.sh not found at $SCRIPT_DIR/setup-shell.sh"
     fi
 }
 
@@ -280,8 +280,8 @@ main() {
     # Create development directories
     create_development_directories
 
-    # Setup dotfiles
-    setup_dotfiles
+    # Setup shell configurations
+    setup_shell
 
     # Final summary
     echo
@@ -297,11 +297,11 @@ main() {
             print_info "Applications installed via Homebrew"
         fi
 
-        if [[ "$SKIP_DOTFILES" == false ]]; then
-            if [[ -f "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
-                print_info "Dotfiles configured"
+        if [[ "$SKIP_SHELL" == false ]]; then
+            if [[ -f "$SCRIPT_DIR/setup-shell.sh" ]]; then
+                print_info "Shell configurations setup"
             else
-                print_warning "Dotfiles setup pending (script not found)"
+                print_warning "Shell setup pending (script not found)"
             fi
         fi
     fi

@@ -64,8 +64,8 @@ coverage/
 cache/
 
 # Custom local settings that shouldn't be tracked
-dotfiles/*.local
-dotfiles/**/*.local
+shell/*.local
+shell/**/*.local
 config.local.json
 
 # Installation artifacts

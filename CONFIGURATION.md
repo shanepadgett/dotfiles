@@ -1,11 +1,11 @@
 # Configuration Files Guide
 
-This document explains all configuration files in the dotfiles directory and how to customize them.
+This document explains all configuration files in the shell directory and how to customize them.
 
 ## Shell Configuration
 
 ### `.zshrc` (Zsh)
-Location: `dotfiles/zshrc` → `~/.zshrc`
+Location: `shell/zshrc` → `~/.zshrc`
 
 **Features:**
 - Zoxide integration for smart directory navigation
@@ -33,14 +33,14 @@ alias personal="cd $PERSONAL_DIR"
 ```
 
 ### `.bashrc` (Bash)
-Location: `dotfiles/bashrc` → `~/.bashrc`
+Location: `shell/bashrc` → `~/.bashrc`
 
 Fallback configuration for systems where Zsh isn't available. Includes similar features as `.zshrc`.
 
 ## Editor Configurations
 
 ### VS Code Settings
-Location: `dotfiles/vscode/` → `~/.config/Code/User/`
+Location: `shell/vscode/` → `~/.config/Code/User/`
 
 **Key Features:**
 - JetBrains Mono font
@@ -59,7 +59,7 @@ Location: `dotfiles/vscode/` → `~/.config/Code/User/`
 - Bracket Pair Colorizer
 
 ### Zed Settings
-Location: `dotfiles/zed/` → `~/.config/zed/`
+Location: `shell/zed/` → `~/.config/zed/`
 
 **Features:**
 - Ayu Dark theme
@@ -69,7 +69,7 @@ Location: `dotfiles/zed/` → `~/.config/zed/`
 - Auto-save after 1 second delay
 
 ### Ghostty Configuration
-Location: `dotfiles/ghostty/config` → `~/.config/ghostty/config`
+Location: `shell/ghostty/config` → `~/.config/ghostty/config`
 
 **Features:**
 - JetBrains Mono font
@@ -81,7 +81,7 @@ Location: `dotfiles/ghostty/config` → `~/.config/ghostty/config`
 ## Directory Navigation
 
 ### Zoxide Configuration
-Location: `dotfiles/zoxide/config.toml`
+Location: `shell/zoxide/config.toml`
 
 **Features:**
 - Fzf integration for interactive selection
@@ -121,13 +121,13 @@ To add a new tool to your configuration:
 
 2. **Update shell configuration:**
    ```bash
-   # Add to dotfiles/zshrc
+   # Add to shell/zshrc
    alias nt="new-tool"
    ```
 
 3. **Add editor configuration:**
    ```bash
-   # Add to dotfiles/vscode/settings.json
+   # Add to shell/vscode/settings.json
    "new-tool.path": "/usr/local/bin/new-tool"
    ```
 
@@ -136,8 +136,8 @@ To add a new tool to your configuration:
 Each configuration supports local overrides:
 
 - Shell: `~/.zshrc.local` or `~/.bashrc.local`
-- VS Code: `~/.config/Code/User/settings.json` (overrides dotfiles)
-- Zed: `~/.config/zed/settings.json` (overrides dotfiles)
+- VS Code: `~/.config/Code/User/settings.json` (overrides shell)
+- Zed: `~/.config/zed/settings.json` (overrides shell)
 
 ### Environment Variables
 

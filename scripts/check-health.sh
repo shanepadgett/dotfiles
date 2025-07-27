@@ -56,7 +56,7 @@ check_symlink() {
     fi
 }
 
-DOTFILES_DIR="$HOME/.dotfiles/dotfiles"
+DOTFILES_DIR="$HOME/.dotfiles/shell"
 check_symlink "$DOTFILES_DIR/zshrc" "$HOME/.zshrc" "Zsh configuration"
 check_symlink "$DOTFILES_DIR/bashrc" "$HOME/.bashrc" "Bash configuration"
 check_symlink "$DOTFILES_DIR/vscode" "$HOME/.config/Code/User" "VS Code settings"

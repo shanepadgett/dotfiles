@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 # Script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-DOTFILES_DIR="$ROOT_DIR/dotfiles"
+DOTFILES_DIR="$ROOT_DIR/shell"
 BACKUP_DIR="$HOME/.config-backup-$(date +%Y-%m-%d-%H%M%S)"
 LOG_FILE="$HOME/.dotfiles.log"
 
@@ -294,14 +294,14 @@ cleanup_broken_symlinks() {
 
 # Main execution
 main() {
-    print_header "Dotfiles Setup"
+    print_header "Shell Configuration Setup"
 
-    log "Starting dotfiles setup"
+    log "Starting shell configuration setup"
 
-    # Check if dotfiles directory exists
+    # Check if shell directory exists
     if [[ ! -d "$DOTFILES_DIR" ]]; then
-        print_error "Dotfiles directory not found: $DOTFILES_DIR"
-        log "ERROR: Dotfiles directory not found: $DOTFILES_DIR"
+        print_error "Shell directory not found: $DOTFILES_DIR"
+        log "ERROR: Shell directory not found: $DOTFILES_DIR"
         exit 1
     fi
 
@@ -323,12 +323,12 @@ main() {
 
     # Final summary
     echo
-    print_header "Dotfiles Setup Complete"
-    print_success "All dotfiles have been linked successfully!"
+    print_header "Shell Configuration Setup Complete"
+    print_success "All shell configurations have been linked successfully!"
     print_info "Backups saved to: $BACKUP_DIR"
     print_info "Restart your terminal for shell changes to take effect"
 
-    log "Dotfiles setup completed successfully"
+    log "Shell configuration setup completed successfully"
 }
 
 # Run main function

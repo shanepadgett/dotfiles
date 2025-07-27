@@ -17,7 +17,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 BACKUP_DIR="$HOME/.config-backup"
-DOTFILES_DIR="$HOME/.dotfiles/dotfiles"
+DOTFILES_DIR="$HOME/.dotfiles/shell"
 
 if [[ "$FORCE" != true ]]; then
     echo -e "${YELLOW}This will remove all symlinks and restore backups.${NC}"

@@ -16,7 +16,7 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 - **CLI Tools**: Modern shell utilities, development tools, and container management via OrbStack
 - **Applications**: Productivity apps, code editors, AI coding tools, browsers, and utilities
 - **Fonts**: Programming-optimized fonts for development
-- **Dotfiles**: Shell configurations, editor settings, terminal setup, and tool configurations
+- **Shell**: Shell configurations, editor settings, terminal setup, and tool configurations
 
 ### Development Environment Management
 - **Smart Project Detection**: Automatic environment setup based on project type
@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 ```bash
 ./install.sh                  # Full installation
 ./install.sh --dry-run       # Preview changes without installing
-./install.sh --skip-dotfiles # Skip dotfile configuration
+./install.sh --skip-shell    # Skip shell configuration
 ./install.sh --skip-apps     # Skip application installation
 ```
 
@@ -48,16 +48,16 @@ The `dev` command provides intelligent project management. Run `dev` without arg
 ### Installation Flow
 1. **`install.sh`** - Bootstrap script (Homebrew, Git, repo setup)
 2. **`scripts/setup.sh`** - Main orchestrator (packages, AI tools, directories)
-3. **`scripts/setup-dotfiles.sh`** - Dotfile management with backup/restore
+3. **`scripts/setup-shell.sh`** - Shell configuration management with backup/restore
 
 ### File Organization
-- `dotfiles/` - Configuration files (stored without leading dots)
+- `shell/` - Shell configuration files (stored without leading dots)
 - `scripts/` - Automation and utility scripts
 - `Brewfile` - Package definitions for Homebrew
 
 ### Key Features
 - **Backup System**: Existing configs backed up to `~/.config-backup-YYYY-MM-DD`
-- **Symlink Management**: Dotfiles symlinked from `dotfiles/` to home directory
+- **Symlink Management**: Shell configs symlinked from `shell/` to home directory
 - **Logging**: All operations logged to `~/.dotfiles.log` with timestamps
 - **Error Handling**: Robust error handling with retry mechanisms
 
@@ -71,9 +71,9 @@ cask "gui-app-name"
 ```
 
 ### Modifying Configurations
-Edit files in `dotfiles/` directory, then run:
+Edit files in `shell/` directory, then run:
 ```bash
-./scripts/setup-dotfiles.sh
+./scripts/setup-shell.sh
 ```
 
 ### Machine-Specific Overrides
