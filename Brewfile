@@ -21,7 +21,7 @@ cask "raycast"       # Launcher and productivity tool (Spotlight replacement)
 cask "rectangle"     # Window management utility for keyboard-based resizing
 
 # GUI Applications - Development
-brew "bruno"         # Open source API testing and development platform
+cask "bruno"         # Open source API testing and development platform
 cask "ghostty"       # Modern terminal emulator with GPU acceleration
 cask "visual-studio-code"  # Popular extensible code editor
 cask "zed"           # High-performance collaborative code editor
