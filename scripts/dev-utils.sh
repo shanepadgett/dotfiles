@@ -17,6 +17,12 @@ get_script_dir() {
 }
 SCRIPT_DIR="$(get_script_dir)"
 COMMANDS_DIR="$SCRIPT_DIR/dev-commands"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Source configuration for INSTALL_DIR
+if [[ -f "$ROOT_DIR/config/config.env" ]]; then
+    source "$ROOT_DIR/config/config.env"
+fi
 
 # Source common utilities
 source "$COMMANDS_DIR/common.sh"
@@ -63,10 +69,10 @@ main() {
             echo "  scripts/dev-commands/common.sh (shared utilities)"
             echo
             echo "Create symlinks to use these commands:"
-            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/git-init"
-            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/pr"
-            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/dev"
-            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/update-configs"
+            echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/git-init"
+            echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/pr"
+            echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/dev"
+            echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/update-configs"
             ;;
         *)
             print_error "Unknown command: $command_name"

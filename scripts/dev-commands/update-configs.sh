@@ -11,6 +11,15 @@ source "$SCRIPT_DIR/common.sh"
 
 # Configuration
 ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+
+# Debug path resolution
+if [[ ! -f "$ROOT_DIR/config/config.env" ]]; then
+    echo "ERROR: Cannot find config.env at $ROOT_DIR/config/config.env"
+    echo "SCRIPT_DIR: $SCRIPT_DIR"
+    echo "ROOT_DIR: $ROOT_DIR"
+    exit 1
+fi
+
 source "$ROOT_DIR/config/config.env"
 
 update_configs_command() {
@@ -53,6 +62,13 @@ update_configs_command() {
     done
     
     print_header "Updating Dotfiles Configuration"
+    
+    # Ensure INSTALL_DIR is set
+    if [[ -z "${INSTALL_DIR:-}" ]]; then
+        print_error "INSTALL_DIR not set. Cannot locate dotfiles repository."
+        print_info "Try running from the dotfiles directory or check config.env"
+        return 1
+    fi
     
     # Check if we're in a git repository
     if [[ ! -d "$INSTALL_DIR/.git" ]]; then
