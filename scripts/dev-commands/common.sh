@@ -140,3 +140,19 @@ check_git_commits() {
     fi
     return 0
 }
+
+# Prompt for sudo access and keep it alive
+prompt_sudo() {
+    local message="${1:-This operation may require administrator privileges for some components.}"
+    
+    print_info "$message"
+    print_info "Please enter your password to cache sudo credentials..."
+    
+    # Prompt for sudo and keep it alive
+    sudo -v
+    
+    # Keep sudo alive in background (updates every 60 seconds)
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    
+    print_success "Sudo credentials cached"
+}

@@ -329,6 +329,11 @@ teardown_main() {
         exit 0
     fi
 
+    # Prompt for sudo access upfront (unless dry run)
+    if [[ "$DRY_RUN" != "true" ]]; then
+        prompt_sudo "This teardown may require administrator privileges for some operations."
+    fi
+
     # Execute teardown steps
     uninstall_brew_packages
     remove_ai_tools

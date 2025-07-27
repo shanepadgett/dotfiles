@@ -15,6 +15,14 @@ NC='\033[0m' # No Color
 # Configuration
 REPO_URL="https://github.com/shanepadgett/dotfiles.git"
 
+# Source common utilities if available (after repository setup)
+source_common_utils() {
+    local common_file="$INSTALL_DIR/scripts/dev-commands/common.sh"
+    if [[ -f "$common_file" ]]; then
+        source "$common_file"
+    fi
+}
+
 # Functions
 print_header() {
     echo -e "\n${BLUE}=== $1 ===${NC}\n"
@@ -140,6 +148,13 @@ main() {
     install_homebrew
     install_git
     setup_repository
+    
+    # Source common utilities now that repository is available
+    source_common_utils
+    
+    # Prompt for sudo access upfront
+    prompt_sudo "This installation may require administrator privileges for some components."
+
     run_setup "$@"
 
     print_header "Setup Complete!"
