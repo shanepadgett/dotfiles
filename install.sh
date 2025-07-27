@@ -11,9 +11,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 REPO_URL="https://github.com/shanepadgett/dotfiles.git"
-
-# Source configuration
-CONFIG_FILE="$INSTALL_DIR/config/config.env"
+INSTALL_DIR="$HOME/.dotfiles"  # Default, can be overridden by config.env
 
 # Functions
 print_header() {
@@ -112,8 +110,10 @@ run_setup() {
 
     cd "$INSTALL_DIR"
 
-    # Source configuration
-    source "config/config.env"
+    # Source configuration to potentially override INSTALL_DIR and set other vars
+    if [[ -f "config/config.env" ]]; then
+        source "config/config.env"
+    fi
 
     if [[ -f "scripts/setup.sh" ]]; then
         bash "scripts/setup.sh" "$@"
