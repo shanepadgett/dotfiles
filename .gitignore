@@ -9,7 +9,7 @@ Icon
 
 # Logs and backups
 *.log
-.mac-setup.log
+.dotfiles.log
 .config-backup-*
 backup/
 backups/

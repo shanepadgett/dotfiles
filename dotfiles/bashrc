@@ -1,0 +1,34 @@
+# Bash configuration as fallback
+
+# Source exports
+for export_file in ~/.exports/*.sh; do
+    [ -r "$export_file" ] && source "$export_file"
+done
+
+# Enable zoxide
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init bash)"
+fi
+
+# Source aliases
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
+
+# History
+HISTSIZE=10000
+HISTFILESIZE=10000
+shopt -s histappend
+shopt -s checkwinsize
+
+
+
+# Prompt
+PS1='\[\e[36m\]\u@\h\[\e[0m\]:\[\e[33m\]\w\[\e[0m\]$ '
+
+
+
+# Machine-specific configs (if they exist)
+if [ -f ~/.bashrc.local ]; then
+    source ~/.bashrc.local
+fi

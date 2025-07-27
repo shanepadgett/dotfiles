@@ -11,7 +11,7 @@ This is a macOS setup automation repository (dotfiles management) designed to co
 ### Installation
 ```bash
 # One-line remote install
-curl -fsSL https://raw.githubusercontent.com/username/mac-setup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.sh | bash
 
 # Local installation options
 ./install.sh                  # Full installation
@@ -39,7 +39,7 @@ brew bundle list --file=Brewfile
 1. `install.sh` - Bootstrap script that:
    - Checks for macOS
    - Installs Homebrew and Git if needed
-   - Clones/updates repo to `~/.mac-setup`
+   - Clones/updates repo to `~/.dotfiles`
    - Calls `scripts/setup.sh`
 
 2. `scripts/setup.sh` - Main orchestrator that:
@@ -64,7 +64,7 @@ brew bundle list --file=Brewfile
 
 2. **AI Tool Installations**: Claude Code and OpenCode are installed via curl commands in `scripts/install-ai-tools.sh`. VoiceInk is installed via Homebrew cask.
 
-3. **Logging**: All operations log to `~/.mac-setup.log` with timestamps.
+3. **Logging**: All operations log to `~/.dotfiles.log` with timestamps.
 
 4. **Error Handling**: The `install.sh` uses `set -euo pipefail` and has trap handlers. Continue this pattern in all scripts.
 

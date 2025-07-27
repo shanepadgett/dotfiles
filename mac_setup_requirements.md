@@ -10,24 +10,36 @@
 
 ## Phase 2: Brewfile Creation
 - [x] Add CLI tools to Brewfile:
-  - [x] `zsh` (shell)
-  - [x] `zoxide` (better cd command)
-  - [x] `gh` (GitHub CLI)
+  - [x] `bat` (cat clone with syntax highlighting)
   - [x] `bruno` (API testing tool)
+  - [x] `eza` (modern ls replacement)
+  - [x] `fzf` (command-line fuzzy finder)
+  - [x] `git` (version control)
+  - [x] `gh` (GitHub CLI)
+  - [x] `htop` (process viewer)
+  - [x] `jq` (JSON processor)
+  - [x] `ripgrep` (fast text search)
+  - [x] `tree` (directory structure display)
+  - [x] `zoxide` (better cd command)
+  - [x] `zsh` (shell)
+- [x] Add development tools:
+  - [x] `orbstack` (Docker alternative)
 - [x] Add GUI applications to Brewfile (via casks):
-  - [x] `raycast` (launcher/productivity)
-  - [x] `ghostty` (terminal emulator)
-  - [x] `zed` (code editor)
-  - [x] `visual-studio-code` (VS Code)
-  - [x] `discord` (communication)
-  - [x] `brave-browser` (web browser)
-  - [x] `rectangle` (window management)
-  - [x] `obsidian` (note-taking)
   - [x] `1password` (password manager)
+  - [x] `brave-browser` (web browser)
+  - [x] `discord` (communication)
+  - [x] `ghostty` (terminal emulator)
   - [x] `logi-options-plus` (Logitech device management)
-  - [x] `claude-code` (if available via brew, otherwise manual install)
-  - [x] `voiceink` (if available via brew, otherwise manual install)
-  - [x] `opencode` (if available via brew, otherwise manual install)
+  - [x] `obsidian` (note-taking)
+  - [x] `raycast` (launcher/productivity)
+  - [x] `rectangle` (window management)
+  - [x] `visual-studio-code` (VS Code)
+  - [x] `voiceink` (voice note application)
+  - [x] `zed` (code editor)
+- [x] Add fonts:
+  - [x] `font-jetbrains-mono`
+  - [x] `font-fira-code`
+  - [x] `font-sf-mono`
 - [x] Add comments explaining each package's purpose
 - [x] Group packages by category (CLI tools, productivity, development, etc.)
 
@@ -35,7 +47,7 @@
 - [x] Add macOS detection and exit if not macOS
 - [x] Install Homebrew if not present
 - [x] Install Git if not present
-- [x] Clone repository to `~/.mac-setup` or update if exists
+- [x] Clone repository to `~/.dotfiles` or update if exists
 - [x] Call main setup script with proper error handling
 - [x] Add progress indicators and clear output messages
 
@@ -79,7 +91,7 @@
 ## Phase 8: Error Handling & Logging
 - [x] Add comprehensive error messages for common failures
 - [ ] Continue processing if individual items fail
-- [x] Log all changes to `~/.mac-setup.log`
+- [x] Log all changes to `~/.dotfiles.log`
 - [ ] Add retry mechanism for network-dependent installations
 
 ## Phase 9: Documentation
@@ -100,5 +112,5 @@
 
 ## Usage Command
 ```bash
-curl -fsSL https://raw.githubusercontent.com/username/mac-setup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/username/dotfiles/main/install.sh | bash
 ```

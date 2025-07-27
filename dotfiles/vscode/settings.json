@@ -1,0 +1,68 @@
+{
+    //***********************
+    // General
+    //***********************
+    "editor.detectIndentation": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "editor.fontSize": 14,
+    "editor.fontFamily": "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.formatOnSave": true,
+    "editor.guides.bracketPairs": true,
+    "editor.insertSpaces": true,
+    "editor.minimap.enabled": false,
+    "editor.rulers": [
+        120
+    ],
+    "editor.scrollbar.verticalScrollbarSize": 8,
+    "editor.tabSize": 2,
+    "emmet.includeLanguages": {
+        "phoenix-heex": "html"
+    },
+    "extensions.autoUpdate": true,
+    "extensions.autoCheckUpdates": true,
+    "extensions.ignoreRecommendations": true,
+    "files.autoSave": "afterDelay",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontFamily": "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+    "window.restoreWindows": "none",
+    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.editor.openPositioning": "left",
+    //***********************
+    // Languages
+    //***********************
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on",
+    },
+    //***********************
+    // Copilot
+    //***********************
+    "chat.commandCenter.enabled": false,
+    "chat.agent.enabled": false,
+    "chat.mcp.enabled": false,
+    "chat.mcp.discovery.enabled": false,
+    //***********************
+    // Augment
+    //***********************
+    "augment.nextEdit.enableBackgroundSuggestions": false,
+    "augment.completions.enableAutomaticCompletions": false,
+    "terminal.integrated.ignoreProcessNames": [
+        "starship",
+        "oh-my-posh",
+        "bash",
+        "zsh",
+        "opencode"
+    ],
+}

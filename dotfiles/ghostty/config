@@ -1,0 +1,29 @@
+# Ghostty terminal configuration
+
+# Font
+font-family = JetBrains Mono
+font-size = 14
+font-style = normal
+
+# Colors
+theme = Ciapre
+background-opacity = 0.85
+background-blur = true
+split-divider-color = #444444
+
+# Window
+window-width = 180
+window-height = 50
+
+# Tabs
+window-decoration = true
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Scrollback
+scrollback-limit = 10000
+
+# Shell
+command = /bin/zsh

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -uo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 # Script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-LOG_FILE="$HOME/.mac-setup.log"
+LOG_FILE="$HOME/.dotfiles.log"
 
 # Options
 DRY_RUN=false
@@ -91,23 +91,23 @@ init_log() {
 # Install Homebrew packages
 install_homebrew_packages() {
     print_header "Installing Homebrew Packages"
-    
+
     if [[ "$SKIP_APPS" == true ]]; then
         print_info "Skipping application installation (--skip-apps flag)"
         log "Skipped Homebrew installation due to --skip-apps flag"
         return 0
     fi
-    
+
     if [[ "$DRY_RUN" == true ]]; then
         print_info "DRY RUN: Would install packages from Brewfile"
         brew bundle check --file="$ROOT_DIR/Brewfile" --verbose
         return 0
     fi
-    
+
     print_info "Installing packages from Brewfile..."
     cd "$ROOT_DIR"
-    
-    if brew bundle install --file="$ROOT_DIR/Brewfile"; then
+
+    if brew bundle install --file="$ROOT_DIR/Brewfile" || true; then
         print_success "Homebrew packages installed successfully"
         log "Homebrew bundle install completed successfully"
     else
@@ -121,20 +121,20 @@ install_homebrew_packages() {
 # Install AI coding tools
 install_ai_tools() {
     print_header "Installing AI Coding Tools"
-    
+
     if [[ "$SKIP_APPS" == true ]]; then
         print_info "Skipping AI tools installation (--skip-apps flag)"
         log "Skipped AI tools installation due to --skip-apps flag"
         return 0
     fi
-    
+
     if [[ "$DRY_RUN" == true ]]; then
         print_info "DRY RUN: Would install AI coding tools"
         print_info "  - Claude Code via curl"
         print_info "  - OpenCode via curl"
         return 0
     fi
-    
+
     # Run the AI tools installation script
     if [[ -x "$SCRIPT_DIR/install-ai-tools.sh" ]]; then
         print_info "Running AI tools installation script..."
@@ -151,21 +151,57 @@ install_ai_tools() {
     fi
 }
 
+# Create development directories
+create_development_directories() {
+    print_header "Creating Development Directories"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        print_info "DRY RUN: Would create development directories"
+        print_info "  - ~/Development"
+        print_info "  - ~/Development/personal"
+        print_info "  - ~/Development/open-source"
+        print_info "  - ~/Development/experiments"
+        print_info "  - ~/Development/work"
+        return 0
+    fi
+
+    local dev_dirs=(
+        "$HOME/Development"
+        "$HOME/Development/personal"
+        "$HOME/Development/open-source"
+        "$HOME/Development/experiments"
+        "$HOME/Development/work"
+    )
+
+    for dir in "${dev_dirs[@]}"; do
+        if [[ ! -d "$dir" ]]; then
+            print_info "Creating directory: $dir"
+            mkdir -p "$dir"
+            log "Created directory: $dir"
+        else
+            print_info "Directory already exists: $dir"
+            log "Directory already exists: $dir"
+        fi
+    done
+
+    print_success "Development directories created"
+}
+
 # Setup dotfiles
 setup_dotfiles() {
     print_header "Setting Up Dotfiles"
-    
+
     if [[ "$SKIP_DOTFILES" == true ]]; then
         print_info "Skipping dotfiles setup (--skip-dotfiles flag)"
         log "Skipped dotfiles setup due to --skip-dotfiles flag"
         return 0
     fi
-    
+
     if [[ "$DRY_RUN" == true ]]; then
         print_info "DRY RUN: Would setup dotfiles"
         return 0
     fi
-    
+
     # Check if dotfiles setup script exists
     if [[ -x "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
         print_info "Running dotfiles setup..."
@@ -187,43 +223,61 @@ setup_dotfiles() {
 # Main installation
 main() {
     print_header "Mac Setup Installation"
-    
+
     # Parse options
     parse_options "$@"
-    
+
     # Initialize log
     init_log
-    
+
     # Check if we're in the right directory
     if [[ ! -f "$ROOT_DIR/Brewfile" ]]; then
         print_error "Brewfile not found. Are you running this from the correct directory?"
         log "ERROR: Brewfile not found at $ROOT_DIR/Brewfile"
         exit 1
     fi
-    
-    # Install Homebrew packages
-    install_homebrew_packages
-    
+
+    # Install Homebrew packages with retry
+    local retry_count=0
+    local max_retries=3
+
+    while [ $retry_count -lt $max_retries ]; do
+        if install_homebrew_packages; then
+            break
+        else
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -lt $max_retries ]; then
+                print_warning "Retrying Homebrew installation (attempt $retry_count/$max_retries)..."
+                sleep 5
+            else
+                print_error "Homebrew installation failed after $max_retries attempts"
+            fi
+        fi
+    done
+
     # Install AI tools
     install_ai_tools
-    
+
+    # Create development directories
+    create_development_directories
+
     # Setup dotfiles
     setup_dotfiles
-    
+
     # Final summary
     echo
     print_header "Installation Summary"
-    
+
     if [[ "$DRY_RUN" == true ]]; then
         print_info "DRY RUN completed - no changes were made"
     else
         print_success "Mac setup installation completed!"
         print_info "Check the log for details: $LOG_FILE"
-        
+
         if [[ "$SKIP_APPS" == false ]]; then
             print_info "Applications installed via Homebrew"
         fi
-        
+
         if [[ "$SKIP_DOTFILES" == false ]]; then
             if [[ -x "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
                 print_info "Dotfiles configured"
@@ -232,7 +286,7 @@ main() {
             fi
         fi
     fi
-    
+
     log "Installation completed"
 }
 

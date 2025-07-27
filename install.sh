@@ -10,8 +10,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/username/mac-setup.git"
-INSTALL_DIR="$HOME/.mac-setup"
+REPO_URL="https://github.com/shanepadgett/dotfiles.git"
+INSTALL_DIR="$HOME/.dotfiles"
 
 # Functions
 print_header() {
@@ -48,13 +48,13 @@ install_homebrew() {
     if ! command -v brew &> /dev/null; then
         print_header "Installing Homebrew"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        
+
         # Add Homebrew to PATH for Apple Silicon Macs
         if [[ -f "/opt/homebrew/bin/brew" ]]; then
             echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
-        
+
         print_success "Homebrew installed"
     else
         print_success "Homebrew already installed"
@@ -75,7 +75,7 @@ install_git() {
 # Clone or update repository
 setup_repository() {
     print_header "Setting up repository"
-    
+
     if [[ -d "$INSTALL_DIR" ]]; then
         print_info "Repository already exists, updating..."
         cd "$INSTALL_DIR"
@@ -91,9 +91,9 @@ setup_repository() {
 # Run main setup script
 run_setup() {
     print_header "Running setup"
-    
+
     cd "$INSTALL_DIR"
-    
+
     if [[ -f "scripts/setup.sh" ]]; then
         bash "scripts/setup.sh" "$@"
     else
@@ -109,31 +109,31 @@ main() {
     echo "║       Mac Setup Installer v1.0        ║"
     echo "╚═══════════════════════════════════════╝"
     echo -e "${NC}"
-    
+
     print_info "Starting Mac setup process..."
-    
+
     # Run checks and installation
     check_macos
     install_homebrew
     install_git
     setup_repository
     run_setup "$@"
-    
+
     print_header "Setup Complete!"
     print_success "Your Mac has been configured successfully."
     print_info "Please restart your terminal for all changes to take effect."
-    print_info "Log file: ~/.mac-setup.log"
+    print_info "Log file: ~/.dotfiles.log"
 }
 
 # Error handling
-trap 'print_error "An error occurred. Check ~/.mac-setup.log for details."' ERR
+trap 'print_error "An error occurred. Check ~/.dotfiles.log for details."' ERR
 
 # Create log file
 mkdir -p "$(dirname "$INSTALL_DIR")"
-exec > >(tee -a "$HOME/.mac-setup.log")
+exec > >(tee -a "$HOME/.dotfiles.log")
 exec 2>&1
 
-echo "=== Mac Setup Installation Log - $(date) ===" >> "$HOME/.mac-setup.log"
+echo "=== Mac Setup Installation Log - $(date) ===" >> "$HOME/.dotfiles.log"
 
 # Run main function with all arguments
 main "$@"

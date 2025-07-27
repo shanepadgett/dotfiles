@@ -2,28 +2,36 @@
 # Automated package installation for macOS
 
 # Taps
-tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/core"
+tap "homebrew/cask"
+tap "homebrew/bundle"
 
 # CLI Tools
-brew "zsh"           # Modern shell with advanced features
-brew "zoxide"        # Smarter cd command with frecency-based navigation
+brew "bat"           # Cat clone with syntax highlighting and Git integration
+brew "eza"           # Modern replacement for ls with colors and icons
+brew "fzf"           # Command-line fuzzy finder for files and history
 brew "gh"            # GitHub CLI for repository management
-brew "bruno"         # Open source API testing and development platform
+brew "htop"          # Interactive process viewer and system monitor
+brew "jq"            # Command-line JSON processor and query tool
+brew "ripgrep"       # Fast text search tool that respects gitignore
+brew "tree"          # Display directory structure in tree format
+brew "zoxide"        # Smarter cd command with frecency-based navigation
+brew "zsh"           # Modern shell with advanced features
 
-# Development Tools (Phase 2+ additions can go here)
+# Development Tools
+cask "orbstack"
 
 # GUI Applications - Productivity
+cask "1password"     # Password manager with team sharing capabilities
+cask "obsidian"      # Knowledge base and note-taking with markdown
 cask "raycast"       # Launcher and productivity tool (Spotlight replacement)
 cask "rectangle"     # Window management utility for keyboard-based resizing
-cask "obsidian"      # Knowledge base and note-taking with markdown
-cask "1password"     # Password manager with team sharing capabilities
 
 # GUI Applications - Development
+brew "bruno"         # Open source API testing and development platform
 cask "ghostty"       # Modern terminal emulator with GPU acceleration
-cask "zed"           # High-performance collaborative code editor
 cask "visual-studio-code"  # Popular extensible code editor
+cask "zed"           # High-performance collaborative code editor
 
 # GUI Applications - Communication
 cask "discord"       # Voice, video, and text communication platform
@@ -35,6 +43,7 @@ cask "brave-browser" # Privacy-focused web browser based on Chromium
 cask "logi-options-plus"  # Logitech device configuration and management
 cask "voiceink"          # Voice note application
 
-# AI Coding Tools (installed via curl in setup script)
-# - Claude Code: AI coding assistant (curl -fsSL claude.ai/install.sh | bash)
-# - OpenCode: Code collaboration tool (curl -fsSL https://opencode.ai/install | bash)
+# Fonts
+cask "font-jetbrains-mono"
+cask "font-fira-code"
+cask "font-sf-mono"

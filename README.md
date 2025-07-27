@@ -7,7 +7,7 @@ A comprehensive macOS setup automation repository for quickly configuring a new 
 Run this command to bootstrap your Mac setup:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/shanepadgett/mac-setup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.sh | bash
 ```
 
 ## What's Included
@@ -58,6 +58,13 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/mac-setup/main/install
 Claude Code and OpenCode are installed automatically via their official installation scripts during setup. These tools use curl-based installers that are executed by the setup process.
 
 ## Customization
+
+### Configuration Guide
+See [CONFIGURATION.md](CONFIGURATION.md) for detailed information about:
+- Shell configurations (.zshrc, .bashrc)
+- Editor settings (VS Code, Zed, Ghostty)
+- Machine-specific overrides
+- Customization examples
 
 ### Adding Applications
 Edit the `Brewfile` to add or remove applications:
