@@ -93,23 +93,56 @@ uninstall_brew_packages() {
 
     local brewfile="$REPO_DIR/Brewfile"
     if [[ -f "$brewfile" ]]; then
-        info "Using Brewfile to uninstall packages..."
-        run_cmd "brew bundle --file='$brewfile' --force cleanup"
+        info "Parsing Brewfile to find packages to uninstall..."
+        
+        # Extract package names from Brewfile
+        local brew_packages=$(grep '^brew ' "$brewfile" | sed 's/brew "\([^"]*\)".*/\1/' | tr '\n' ' ')
+        local cask_packages=$(grep '^cask ' "$brewfile" | sed 's/cask "\([^"]*\)".*/\1/' | tr '\n' ' ')
+        
+        # Uninstall casks first (they often depend on formulas)
+        if [[ -n "$cask_packages" ]]; then
+            info "Uninstalling casks: $cask_packages"
+            for cask in $cask_packages; do
+                if brew list --cask "$cask" &>/dev/null; then
+                    run_cmd "brew uninstall --cask --force '$cask'"
+                else
+                    info "Cask $cask not installed, skipping"
+                fi
+            done
+        fi
+        
+        # Then uninstall formulas
+        if [[ -n "$brew_packages" ]]; then
+            info "Uninstalling brew packages: $brew_packages"
+            for package in $brew_packages; do
+                if brew list --formula "$package" &>/dev/null; then
+                    run_cmd "brew uninstall --force '$package'"
+                else
+                    info "Package $package not installed, skipping"
+                fi
+            done
+        fi
+        
+        # Clean up any remaining dependencies
+        info "Cleaning up unused dependencies..."
+        run_cmd "brew autoremove"
+        
     else
-        warn "Brewfile not found, manually removing common packages..."
+        warn "Brewfile not found at $brewfile"
+        info "Attempting to uninstall all user-installed packages..."
 
-        # Get list of installed packages
+        # Get list of all installed packages (fallback)
         local packages=$(brew list --formula 2>/dev/null || true)
         local casks=$(brew list --cask 2>/dev/null || true)
 
-        if [[ -n "$packages" ]]; then
-            info "Uninstalling brew packages: $packages"
-            run_cmd "brew uninstall --force $packages"
+        if [[ -n "$casks" ]]; then
+            info "Uninstalling all casks: $casks"
+            run_cmd "brew uninstall --cask --force $casks"
         fi
 
-        if [[ -n "$casks" ]]; then
-            info "Uninstalling casks: $casks"
-            run_cmd "brew uninstall --cask --force $casks"
+        if [[ -n "$packages" ]]; then
+            info "Uninstalling all brew packages: $packages"
+            run_cmd "brew uninstall --force $packages"
         fi
     fi
 }
@@ -240,37 +273,43 @@ EOF
 
 # Check if running in a terminal that will be uninstalled
 check_terminal_warning() {
-    # Check if running in Ghostty
+    # Check if running in Ghostty - BLOCK execution
     if [[ "${TERM_PROGRAM:-}" == "ghostty" ]]; then
-        warn "You are running this script from Ghostty terminal"
-        warn "Teardown will uninstall Ghostty, which may terminate this session"
+        error "Cannot run teardown from Ghostty terminal!"
+        error "Teardown will uninstall Ghostty, terminating this session mid-process."
         echo
-        if ! confirm "Continue anyway? (Recommended: run from Terminal.app or iTerm2)"; then
-            log "Teardown cancelled - running from Ghostty"
-            exit 0
-        fi
+        info "Please run teardown from Terminal.app or iTerm2:"
+        info "1. Open Terminal.app (Applications > Utilities > Terminal)"
+        info "2. Run: teardown"
+        echo
+        log "Teardown blocked - running from Ghostty"
+        exit 1
     fi
     
-    # Check if running in VS Code integrated terminal
+    # Check if running in VS Code integrated terminal - BLOCK execution
     if [[ "${TERM_PROGRAM:-}" == "vscode" ]]; then
-        warn "You are running this script from VS Code integrated terminal"
-        warn "Teardown will uninstall VS Code, which may terminate this session"
+        error "Cannot run teardown from VS Code integrated terminal!"
+        error "Teardown will uninstall VS Code, terminating this session mid-process."
         echo
-        if ! confirm "Continue anyway? (Recommended: run from Terminal.app)"; then
-            log "Teardown cancelled - running from VS Code"
-            exit 0
-        fi
+        info "Please run teardown from Terminal.app:"
+        info "1. Open Terminal.app (Applications > Utilities > Terminal)"
+        info "2. Run: teardown"
+        echo
+        log "Teardown blocked - running from VS Code"
+        exit 1
     fi
     
-    # Check if running in Zed integrated terminal
+    # Check if running in Zed integrated terminal - BLOCK execution
     if [[ "${TERM_PROGRAM:-}" == "zed" ]]; then
-        warn "You are running this script from Zed integrated terminal"
-        warn "Teardown will uninstall Zed, which may terminate this session"
+        error "Cannot run teardown from Zed integrated terminal!"
+        error "Teardown will uninstall Zed, terminating this session mid-process."
         echo
-        if ! confirm "Continue anyway? (Recommended: run from Terminal.app)"; then
-            log "Teardown cancelled - running from Zed"
-            exit 0
-        fi
+        info "Please run teardown from Terminal.app:"
+        info "1. Open Terminal.app (Applications > Utilities > Terminal)"
+        info "2. Run: teardown"
+        echo
+        log "Teardown blocked - running from Zed"
+        exit 1
     fi
 }
 
