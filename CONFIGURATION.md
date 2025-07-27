@@ -45,7 +45,7 @@ Location: `config/shell/exports/` → `~/.exports/`
 - `editor.sh` - Default editor settings
 - `development.sh` - Development environment variables
 - `system.sh` - System-specific settings
-- `colors.sh` - Terminal color definitions
+
 
 ## Editor Configurations
 

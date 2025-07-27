@@ -21,12 +21,8 @@ SAVEHIST=10000
 setopt HIST_IGNORE_DUPS
 setopt SHARE_HISTORY
 
-# Colors
-autoload -U colors && colors
-setopt PROMPT_SUBST
-
 # Prompt
-PROMPT='%F{cyan}%n@%m%f:%F{green}%~%f%# '
+PROMPT='%n@%m:%~%# '
 
 # Machine-specific configs (if they exist)
 if [ -f ~/.zshrc.local ]; then
