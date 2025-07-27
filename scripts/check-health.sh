@@ -5,38 +5,35 @@
 
 set -euo pipefail
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Source centralized logging system
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/lib/logger.sh"
 
-echo -e "${BLUE}=== Mac Setup Health Check ===${NC}"
+log_header "Mac Setup Health Check"
 echo
 
 # Check Homebrew
 if command -v brew &> /dev/null; then
-    echo -e "${GREEN}✓ Homebrew is installed${NC}"
-    echo -e "  Version: $(brew --version | head -1)"
+    log_success "Homebrew is installed"
+    log_info "Version: $(brew --version | head -1)"
 else
-    echo -e "${RED}✗ Homebrew is not installed${NC}"
+    log_error "Homebrew is not installed"
 fi
 
 # Check Brewfile packages
 echo
-echo -e "${BLUE}Checking Brewfile packages...${NC}"
+log_step "Checking Brewfile packages"
 if [ -f "Brewfile" ]; then
     brew bundle check --file=Brewfile 2>/dev/null && \
-        echo -e "${GREEN}✓ All Brewfile packages are installed${NC}" || \
-        echo -e "${YELLOW}! Some Brewfile packages are missing${NC}"
+        log_success "All Brewfile packages are installed" || \
+        log_warning "Some Brewfile packages are missing"
 else
-    echo -e "${YELLOW}! Brewfile not found${NC}"
+    log_warning "Brewfile not found"
 fi
 
 # Check symlinks
 echo
-echo -e "${BLUE}Checking symlinks...${NC}"
+log_step "Checking symlinks"
 
 check_symlink() {
     local source="$1"
@@ -45,14 +42,14 @@ check_symlink() {
 
     if [ -L "$target" ]; then
         if [ "$(readlink "$target")" = "$source" ]; then
-            echo -e "${GREEN}✓ $description${NC}"
+            log_success "$description"
         else
-            echo -e "${YELLOW}! $description (points to wrong location)${NC}"
+            log_warning "$description (points to wrong location)"
         fi
     elif [ -e "$target" ]; then
-        echo -e "${YELLOW}! $description (exists but not a symlink)${NC}"
+        log_warning "$description (exists but not a symlink)"
     else
-        echo -e "${RED}✗ $description (missing)${NC}"
+        log_error "$description (missing)"
     fi
 }
 
@@ -69,7 +66,7 @@ check_symlink "$CONFIG_TOOLS_DIR/ghostty" "$HOME/.config/ghostty" "Ghostty confi
 
 # Check applications
 echo
-echo -e "${BLUE}Checking applications...${NC}"
+log_step "Checking applications"
 
 apps=(
     "Raycast:/Applications/Raycast.app"
@@ -86,15 +83,15 @@ apps=(
 for app in "${apps[@]}"; do
     IFS=':' read -r name path <<< "$app"
     if [ -d "$path" ]; then
-        echo -e "${GREEN}✓ $name${NC}"
+        log_success "$name"
     else
-        echo -e "${RED}✗ $name${NC}"
+        log_error "$name"
     fi
 done
 
 # Check CLI tools
 echo
-echo -e "${BLUE}Checking CLI tools...${NC}"
+log_step "Checking CLI tools"
 
 tools=(
     "zsh:zsh --version"
@@ -106,21 +103,21 @@ tools=(
 for tool in "${tools[@]}"; do
     IFS=':' read -r name cmd <<< "$tool"
     if command -v "$name" &> /dev/null; then
-        echo -e "${GREEN}✓ $name${NC}"
+        log_success "$name"
     else
-        echo -e "${RED}✗ $name${NC}"
+        log_error "$name"
     fi
 done
 
 # Check log file
 echo
-echo -e "${BLUE}Checking log file...${NC}"
+log_step "Checking log file"
 if [ -f "$HOME/config.log" ]; then
-    echo -e "${GREEN}✓ Log file exists${NC}"
-    echo -e "  Last update: $(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$HOME/config.log")"
+    log_success "Log file exists"
+    log_info "Last update: $(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$HOME/config.log")"
 else
-    echo -e "${YELLOW}! Log file not found${NC}"
+    log_warning "Log file not found"
 fi
 
 echo
-echo -e "${BLUE}=== Health check complete ===${NC}"
+log_header "Health check complete"

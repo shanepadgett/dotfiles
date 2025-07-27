@@ -5,12 +5,34 @@ set -euo pipefail
 # Default installation directory (can be overridden by config.env later)
 INSTALL_DIR="$HOME/.dotfiles"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Source centralized logging system
+source_logger() {
+    local logger_file="$INSTALL_DIR/scripts/lib/logger.sh"
+    if [[ -f "$logger_file" ]]; then
+        source "$logger_file"
+    else
+        # Fallback colors if logger not available yet
+        LOG_RED='\033[1;91m'
+        LOG_GREEN='\033[1;92m'
+        LOG_YELLOW='\033[1;93m'
+        LOG_BLUE='\033[1;94m'
+        LOG_CYAN='\033[1;96m'
+        LOG_RESET='\033[0m'
+        
+        log_info() { echo -e "${LOG_CYAN}[INFO]${LOG_RESET} $1"; }
+        log_success() { echo -e "${LOG_GREEN}[SUCCESS]${LOG_RESET} $1"; }
+        log_error() { echo -e "${LOG_RED}[ERROR]${LOG_RESET} $1"; }
+        log_warning() { echo -e "${LOG_YELLOW}[WARNING]${LOG_RESET} $1"; }
+        log_header() { echo; echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} $1"; echo; }
+        
+        # Legacy compatibility
+        print_success() { log_success "$1"; }
+        print_error() { log_error "$1"; }
+        print_warning() { log_warning "$1"; }
+        print_info() { log_info "$1"; }
+        print_header() { log_header "$1"; }
+    fi
+}
 
 # Configuration
 REPO_URL="https://github.com/shanepadgett/dotfiles.git"
@@ -23,26 +45,8 @@ source_common_utils() {
     fi
 }
 
-# Functions
-print_header() {
-    echo -e "\n${BLUE}=== $1 ===${NC}\n"
-}
-
-print_success() {
-    echo -e "${GREEN}✓ $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}✗ $1${NC}"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠ $1${NC}"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ $1${NC}"
-}
+# Initialize logging (will use fallback until repository is cloned)
+source_logger
 
 # Check if running on macOS
 check_macos() {
@@ -111,6 +115,9 @@ setup_repository() {
         print_info "Cloning repository..."
         git clone "$REPO_URL" "$INSTALL_DIR"
         print_success "Repository cloned"
+        
+        # Now source the proper logger
+        source_logger
     fi
 }
 

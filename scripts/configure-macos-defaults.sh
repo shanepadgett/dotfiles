@@ -5,10 +5,14 @@
 
 set -e
 
-echo "🍎 Configuring macOS system defaults..."
+# Source centralized logging system
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/lib/logger.sh"
+
+log_header "Configuring macOS system defaults"
 
 # Dock Configuration
-echo "  → Configuring Dock settings..."
+log_step "Configuring Dock settings"
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.5
@@ -18,7 +22,7 @@ defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock minimize-to-application -bool true
 
 # Trackpad Configuration
-echo "  → Configuring trackpad settings..."
+log_step "Configuring trackpad settings"
 # Enable two-finger swipe for back/forward navigation
 defaults write NSGlobalDomain AppleEnableSwipeNavigateWithScrolls -bool true
 # Enable three-finger drag (requires restart)
@@ -26,18 +30,18 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool t
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
 
 # Finder Configuration
-echo "  → Configuring Finder settings..."
+log_step "Configuring Finder settings"
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Clear existing dock
-echo "  → Clearing existing dock..."
+log_step "Clearing existing dock"
 defaults write com.apple.dock persistent-apps -array
 
 # Add GUI applications to dock
-echo "  → Adding applications to dock..."
+log_step "Adding applications to dock"
 
 # Define applications to add to dock (in order)
 apps=(
@@ -56,17 +60,17 @@ apps=(
 # Add each application to dock if it exists
 for app in "${apps[@]}"; do
     if [ -d "$app" ]; then
-        echo "    Adding $(basename "$app" .app) to dock..."
+        log_info "Adding $(basename "$app" .app) to dock"
         defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
     else
-        echo "    ⚠️  $(basename "$app" .app) not found, skipping..."
+        log_warning "$(basename "$app" .app) not found, skipping"
     fi
 done
 
 # Restart affected services
-echo "  → Restarting Dock and Finder..."
+log_step "Restarting Dock and Finder"
 killall Dock
 killall Finder
 
-echo "✅ macOS defaults configured successfully!"
-echo "📝 Note: Some trackpad settings may require a logout/login to take effect."
+log_success "macOS defaults configured successfully!"
+log_info "Note: Some trackpad settings may require a logout/login to take effect."

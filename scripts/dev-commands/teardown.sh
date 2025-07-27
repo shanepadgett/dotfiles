@@ -21,23 +21,23 @@ BACKUP_DIR_PATTERN="$HOME/.config-backup-20*"
 DRY_RUN=false
 SKIP_CONFIRM=false
 
-# Logging
+# Enhanced logging with file output
 LOG_FILE="$HOME/teardown.log"
 
 log() {
-    echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')]${NC} $1" | tee -a "$LOG_FILE"
+    log_info_file "$1" "$LOG_FILE"
 }
 
 warn() {
-    echo -e "${YELLOW}[WARNING]${NC} $1" | tee -a "$LOG_FILE"
+    log_warning_file "$1" "$LOG_FILE"
 }
 
 error() {
-    echo -e "${RED}[ERROR]${NC} $1" | tee -a "$LOG_FILE"
+    log_error_file "$1" "$LOG_FILE"
 }
 
 info() {
-    echo -e "${BLUE}[INFO]${NC} $1" | tee -a "$LOG_FILE"
+    log_info_file "$1" "$LOG_FILE"
 }
 
 usage() {
@@ -63,7 +63,7 @@ confirm() {
         return 0
     fi
 
-    echo -e "${YELLOW}$1${NC}"
+    log_warning "$1"
     read -p "Continue? [y/N]: " -n 1 -r
     echo
     [[ $REPLY =~ ^[Yy]$ ]]
