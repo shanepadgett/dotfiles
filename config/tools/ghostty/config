@@ -6,8 +6,7 @@ font-size = 14
 font-style = normal
 
 # Colors
-theme = Ciapre
-background-opacity = 0.85
+background-opacity = 0.90
 background-blur = true
 split-divider-color = #444444
 

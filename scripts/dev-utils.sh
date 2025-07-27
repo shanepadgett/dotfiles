@@ -53,6 +53,10 @@ main() {
             source "$COMMANDS_DIR/update-configs.sh"
             update_configs_command "$@"
             ;;
+        "reset-configs")
+            source "$COMMANDS_DIR/reset-configs.sh"
+            reset_configs_command "$@"
+            ;;
         "dev-utils.sh")
             # If called directly, show help
             print_header "Development Utilities"
@@ -61,6 +65,7 @@ main() {
             echo "  pr [title]                Create pull request using gh CLI"
             echo "  dev [action] [project]    Manage development environments"
             echo "  update-configs [opts]     Update dotfiles from repository"
+            echo "  reset-configs [opts]      Reset dotfiles to repository state"
             echo
             echo "Commands are organized in modular files:"
             echo "  scripts/dev-commands/git-init.sh"
@@ -73,6 +78,7 @@ main() {
             echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/pr"
             echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/dev"
             echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/update-configs"
+            echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/reset-configs"
             ;;
         *)
             print_error "Unknown command: $command_name"
