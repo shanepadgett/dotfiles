@@ -86,6 +86,7 @@ See [CONFIGURATION.md](CONFIGURATION.md) for detailed customization options.
 ./scripts/check-health.sh      # Verify installation state
 ./scripts/update-brewfile.sh   # Update Brewfile from current system
 ./scripts/cleanup.sh           # Uninstall and cleanup
+./scripts/teardown.sh          # Complete development environment teardown
 ```
 
 **Development:**
@@ -104,6 +105,23 @@ xcode-select --install
 **Missing Applications**: Check availability with `brew search app-name`
 
 **View Logs**: Check `~/config.log` for detailed installation logs
+
+## Teardown
+
+To completely remove the development environment and restore your system to pre-setup state:
+
+```bash
+./teardown.sh                   # Interactive teardown with confirmations
+./teardown.sh --dry-run       # Preview what would be removed
+./teardown.sh --yes           # Skip all confirmations
+```
+
+The teardown process will:
+- Uninstall all Homebrew packages, casks, and fonts
+- Remove AI coding tools (Claude Code, OpenCode)
+- Remove symlinks from your home directory
+- Restore original configuration files from backup
+- Clean up development directories and logs
 
 ## License
 
