@@ -298,7 +298,6 @@ main() {
     setup_dev_utils
 
     # Final summary
-    echo
     print_header "Shell Configuration Setup Complete"
     print_success "All shell configurations have been linked successfully!"
     print_info "Backups saved to: $BACKUP_DIR"

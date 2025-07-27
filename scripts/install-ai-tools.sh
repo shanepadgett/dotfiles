@@ -98,7 +98,6 @@ main() {
             install_claude_code || ((failed++))
             install_opencode || ((failed++))
             
-            echo
             if [[ $failed -eq 0 ]]; then
                 print_success "All AI coding tools installed successfully!"
             else
