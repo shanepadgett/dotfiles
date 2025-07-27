@@ -11,7 +11,9 @@ NC='\033[0m' # No Color
 
 # Configuration
 REPO_URL="https://github.com/shanepadgett/dotfiles.git"
-INSTALL_DIR="$HOME/.dotfiles"
+
+# Source configuration
+CONFIG_FILE="$INSTALL_DIR/config/config.env"
 
 # Functions
 print_header() {
@@ -84,7 +86,7 @@ setup_repository() {
     if [[ -d "$INSTALL_DIR" ]]; then
         print_info "Repository already exists, updating..."
         cd "$INSTALL_DIR"
-        
+
         # Get current branch and update accordingly
         local current_branch=$(git branch --show-current 2>/dev/null || echo "main")
         if git pull origin "$current_branch" 2>/dev/null; then
@@ -109,6 +111,9 @@ run_setup() {
     print_header "Running setup"
 
     cd "$INSTALL_DIR"
+
+    # Source configuration
+    source "config/config.env"
 
     if [[ -f "scripts/setup.sh" ]]; then
         bash "scripts/setup.sh" "$@"
@@ -138,18 +143,18 @@ main() {
     print_header "Setup Complete!"
     print_success "Your Mac has been configured successfully."
     print_info "Please restart your terminal for all changes to take effect."
-    print_info "Log file: ~/.dotfiles.log"
+    print_info "Log file: ~/config.log"
 }
 
 # Error handling
-trap 'print_error "An error occurred. Check ~/.dotfiles.log for details."' ERR
+trap 'print_error "An error occurred. Check ~/config.log for details."' ERR
 
 # Create log file
 mkdir -p "$(dirname "$INSTALL_DIR")"
-exec > >(tee -a "$HOME/.dotfiles.log")
+exec > >(tee -a "$HOME/config.log")
 exec 2>&1
 
-echo "=== Mac Setup Installation Log - $(date) ===" >> "$HOME/.dotfiles.log"
+echo "=== Mac Setup Installation Log - $(date) ===" >> "$HOME/config.log"
 
 # Run main function with all arguments
 main "$@"

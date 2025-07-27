@@ -58,7 +58,7 @@ The `dev` command provides intelligent project management. Run `dev` without arg
 ### Key Features
 - **Backup System**: Existing configs backed up to `~/.config-backup-YYYY-MM-DD`
 - **Symlink Management**: Shell configs symlinked from `shell/` to home directory
-- **Logging**: All operations logged to `~/.dotfiles.log` with timestamps
+- **Logging**: All operations logged to `~/config.log` with timestamps
 - **Error Handling**: Robust error handling with retry mechanisms
 
 ## Customization
@@ -103,7 +103,7 @@ xcode-select --install
 
 **Missing Applications**: Check availability with `brew search app-name`
 
-**View Logs**: Check `~/.dotfiles.log` for detailed installation logs
+**View Logs**: Check `~/config.log` for detailed installation logs
 
 ## License
 

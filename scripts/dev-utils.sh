@@ -58,9 +58,9 @@ main() {
             echo "  scripts/dev-commands/common.sh (shared utilities)"
             echo
             echo "Create symlinks to use these commands:"
-            echo "  ln -sf ~/.dotfiles/scripts/dev-utils.sh ~/.local/bin/git-init"
-            echo "  ln -sf ~/.dotfiles/scripts/dev-utils.sh ~/.local/bin/pr"
-            echo "  ln -sf ~/.dotfiles/scripts/dev-utils.sh ~/.local/bin/dev"
+            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/git-init"
+            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/pr"
+            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/dev"
             ;;
         *)
             print_error "Unknown command: $command_name"

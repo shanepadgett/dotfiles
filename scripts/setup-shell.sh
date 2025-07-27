@@ -10,12 +10,12 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Script directory
+# Source configuration
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-DOTFILES_DIR="$ROOT_DIR/shell"
+source "$ROOT_DIR/config/config.env"
 BACKUP_DIR="$HOME/.config-backup-$(date +%Y-%m-%d-%H%M%S)"
-LOG_FILE="$HOME/.dotfiles.log"
+LOG_FILE="$HOME/config.log"
 
 # Functions
 print_header() {
@@ -61,11 +61,11 @@ backup_existing() {
     local backup_name="$(basename "$target")"
 
     if [[ -e "$target" || -L "$target" ]]; then
-        # If it's already a symlink pointing to our dotfiles, skip backup
+        # If it's already a symlink pointing to our config, skip backup
         if [[ -L "$target" ]]; then
             local link_target="$(readlink "$target")"
-            if [[ "$link_target" == "$DOTFILES_DIR"* ]]; then
-                print_info "Skipping backup of $target (already linked to dotfiles)"
+            if [[ "$link_target" == "$CONFIG_SHELL_DIR"* ]]; then
+                print_info "Skipping backup of $target (already linked to config)"
                 return 0
             fi
         fi
@@ -124,23 +124,23 @@ setup_shell_configs() {
     print_header "Setting up shell configurations"
 
     # .zshrc
-    if [[ -f "$DOTFILES_DIR/zshrc" ]]; then
-        create_symlink "$DOTFILES_DIR/zshrc" "$HOME/.zshrc" ".zshrc"
+    if [[ -f "$CONFIG_SHELL_DIR/zshrc" ]]; then
+        create_symlink "$CONFIG_SHELL_DIR/zshrc" "$HOME/.zshrc" ".zshrc"
     fi
 
     # .bashrc
-    if [[ -f "$DOTFILES_DIR/bashrc" ]]; then
-        create_symlink "$DOTFILES_DIR/bashrc" "$HOME/.bashrc" ".bashrc"
+    if [[ -f "$CONFIG_SHELL_DIR/bashrc" ]]; then
+        create_symlink "$CONFIG_SHELL_DIR/bashrc" "$HOME/.bashrc" ".bashrc"
     fi
 
     # .aliases
-    if [[ -f "$DOTFILES_DIR/aliases" ]]; then
-        create_symlink "$DOTFILES_DIR/aliases" "$HOME/.aliases" ".aliases"
+    if [[ -f "$CONFIG_SHELL_DIR/aliases" ]]; then
+        create_symlink "$CONFIG_SHELL_DIR/aliases" "$HOME/.aliases" ".aliases"
     fi
 
     # .exports directory
-    if [[ -d "$DOTFILES_DIR/exports" ]]; then
-        create_symlink "$DOTFILES_DIR/exports" "$HOME/.exports" ".exports"
+    if [[ -d "$CONFIG_SHELL_DIR/exports" ]]; then
+        create_symlink "$CONFIG_SHELL_DIR/exports" "$HOME/.exports" ".exports"
     fi
 }
 
@@ -148,8 +148,8 @@ setup_shell_configs() {
 setup_zoxide() {
     print_header "Setting up zoxide configuration"
 
-    if [[ -d "$DOTFILES_DIR/zoxide" ]]; then
-        create_symlink "$DOTFILES_DIR/zoxide" "$HOME/.config/zoxide" "zoxide config"
+    if [[ -d "$INSTALL_DIR/config/tools/zoxide" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/zoxide" "$HOME/.config/zoxide" "zoxide config"
     fi
 }
 
@@ -160,20 +160,20 @@ setup_vscode() {
     # VS Code settings location varies by platform
     local vscode_dir="$HOME/Library/Application Support/Code/User"
 
-    if [[ -d "$DOTFILES_DIR/vscode" ]]; then
+    if [[ -d "$INSTALL_DIR/config/tools/vscode" ]]; then
         # Settings
-        if [[ -f "$DOTFILES_DIR/vscode/settings.json" ]]; then
-            create_symlink "$DOTFILES_DIR/vscode/settings.json" "$vscode_dir/settings.json" "VS Code settings"
+        if [[ -f "$INSTALL_DIR/config/tools/vscode/settings.json" ]]; then
+            create_symlink "$INSTALL_DIR/config/tools/vscode/settings.json" "$vscode_dir/settings.json" "VS Code settings"
         fi
 
         # Keybindings
-        if [[ -f "$DOTFILES_DIR/vscode/keybindings.json" ]]; then
-            create_symlink "$DOTFILES_DIR/vscode/keybindings.json" "$vscode_dir/keybindings.json" "VS Code keybindings"
+        if [[ -f "$INSTALL_DIR/config/tools/vscode/keybindings.json" ]]; then
+            create_symlink "$INSTALL_DIR/config/tools/vscode/keybindings.json" "$vscode_dir/keybindings.json" "VS Code keybindings"
         fi
 
         # Snippets
-        if [[ -d "$DOTFILES_DIR/vscode/snippets" ]]; then
-            create_symlink "$DOTFILES_DIR/vscode/snippets" "$vscode_dir/snippets" "VS Code snippets"
+        if [[ -d "$INSTALL_DIR/config/tools/vscode/snippets" ]]; then
+            create_symlink "$INSTALL_DIR/config/tools/vscode/snippets" "$vscode_dir/snippets" "VS Code snippets"
         fi
     fi
 }
@@ -185,8 +185,8 @@ setup_zed() {
     # Zed config location
     local zed_dir="$HOME/.config/zed"
 
-    if [[ -d "$DOTFILES_DIR/zed" ]]; then
-        create_symlink "$DOTFILES_DIR/zed" "$zed_dir" "Zed config"
+    if [[ -d "$INSTALL_DIR/config/tools/zed" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/zed" "$zed_dir" "Zed config"
     fi
 }
 
@@ -197,11 +197,11 @@ setup_ghostty() {
     # Ghostty config location
     local ghostty_dir="$HOME/.config/ghostty"
 
-    if [[ -d "$DOTFILES_DIR/ghostty" ]]; then
-        create_symlink "$DOTFILES_DIR/ghostty" "$ghostty_dir" "Ghostty config"
-    elif [[ -f "$DOTFILES_DIR/ghostty.conf" ]]; then
+    if [[ -d "$INSTALL_DIR/config/tools/ghostty" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/ghostty" "$ghostty_dir" "Ghostty config"
+    elif [[ -f "$INSTALL_DIR/config/tools/ghostty.conf" ]]; then
         # Some users might have a single config file
-        create_symlink "$DOTFILES_DIR/ghostty.conf" "$HOME/.config/ghostty/config" "Ghostty config"
+        create_symlink "$INSTALL_DIR/config/tools/ghostty.conf" "$HOME/.config/ghostty/config" "Ghostty config"
     fi
 }
 
@@ -212,8 +212,8 @@ setup_claude_code() {
     # Claude Code config location (may vary)
     local claude_dir="$HOME/.config/claude-code"
 
-    if [[ -d "$DOTFILES_DIR/claude-code" ]]; then
-        create_symlink "$DOTFILES_DIR/claude-code" "$claude_dir" "Claude Code config"
+    if [[ -d "$INSTALL_DIR/config/tools/claude-code" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/claude-code" "$claude_dir" "Claude Code config"
     fi
 }
 
@@ -224,8 +224,8 @@ setup_opencode() {
     # OpenCode config location (may vary)
     local opencode_dir="$HOME/.config/opencode"
 
-    if [[ -d "$DOTFILES_DIR/opencode" ]]; then
-        create_symlink "$DOTFILES_DIR/opencode" "$opencode_dir" "OpenCode config"
+    if [[ -d "$INSTALL_DIR/config/tools/opencode" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/opencode" "$opencode_dir" "OpenCode config"
     fi
 }
 
@@ -299,9 +299,9 @@ main() {
     log "Starting shell configuration setup"
 
     # Check if shell directory exists
-    if [[ ! -d "$DOTFILES_DIR" ]]; then
-        print_error "Shell directory not found: $DOTFILES_DIR"
-        log "ERROR: Shell directory not found: $DOTFILES_DIR"
+    if [[ ! -d "$CONFIG_SHELL_DIR" ]]; then
+        print_error "Shell directory not found: $CONFIG_SHELL_DIR"
+        log "ERROR: Shell directory not found: $CONFIG_SHELL_DIR"
         exit 1
     fi
 

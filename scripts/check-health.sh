@@ -56,12 +56,16 @@ check_symlink() {
     fi
 }
 
-DOTFILES_DIR="$HOME/.dotfiles/shell"
-check_symlink "$DOTFILES_DIR/zshrc" "$HOME/.zshrc" "Zsh configuration"
-check_symlink "$DOTFILES_DIR/bashrc" "$HOME/.bashrc" "Bash configuration"
-check_symlink "$DOTFILES_DIR/vscode" "$HOME/.config/Code/User" "VS Code settings"
-check_symlink "$DOTFILES_DIR/zed" "$HOME/.config/zed" "Zed settings"
-check_symlink "$DOTFILES_DIR/ghostty" "$HOME/.config/ghostty" "Ghostty configuration"
+# Source configuration
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+source "$ROOT_DIR/config/config.env"
+
+check_symlink "$CONFIG_SHELL_DIR/zshrc" "$HOME/.zshrc" "Zsh configuration"
+check_symlink "$CONFIG_SHELL_DIR/bashrc" "$HOME/.bashrc" "Bash configuration"
+check_symlink "$CONFIG_TOOLS_DIR/vscode" "$HOME/.config/Code/User" "VS Code settings"
+check_symlink "$CONFIG_TOOLS_DIR/zed" "$HOME/.config/zed" "Zed settings"
+check_symlink "$CONFIG_TOOLS_DIR/ghostty" "$HOME/.config/ghostty" "Ghostty configuration"
 
 # Check applications
 echo
@@ -111,9 +115,9 @@ done
 # Check log file
 echo
 echo -e "${BLUE}Checking log file...${NC}"
-if [ -f "$HOME/.dotfiles.log" ]; then
+if [ -f "$HOME/config.log" ]; then
     echo -e "${GREEN}✓ Log file exists${NC}"
-    echo -e "  Last update: $(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$HOME/.dotfiles.log")"
+    echo -e "  Last update: $(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$HOME/config.log")"
 else
     echo -e "${YELLOW}! Log file not found${NC}"
 fi
