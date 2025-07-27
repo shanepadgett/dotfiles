@@ -5,18 +5,21 @@
 
 set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Source common utilities
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/common.sh"
 
 # Configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$SCRIPT_DIR"
+ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+if [[ -f "$ROOT_DIR/config/config.env" ]]; then
+    source "$ROOT_DIR/config/config.env"
+fi
+
+# Set REPO_DIR to INSTALL_DIR for consistency
+REPO_DIR="${INSTALL_DIR:-$ROOT_DIR}"
 BACKUP_DIR_PATTERN="$HOME/.config-backup-20*"
 DRY_RUN=false
+SKIP_CONFIRM=false
 
 # Logging
 LOG_FILE="$HOME/teardown.log"
@@ -39,7 +42,7 @@ info() {
 
 usage() {
     cat << EOF
-Usage: $0 [OPTIONS]
+Usage: teardown [OPTIONS]
 
 Teardown development environment setup
 
@@ -49,9 +52,9 @@ OPTIONS:
     -y, --yes       Skip confirmation prompts
 
 EXAMPLES:
-    $0              # Interactive teardown with confirmations
-    $0 --dry-run    # Preview what would be removed
-    $0 --yes        # Skip all confirmations
+    teardown              # Interactive teardown with confirmations
+    teardown --dry-run    # Preview what would be removed
+    teardown --yes        # Skip all confirmations
 EOF
 }
 
@@ -117,7 +120,8 @@ remove_ai_tools() {
 
     if [[ -f "$REPO_DIR/scripts/install-ai-tools.sh" ]]; then
         info "Using AI tools uninstall script..."
-            run_cmd "$REPO_DIR/scripts/install-ai-tools.sh uninstall"    else
+        run_cmd "$REPO_DIR/scripts/install-ai-tools.sh uninstall"
+    else
         warn "AI tools install script not found, skipping AI tools removal"
     fi
 }
@@ -139,6 +143,17 @@ remove_symlinks() {
         ".config/git"
         ".config/zsh"
         ".config/bash"
+        ".config/zoxide"
+        ".config/zed"
+        ".config/ghostty"
+        ".config/claude-code"
+        ".config/opencode"
+        ".local/bin/git-init"
+        ".local/bin/pr"
+        ".local/bin/dev"
+        ".local/bin/update-configs"
+        ".local/bin/reset-configs"
+        ".local/bin/teardown"
     )
 
     for config in "${shell_configs[@]}"; do
@@ -177,6 +192,26 @@ restore_backups() {
     fi
 }
 
+# Clean up directories and logs
+cleanup_directories() {
+    log "Cleaning up development directories..."
+
+    local dirs_to_clean=(
+        "$HOME/dev"
+        "$HOME/.config-backup-*"
+        "$HOME/config.log"
+        "$HOME/teardown.log"
+        "$HOME/.orbstack"
+    )
+
+    for dir in "${dirs_to_clean[@]}"; do
+        if [[ -e "$dir" ]]; then
+            info "Removing $dir"
+            run_cmd "rm -rf '$dir'"
+        fi
+    done
+}
+
 # Remove the dotfiles repository (final step)
 remove_repository() {
     log "Removing dotfiles repository..."
@@ -201,26 +236,6 @@ EOF
     chmod +x "$temp_script"
     info "Executing final repository removal..."
     exec bash "$temp_script" "$REPO_DIR"
-}
-
-# Clean up directories and logs
-cleanup_directories() {
-    log "Cleaning up development directories..."
-
-    local dirs_to_clean=(
-        "$HOME/dev"
-        "$HOME/.config-backup-*"
-        "$HOME/config.log"
-        "$HOME/teardown.log"
-        "$HOME/.orbstack"
-    )
-
-    for dir in "${dirs_to_clean[@]}"; do
-        if [[ -e "$dir" ]]; then
-            info "Removing $dir"
-            run_cmd "rm -rf '$dir'"
-        fi
-    done
 }
 
 # Check if running in a terminal that will be uninstalled
@@ -260,7 +275,7 @@ check_terminal_warning() {
 }
 
 # Main teardown process
-main() {
+teardown_main() {
     log "Starting development environment teardown..."
 
     if [[ "$DRY_RUN" == "true" ]]; then
@@ -297,29 +312,37 @@ main() {
     info "You may need to restart your shell or terminal for changes to take effect"
 }
 
-# Parse command line arguments
-SKIP_CONFIRM=false
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -d|--dry-run)
-            DRY_RUN=true
-            shift
-            ;;
-        -y|--yes)
-            SKIP_CONFIRM=true
-            shift
-            ;;
-        *)
-            error "Unknown option: $1"
-            usage
-            exit 1
-            ;;
-    esac
-done
+teardown_command() {
+    # Parse command line arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                usage
+                return 0
+                ;;
+            -d|--dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            -y|--yes)
+                SKIP_CONFIRM=true
+                shift
+                ;;
+            *)
+                error "Unknown option: $1"
+                usage
+                return 1
+                ;;
+        esac
+    done
 
-# Run main function
-main
+    # Ensure INSTALL_DIR is set
+    if [[ -z "${INSTALL_DIR:-}" ]]; then
+        print_error "INSTALL_DIR not set. Cannot locate dotfiles repository."
+        print_info "Try running from the dotfiles directory or check config.env"
+        return 1
+    fi
+
+    # Run main teardown
+    teardown_main
+}
