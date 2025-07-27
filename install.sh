@@ -18,6 +18,7 @@ source_logger() {
             LOG_YELLOW='\033[1;93m'
             LOG_BLUE='\033[1;94m'
             LOG_CYAN='\033[1;96m'
+            LOG_BOLD='\033[1m'
             LOG_RESET='\033[0m'
         fi
         
@@ -25,7 +26,7 @@ source_logger() {
         log_success() { echo -e "${LOG_GREEN}[SUCCESS]${LOG_RESET} $1"; }
         log_error() { echo -e "${LOG_RED}[ERROR]${LOG_RESET} $1"; }
         log_warning() { echo -e "${LOG_YELLOW}[WARNING]${LOG_RESET} $1"; }
-        log_header() { echo; echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} $1"; echo; }
+        log_header() { echo; echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} ${LOG_BOLD}$1${LOG_RESET}"; echo; }
         
         # Legacy compatibility
         print_success() { log_success "$1"; }
