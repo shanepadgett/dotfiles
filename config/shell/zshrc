@@ -26,7 +26,7 @@ autoload -U colors && colors
 setopt PROMPT_SUBST
 
 # Prompt
-PROMPT='%F{cyan}%n@%m%f:%F{yellow}%~%f%# '
+PROMPT='%F{cyan}%n@%m%f:%F{green}%~%f%# '
 
 # Machine-specific configs (if they exist)
 if [ -f ~/.zshrc.local ]; then

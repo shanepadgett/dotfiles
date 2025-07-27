@@ -73,6 +73,10 @@ run_cmd() {
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "[DRY RUN] Would execute: $*"
     else
+        # Refresh sudo before potentially privileged operations
+        if [[ "$*" == *"brew uninstall"* ]]; then
+            sudo -v 2>/dev/null || true
+        fi
         eval "$*"
     fi
 }
@@ -227,10 +231,11 @@ restore_backups() {
 
 # Clean up directories and logs
 cleanup_directories() {
-    log "Cleaning up development directories..."
+    log "Cleaning up development directories and temporary files..."
 
+    # Development directories and config files
     local dirs_to_clean=(
-        "$HOME/dev"
+        "$HOME/Development"
         "$HOME/.config-backup-*"
         "$HOME/config.log"
         "$HOME/teardown.log"
@@ -241,6 +246,44 @@ cleanup_directories() {
         if [[ -e "$dir" ]]; then
             info "Removing $dir"
             run_cmd "rm -rf '$dir'"
+        fi
+    done
+
+    # Clean Downloads folder contents (but keep the folder itself)
+    if [[ -d "$HOME/Downloads" ]]; then
+        local download_count=$(find "$HOME/Downloads" -mindepth 1 -maxdepth 1 | wc -l)
+        if [[ $download_count -gt 0 ]]; then
+            info "Cleaning Downloads folder contents ($download_count items)"
+            run_cmd "rm -rf '$HOME/Downloads'/*"
+            run_cmd "rm -rf '$HOME/Downloads'/.*" 2>/dev/null || true  # Hidden files, ignore errors
+        else
+            info "Downloads folder is already empty"
+        fi
+    fi
+
+    # Clean cache and package manager directories
+    local cache_dirs=(
+        "$HOME/.cache"
+        "$HOME/Library/Caches/Homebrew"
+    )
+
+    local package_manager_dirs=(
+        "$HOME/.npm"
+        "$HOME/.yarn"
+        "$HOME/.cargo"
+    )
+
+    for cache_dir in "${cache_dirs[@]}"; do
+        if [[ -d "$cache_dir" ]]; then
+            info "Cleaning cache directory: $cache_dir"
+            run_cmd "rm -rf '$cache_dir'"
+        fi
+    done
+
+    for pm_dir in "${package_manager_dirs[@]}"; do
+        if [[ -d "$pm_dir" ]]; then
+            info "Removing entire package manager directory: $pm_dir"
+            run_cmd "rm -rf '$pm_dir'"
         fi
     done
 }
@@ -331,7 +374,18 @@ teardown_main() {
 
     # Prompt for sudo access upfront (unless dry run)
     if [[ "$DRY_RUN" != "true" ]]; then
-        prompt_sudo "This teardown may require administrator privileges for some operations."
+        log_info "This teardown may require administrator privileges for uninstalling system applications."
+        log_info "Please enter your password to cache sudo credentials..."
+        sudo -v
+        
+        # Keep sudo alive in background for the entire teardown process
+        while true; do sudo -n true; sleep 45; kill -0 "$$" || exit; done 2>/dev/null &
+        local sudo_keepalive_pid=$!
+        
+        # Ensure we clean up the background process on exit
+        trap "kill $sudo_keepalive_pid 2>/dev/null || true" EXIT
+        
+        log_success "Sudo credentials cached for teardown process"
     fi
 
     # Execute teardown steps
@@ -343,7 +397,7 @@ teardown_main() {
         restore_backups
     fi
 
-    if confirm "Clean up development directories and logs?"; then
+    if confirm "Clean up directories and files? (Development folders, Downloads contents, caches, logs)"; then
         cleanup_directories
     fi
 
