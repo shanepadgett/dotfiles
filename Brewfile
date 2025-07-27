@@ -1,11 +1,6 @@
 # Mac Setup Brewfile
 # Automated package installation for macOS
 
-# Taps
-tap "homebrew/core"
-tap "homebrew/cask"
-tap "homebrew/bundle"
-
 # CLI Tools
 brew "bat"           # Cat clone with syntax highlighting and Git integration
 brew "eza"           # Modern replacement for ls with colors and icons
