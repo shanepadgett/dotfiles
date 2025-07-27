@@ -14,9 +14,7 @@ brew "gh"            # GitHub CLI for repository management
 brew "htop"          # Interactive process viewer and system monitor
 brew "jq"            # Command-line JSON processor and query tool
 brew "ripgrep"       # Fast text search tool that respects gitignore
-brew "tree"          # Display directory structure in tree format
 brew "zoxide"        # Smarter cd command with frecency-based navigation
-brew "zsh"           # Modern shell with advanced features
 
 # Development Tools
 cask "orbstack"

@@ -177,6 +177,32 @@ restore_backups() {
     fi
 }
 
+# Remove the dotfiles repository (final step)
+remove_repository() {
+    log "Removing dotfiles repository..."
+    
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[DRY RUN] Would remove repository: $REPO_DIR"
+        return 0
+    fi
+    
+    # Copy this script to temp location and re-exec to finish removal
+    local temp_script="/tmp/teardown-final-$$.sh"
+    cat > "$temp_script" << 'EOF'
+#!/bin/bash
+REPO_DIR="$1"
+echo "Removing dotfiles repository: $REPO_DIR"
+rm -rf "$REPO_DIR"
+echo "✓ Dotfiles repository removed"
+echo "Teardown complete!"
+rm -f "$0"  # Remove this temp script
+EOF
+    
+    chmod +x "$temp_script"
+    info "Executing final repository removal..."
+    exec bash "$temp_script" "$REPO_DIR"
+}
+
 # Clean up directories and logs
 cleanup_directories() {
     log "Cleaning up development directories..."
@@ -197,6 +223,42 @@ cleanup_directories() {
     done
 }
 
+# Check if running in a terminal that will be uninstalled
+check_terminal_warning() {
+    # Check if running in Ghostty
+    if [[ "${TERM_PROGRAM:-}" == "ghostty" ]]; then
+        warn "You are running this script from Ghostty terminal"
+        warn "Teardown will uninstall Ghostty, which may terminate this session"
+        echo
+        if ! confirm "Continue anyway? (Recommended: run from Terminal.app or iTerm2)"; then
+            log "Teardown cancelled - running from Ghostty"
+            exit 0
+        fi
+    fi
+    
+    # Check if running in VS Code integrated terminal
+    if [[ "${TERM_PROGRAM:-}" == "vscode" ]]; then
+        warn "You are running this script from VS Code integrated terminal"
+        warn "Teardown will uninstall VS Code, which may terminate this session"
+        echo
+        if ! confirm "Continue anyway? (Recommended: run from Terminal.app)"; then
+            log "Teardown cancelled - running from VS Code"
+            exit 0
+        fi
+    fi
+    
+    # Check if running in Zed integrated terminal
+    if [[ "${TERM_PROGRAM:-}" == "zed" ]]; then
+        warn "You are running this script from Zed integrated terminal"
+        warn "Teardown will uninstall Zed, which may terminate this session"
+        echo
+        if ! confirm "Continue anyway? (Recommended: run from Terminal.app)"; then
+            log "Teardown cancelled - running from Zed"
+            exit 0
+        fi
+    fi
+}
+
 # Main teardown process
 main() {
     log "Starting development environment teardown..."
@@ -204,6 +266,9 @@ main() {
     if [[ "$DRY_RUN" == "true" ]]; then
         info "Running in DRY RUN mode - no changes will be made"
     fi
+
+    # Check for terminal conflicts
+    check_terminal_warning
 
     if ! confirm "This will remove all development tools and configurations. Are you sure?"; then
         log "Teardown cancelled by user"
@@ -221,6 +286,11 @@ main() {
 
     if confirm "Clean up development directories and logs?"; then
         cleanup_directories
+    fi
+
+    # Final step: offer to remove the dotfiles repository
+    if confirm "Remove the dotfiles repository itself? (This will delete $REPO_DIR)"; then
+        remove_repository
     fi
 
     log "Teardown completed successfully!"
