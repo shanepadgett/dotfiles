@@ -35,13 +35,24 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 
 ## Development Workflow
 
-The `dev` command provides intelligent project management. Run `dev` without arguments for help and available commands.
+After installation, you'll have access to several global development utilities:
+
+### Configuration Management
+- **`update-configs`** - Pull latest changes from repository and re-run setup
+- **`reset-configs`** - Reset repository to clean state (discards local changes)
+- **`teardown`** - Complete removal of dotfiles and applications
+
+### Project Management
+- **`dev`** - Intelligent project environment management with auto-detection
+- **`git-init <name> [desc]`** - Initialize new git project with first commit
+- **`pr [title]`** - Create pull request using GitHub CLI
 
 **Key Features:**
 - Auto-detection of project types and smart environment setup
 - Docker Compose workflow management
 - Isolated Linux development environments
 - Multi-language project support
+- Safe configuration updates and rollbacks
 
 ## Architecture
 
@@ -51,8 +62,10 @@ The `dev` command provides intelligent project management. Run `dev` without arg
 3. **`scripts/setup-shell.sh`** - Shell configuration management with backup/restore
 
 ### File Organization
-- `shell/` - Shell configuration files (stored without leading dots)
+- `config/shell/` - Shell configuration files (stored without leading dots)
+- `config/tools/` - Application-specific configurations (VS Code, Zed, Ghostty, etc.)
 - `scripts/` - Automation and utility scripts
+- `scripts/dev-commands/` - Development utility commands
 - `Brewfile` - Package definitions for Homebrew
 
 ### Key Features
@@ -71,7 +84,7 @@ cask "gui-app-name"
 ```
 
 ### Modifying Configurations
-Edit files in `shell/` directory, then run:
+Edit files in `config/shell/` or `config/tools/` directories, then run:
 ```bash
 ./scripts/setup-shell.sh
 ```
@@ -81,17 +94,23 @@ See [CONFIGURATION.md](CONFIGURATION.md) for detailed customization options.
 
 ## Available Commands
 
-**Maintenance:**
+**Global Development Utilities:**
+```bash
+git-init <name> [desc]         # Initialize new git project with first commit
+pr [title]                     # Create pull request using gh CLI
+dev [action] [project]         # Manage development environments
+update-configs [opts]          # Update dotfiles from repository
+reset-configs [opts]           # Reset dotfiles to repository state
+teardown [opts]                # Remove dotfiles and applications
+```
+
+**Maintenance Scripts:**
 ```bash
 ./scripts/check-health.sh      # Verify installation state
 ./scripts/update-brewfile.sh   # Update Brewfile from current system
 ./scripts/cleanup.sh           # Uninstall and cleanup
-./scripts/teardown.sh          # Complete development environment teardown
+./scripts/setup-shell.sh       # Re-run shell configuration setup
 ```
-
-**Development:**
-- Run `dev` for project environment management
-- Additional utilities available in `scripts/dev-commands/` for Git workflows and development tasks
 
 ## Troubleshooting
 
@@ -111,17 +130,21 @@ xcode-select --install
 To completely remove the development environment and restore your system to pre-setup state:
 
 ```bash
-./teardown.sh                   # Interactive teardown with confirmations
-./teardown.sh --dry-run       # Preview what would be removed
-./teardown.sh --yes           # Skip all confirmations
+teardown                        # Interactive teardown with confirmations
+teardown --dry-run             # Preview what would be removed
+teardown --yes                 # Skip all confirmations
 ```
 
+**Important:** Teardown must be run from Terminal.app or iTerm2, not from Ghostty, VS Code, or Zed terminals (since these applications will be uninstalled).
+
 The teardown process will:
-- Uninstall all Homebrew packages, casks, and fonts
+- Uninstall all Homebrew packages and casks from the Brewfile
 - Remove AI coding tools (Claude Code, OpenCode)
-- Remove symlinks from your home directory
+- Remove all symlinks from your home directory
+- Remove global development utility commands
 - Restore original configuration files from backup
 - Clean up development directories and logs
+- Optionally remove the dotfiles repository itself
 
 ## License
 

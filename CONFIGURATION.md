@@ -5,7 +5,7 @@ This document explains all configuration files in the shell directory and how to
 ## Shell Configuration
 
 ### `.zshrc` (Zsh)
-Location: `shell/zshrc` → `~/.zshrc`
+Location: `config/shell/zshrc` → `~/.zshrc`
 
 **Features:**
 - Zoxide integration for smart directory navigation
@@ -33,14 +33,24 @@ alias personal="cd $PERSONAL_DIR"
 ```
 
 ### `.bashrc` (Bash)
-Location: `shell/bashrc` → `~/.bashrc`
+Location: `config/shell/bashrc` → `~/.bashrc`
 
 Fallback configuration for systems where Zsh isn't available. Includes similar features as `.zshrc`.
+
+### Path and Environment Variables
+Location: `config/shell/exports/` → `~/.exports/`
+
+**Included exports:**
+- `path.sh` - PATH additions including `~/.local/bin` and `~/.opencode/bin`
+- `editor.sh` - Default editor settings
+- `development.sh` - Development environment variables
+- `system.sh` - System-specific settings
+- `colors.sh` - Terminal color definitions
 
 ## Editor Configurations
 
 ### VS Code Settings
-Location: `shell/vscode/` → `~/.config/Code/User/`
+Location: `config/tools/vscode/` → `~/Library/Application Support/Code/User/`
 
 **Key Features:**
 - JetBrains Mono font
@@ -59,7 +69,7 @@ Location: `shell/vscode/` → `~/.config/Code/User/`
 - Bracket Pair Colorizer
 
 ### Zed Settings
-Location: `shell/zed/` → `~/.config/zed/`
+Location: `config/tools/zed/` → `~/.config/zed/`
 
 **Features:**
 - Ayu Dark theme
@@ -69,25 +79,53 @@ Location: `shell/zed/` → `~/.config/zed/`
 - Auto-save after 1 second delay
 
 ### Ghostty Configuration
-Location: `shell/ghostty/config` → `~/.config/ghostty/config`
+Location: `config/tools/ghostty/config` → `~/.config/ghostty/config`
 
 **Features:**
-- JetBrains Mono font
-- Dark theme
-- 120x40 window size
-- 10px padding
+- Modern terminal emulator with GPU acceleration
+- Configurable themes and fonts
 - macOS-specific optimizations
+- Automatic configuration via symlink
 
 ## Directory Navigation
 
 ### Zoxide Configuration
-Location: `shell/zoxide/config.toml`
+Location: `config/tools/zoxide/config.toml` → `~/.config/zoxide/config.toml`
 
 **Features:**
 - Fzf integration for interactive selection
 - Case-insensitive matching
 - Score display
 - Exclude temp directories
+
+## Global Development Utilities
+
+The setup installs several global commands in `~/.local/bin/` that are available system-wide:
+
+### Configuration Management
+- **`update-configs`** - Pull latest dotfiles and re-run setup
+- **`reset-configs`** - Reset repository to clean state
+- **`teardown`** - Complete removal of dotfiles
+
+### Project Management  
+- **`git-init <name> [desc]`** - Initialize git project with first commit
+- **`pr [title]`** - Create GitHub pull request
+- **`dev [action] [project]`** - Project environment management
+
+**Usage Examples:**
+```bash
+# Update your dotfiles configuration
+update-configs --skip-apps      # Update configs only, skip Homebrew
+
+# Reset any local changes
+reset-configs --dry-run         # Preview what would be reset
+reset-configs --force           # Reset without confirmation
+
+# Project management
+git-init my-project "A new project"
+pr "Add new feature"
+dev start my-project
+```
 
 ## Customization Examples
 
@@ -121,14 +159,21 @@ To add a new tool to your configuration:
 
 2. **Update shell configuration:**
    ```bash
-   # Add to shell/zshrc
+   # Add to config/shell/aliases
    alias nt="new-tool"
    ```
 
 3. **Add editor configuration:**
    ```bash
-   # Add to shell/vscode/settings.json
+   # Add to config/tools/vscode/settings.json
    "new-tool.path": "/usr/local/bin/new-tool"
+   ```
+
+4. **Re-run setup:**
+   ```bash
+   update-configs --skip-apps     # Update configs only
+   # or
+   ./scripts/setup-shell.sh       # Re-run shell setup only
    ```
 
 ### Machine-Specific Overrides
@@ -166,8 +211,9 @@ export PYTHONPATH="$HOME/.local/lib/python3.9/site-packages"
 
 ### Conflicts with Existing Configs
 The setup script creates backups automatically:
-- Check `~/.config-backup-YYYY-MM-DD/` for previous configurations
-- Use `scripts/cleanup.sh` to restore backups
+- Check `~/.config-backup-YYYY-MM-DD-HHMMSS/` for previous configurations
+- Use `teardown` command to restore backups and remove dotfiles
+- Use `reset-configs` to discard local changes and reset to repository state
 
 ### Missing Tools
 Run `scripts/check-health.sh` to verify all tools are installed correctly.
