@@ -135,7 +135,11 @@ update_configs_command() {
     print_info "Re-running setup with updated configuration..."
     
     if [[ -f "$INSTALL_DIR/scripts/setup.sh" ]]; then
-        bash "$INSTALL_DIR/scripts/setup.sh" "${setup_args[@]}"
+        if [[ ${#setup_args[@]} -gt 0 ]]; then
+            bash "$INSTALL_DIR/scripts/setup.sh" "${setup_args[@]}"
+        else
+            bash "$INSTALL_DIR/scripts/setup.sh"
+        fi
     else
         print_error "Setup script not found at $INSTALL_DIR/scripts/setup.sh"
         return 1
