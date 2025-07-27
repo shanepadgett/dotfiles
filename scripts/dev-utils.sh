@@ -5,8 +5,17 @@
 
 set -euo pipefail
 
-# Get the directory of this script (resolve symlinks)
-SCRIPT_DIR="$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )" && pwd )"
+# Get the directory of this script (resolve symlinks - macOS compatible)
+get_script_dir() {
+    local source="${BASH_SOURCE[0]}"
+    while [[ -L "$source" ]]; do
+        local dir="$( cd -P "$( dirname "$source" )" && pwd )"
+        source="$(readlink "$source")"
+        [[ $source != /* ]] && source="$dir/$source"
+    done
+    cd -P "$( dirname "$source" )" && pwd
+}
+SCRIPT_DIR="$(get_script_dir)"
 COMMANDS_DIR="$SCRIPT_DIR/dev-commands"
 
 # Source common utilities

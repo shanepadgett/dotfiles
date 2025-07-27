@@ -49,10 +49,15 @@ install_homebrew() {
         print_header "Installing Homebrew"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-        # Add Homebrew to PATH for Apple Silicon Macs
+        # Add Homebrew to PATH based on Mac architecture
         if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            # Apple Silicon Mac
             echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
             eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            # Intel Mac
+            echo 'eval "$(/usr/local/bin/brew shellenv)"' >> "$HOME/.zprofile"
+            eval "$(/usr/local/bin/brew shellenv)"
         fi
 
         print_success "Homebrew installed"
@@ -79,8 +84,19 @@ setup_repository() {
     if [[ -d "$INSTALL_DIR" ]]; then
         print_info "Repository already exists, updating..."
         cd "$INSTALL_DIR"
-        git pull origin main
-        print_success "Repository updated"
+        
+        # Get current branch and update accordingly
+        local current_branch=$(git branch --show-current 2>/dev/null || echo "main")
+        if git pull origin "$current_branch" 2>/dev/null; then
+            print_success "Repository updated from origin/$current_branch"
+        else
+            print_warning "Failed to pull from origin/$current_branch, trying git pull"
+            if git pull; then
+                print_success "Repository updated"
+            else
+                print_warning "Git pull failed, continuing with existing repository"
+            fi
+        fi
     else
         print_info "Cloning repository..."
         git clone "$REPO_URL" "$INSTALL_DIR"

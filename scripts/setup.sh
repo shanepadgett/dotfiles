@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -uo pipefail
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -107,13 +107,30 @@ install_homebrew_packages() {
     print_info "Installing packages from Brewfile..."
     cd "$ROOT_DIR"
 
-    if brew bundle install --file="$ROOT_DIR/Brewfile" || true; then
+    # Run brew bundle and capture output
+    local brew_output
+    local brew_exit_code
+    
+    brew_output=$(brew bundle install --file="$ROOT_DIR/Brewfile" 2>&1)
+    brew_exit_code=$?
+    
+    # Log the full output
+    echo "$brew_output" >> "$LOG_FILE"
+    
+    if [[ $brew_exit_code -eq 0 ]]; then
         print_success "Homebrew packages installed successfully"
         log "Homebrew bundle install completed successfully"
     else
-        print_error "Some Homebrew packages failed to install"
-        log "ERROR: Homebrew bundle install had failures"
-        print_warning "Check the log above for details"
+        print_warning "Some Homebrew packages had issues during installation"
+        log "WARNING: Homebrew bundle install exit code: $brew_exit_code"
+        
+        # Show specific failures if any
+        if echo "$brew_output" | grep -q "Error\|Failed"; then
+            print_info "Failed packages:"
+            echo "$brew_output" | grep -E "Error|Failed" | head -5
+        fi
+        
+        print_info "Check $LOG_FILE for full details"
         # Continue execution even if some packages fail
     fi
 }
@@ -136,8 +153,9 @@ install_ai_tools() {
     fi
 
     # Run the AI tools installation script
-    if [[ -x "$SCRIPT_DIR/install-ai-tools.sh" ]]; then
+    if [[ -f "$SCRIPT_DIR/install-ai-tools.sh" ]]; then
         print_info "Running AI tools installation script..."
+        chmod +x "$SCRIPT_DIR/install-ai-tools.sh"
         if "$SCRIPT_DIR/install-ai-tools.sh"; then
             print_success "AI tools installation completed"
             log "AI tools installation completed successfully"
@@ -146,7 +164,7 @@ install_ai_tools() {
             log "WARNING: AI tools installation had failures"
         fi
     else
-        print_warning "AI tools installation script not found or not executable"
+        print_warning "AI tools installation script not found"
         log "WARNING: install-ai-tools.sh not found at $SCRIPT_DIR/install-ai-tools.sh"
     fi
 }
@@ -203,8 +221,9 @@ setup_dotfiles() {
     fi
 
     # Check if dotfiles setup script exists
-    if [[ -x "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
+    if [[ -f "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
         print_info "Running dotfiles setup..."
+        chmod +x "$SCRIPT_DIR/setup-dotfiles.sh"
         if "$SCRIPT_DIR/setup-dotfiles.sh"; then
             print_success "Dotfiles setup completed"
             log "Dotfiles setup completed successfully"
@@ -214,7 +233,7 @@ setup_dotfiles() {
             return 1
         fi
     else
-        print_warning "Dotfiles setup script not found yet"
+        print_warning "Dotfiles setup script not found"
         print_info "Run './scripts/setup-dotfiles.sh' when it's created"
         log "WARNING: setup-dotfiles.sh not found at $SCRIPT_DIR/setup-dotfiles.sh"
     fi
@@ -279,7 +298,7 @@ main() {
         fi
 
         if [[ "$SKIP_DOTFILES" == false ]]; then
-            if [[ -x "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
+            if [[ -f "$SCRIPT_DIR/setup-dotfiles.sh" ]]; then
                 print_info "Dotfiles configured"
             else
                 print_warning "Dotfiles setup pending (script not found)"

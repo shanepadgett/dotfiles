@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 DOTFILES_DIR="$ROOT_DIR/dotfiles"
-BACKUP_DIR="$HOME/.config-backup-$(date +%Y-%m-%d)"
+BACKUP_DIR="$HOME/.config-backup-$(date +%Y-%m-%d-%H%M%S)"
 LOG_FILE="$HOME/.dotfiles.log"
 
 # Functions
@@ -240,6 +240,10 @@ setup_dev_utils() {
     local dev_utils_script="$ROOT_DIR/scripts/dev-utils.sh"
     
     if [[ -f "$dev_utils_script" ]]; then
+        # Make the script executable
+        chmod +x "$dev_utils_script"
+        
+        # Create individual symlinks for each command
         create_symlink "$dev_utils_script" "$HOME/.local/bin/git-init" "git-init command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/pr" "pr command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/dev" "dev command"
