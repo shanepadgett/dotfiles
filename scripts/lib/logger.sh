@@ -3,17 +3,25 @@
 # Centralized logging utility for dotfiles
 # Provides standardized, high-contrast output for transparent terminals
 
+# Guard against multiple sourcing
+if [[ -n "${LOGGER_LOADED:-}" ]]; then
+    return 0
+fi
+LOGGER_LOADED=1
+
 # High-contrast color primitives for transparent terminals
 # Using bright variants for better visibility
-readonly LOG_RED='\033[1;91m'      # Bright red
-readonly LOG_GREEN='\033[1;92m'    # Bright green  
-readonly LOG_YELLOW='\033[1;93m'   # Bright yellow
-readonly LOG_BLUE='\033[1;94m'     # Bright blue
-readonly LOG_MAGENTA='\033[1;95m'  # Bright magenta
-readonly LOG_CYAN='\033[1;96m'     # Bright cyan
-readonly LOG_WHITE='\033[1;97m'    # Bright white
-readonly LOG_BOLD='\033[1m'        # Bold
-readonly LOG_RESET='\033[0m'       # Reset
+if [[ -z "${LOG_RED:-}" ]]; then
+    LOG_RED='\033[1;91m'      # Bright red
+    LOG_GREEN='\033[1;92m'    # Bright green  
+    LOG_YELLOW='\033[1;93m'   # Bright yellow
+    LOG_BLUE='\033[1;94m'     # Bright blue
+    LOG_MAGENTA='\033[1;95m'  # Bright magenta
+    LOG_CYAN='\033[1;96m'     # Bright cyan
+    LOG_WHITE='\033[1;97m'    # Bright white
+    LOG_BOLD='\033[1m'        # Bold
+    LOG_RESET='\033[0m'       # Reset
+fi
 
 # Block-style logging functions
 log_info() {

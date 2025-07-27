@@ -12,12 +12,14 @@ source_logger() {
         source "$logger_file"
     else
         # Fallback colors if logger not available yet
-        LOG_RED='\033[1;91m'
-        LOG_GREEN='\033[1;92m'
-        LOG_YELLOW='\033[1;93m'
-        LOG_BLUE='\033[1;94m'
-        LOG_CYAN='\033[1;96m'
-        LOG_RESET='\033[0m'
+        if [[ -z "${LOG_RED:-}" ]]; then
+            LOG_RED='\033[1;91m'
+            LOG_GREEN='\033[1;92m'
+            LOG_YELLOW='\033[1;93m'
+            LOG_BLUE='\033[1;94m'
+            LOG_CYAN='\033[1;96m'
+            LOG_RESET='\033[0m'
+        fi
         
         log_info() { echo -e "${LOG_CYAN}[INFO]${LOG_RESET} $1"; }
         log_success() { echo -e "${LOG_GREEN}[SUCCESS]${LOG_RESET} $1"; }
@@ -142,11 +144,11 @@ run_setup() {
 
 # Main execution
 main() {
-    echo -e "${BLUE}"
+    echo -e "${LOG_BLUE}"
     echo "╔═══════════════════════════════════════╗"
     echo "║       Mac Setup Installer v1.0        ║"
     echo "╚═══════════════════════════════════════╝"
-    echo -e "${NC}"
+    echo -e "${LOG_RESET}"
 
     print_info "Starting Mac setup process..."
 
