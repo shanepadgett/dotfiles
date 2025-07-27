@@ -36,6 +36,11 @@ defaults write com.apple.finder ShowStatusBar -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+# Desktop Configuration
+log_step "Configuring desktop settings"
+# Disable "Show Desktop" gesture (clicking wallpaper to hide all windows)
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
 # Clear existing dock
 log_step "Clearing existing dock"
 defaults write com.apple.dock persistent-apps -array
@@ -51,7 +56,7 @@ apps=(
     "/Applications/Ghostty.app"
     "/Applications/Bruno.app"
     "/Applications/Obsidian.app"
-    "/Applications/1Password 7 - Password Manager.app"
+    "/Applications/1Password.app"
     "/Applications/Raycast.app"
     "/Applications/Discord.app"
     "/Applications/OrbStack.app"

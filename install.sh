@@ -155,15 +155,21 @@ main() {
 
     # Run checks and installation
     check_macos
+    
+    # Prompt for sudo access upfront before any operations that might need it
+    print_info "This installation may require administrator privileges for Homebrew and system configuration."
+    print_info "Please enter your password to cache sudo credentials..."
+    sudo -v
+    
+    # Keep sudo alive in background (updates every 60 seconds)
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    
     install_homebrew
     install_git
     setup_repository
     
     # Source common utilities now that repository is available
     source_common_utils
-    
-    # Prompt for sudo access upfront
-    prompt_sudo "This installation may require administrator privileges for some components."
 
     run_setup "$@"
 

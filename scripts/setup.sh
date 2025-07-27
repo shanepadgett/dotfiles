@@ -254,6 +254,10 @@ main() {
 
     # Initialize log
     init_log
+    
+    # Refresh sudo credentials (should already be cached from install.sh)
+    print_info "Refreshing sudo credentials for system configuration..."
+    sudo -v
 
     # Check if we're in the right directory
     if [[ ! -f "$ROOT_DIR/Brewfile" ]]; then
