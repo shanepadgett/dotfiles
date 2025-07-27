@@ -239,6 +239,35 @@ setup_shell() {
     fi
 }
 
+# Configure macOS system defaults
+configure_macos_defaults() {
+    print_header "Configuring macOS System Defaults"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        print_info "DRY RUN: Would configure macOS defaults"
+        print_info "  - Dock autohide and application setup"
+        print_info "  - Trackpad navigation settings"
+        print_info "  - Finder preferences"
+        return 0
+    fi
+
+    # Check if macOS defaults script exists
+    if [[ -f "$SCRIPT_DIR/configure-macos-defaults.sh" ]]; then
+        print_info "Running macOS defaults configuration..."
+        chmod +x "$SCRIPT_DIR/configure-macos-defaults.sh"
+        if "$SCRIPT_DIR/configure-macos-defaults.sh"; then
+            print_success "macOS defaults configured"
+            log "macOS defaults configuration completed successfully"
+        else
+            print_warning "macOS defaults configuration had issues"
+            log "WARNING: macOS defaults configuration failed"
+        fi
+    else
+        print_warning "macOS defaults script not found"
+        log "WARNING: configure-macos-defaults.sh not found at $SCRIPT_DIR/configure-macos-defaults.sh"
+    fi
+}
+
 # Main installation
 main() {
     print_header "Mac Setup Installation"
@@ -280,11 +309,13 @@ main() {
     # Create development directories
     create_development_directories
 
-    # Setup shell configurations
-    setup_shell
+# Setup shell configurations
+setup_shell
 
-    # Final summary
-    echo
+# Configure macOS defaults
+configure_macos_defaults
+
+# Final summary    echo
     print_header "Installation Summary"
 
     if [[ "$DRY_RUN" == true ]]; then
