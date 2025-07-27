@@ -17,6 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 - **Applications**: Productivity apps, code editors, AI coding tools, browsers, and utilities
 - **Fonts**: Programming-optimized fonts for development
 - **Shell**: Shell configurations, editor settings, terminal setup, and tool configurations
+- **macOS Defaults**: System preferences, dock configuration, trackpad settings, and desktop behavior
 
 ### Development Environment Management
 - **Smart Project Detection**: Automatic environment setup based on project type
@@ -58,7 +59,7 @@ After installation, you'll have access to several global development utilities:
 
 ### Installation Flow
 1. **`install.sh`** - Bootstrap script (Homebrew, Git, repo setup)
-2. **`scripts/setup.sh`** - Main orchestrator (packages, AI tools, directories)
+2. **`scripts/setup.sh`** - Main orchestrator (packages, AI tools, directories, macOS defaults)
 3. **`scripts/setup-shell.sh`** - Shell configuration management with backup/restore
 
 ### File Organization
@@ -71,6 +72,7 @@ After installation, you'll have access to several global development utilities:
 ### Key Features
 - **Backup System**: Existing configs backed up to `~/.config-backup-YYYY-MM-DD`
 - **Symlink Management**: Shell configs symlinked from `shell/` to home directory
+- **System Configuration**: Automated dock setup, trackpad settings, and desktop preferences
 - **Logging**: All operations logged to `~/config.log` with timestamps
 - **Error Handling**: Robust error handling with retry mechanisms
 

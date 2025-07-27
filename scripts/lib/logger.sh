@@ -46,9 +46,7 @@ log_debug() {
 
 # Header for major sections
 log_header() {
-    echo
     echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} ${LOG_BOLD}$1${LOG_RESET}"
-    echo
 }
 
 # Step logging for processes

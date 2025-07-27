@@ -26,7 +26,7 @@ source_logger() {
         log_success() { echo -e "${LOG_GREEN}[SUCCESS]${LOG_RESET} $1"; }
         log_error() { echo -e "${LOG_RED}[ERROR]${LOG_RESET} $1"; }
         log_warning() { echo -e "${LOG_YELLOW}[WARNING]${LOG_RESET} $1"; }
-        log_header() { echo; echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} ${LOG_BOLD}$1${LOG_RESET}"; echo; }
+        log_header() { echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} ${LOG_BOLD}$1${LOG_RESET}"; }
         
         # Legacy compatibility
         print_success() { log_success "$1"; }
