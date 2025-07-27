@@ -43,6 +43,10 @@ main() {
             source "$COMMANDS_DIR/dev.sh"
             dev_command "$@"
             ;;
+        "update-configs")
+            source "$COMMANDS_DIR/update-configs.sh"
+            update_configs_command "$@"
+            ;;
         "dev-utils.sh")
             # If called directly, show help
             print_header "Development Utilities"
@@ -50,6 +54,7 @@ main() {
             echo "  git-init <name> [desc]    Initialize new git project with first commit"
             echo "  pr [title]                Create pull request using gh CLI"
             echo "  dev [action] [project]    Manage development environments"
+            echo "  update-configs [opts]     Update dotfiles from repository"
             echo
             echo "Commands are organized in modular files:"
             echo "  scripts/dev-commands/git-init.sh"
@@ -61,6 +66,7 @@ main() {
             echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/git-init"
             echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/pr"
             echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/dev"
+            echo "  ln -sf $INSTALL_DIR/scripts/dev-utils.sh ~/.local/bin/update-configs"
             ;;
         *)
             print_error "Unknown command: $command_name"

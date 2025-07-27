@@ -247,9 +247,10 @@ setup_dev_utils() {
         create_symlink "$dev_utils_script" "$HOME/.local/bin/git-init" "git-init command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/pr" "pr command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/dev" "dev command"
+        create_symlink "$dev_utils_script" "$HOME/.local/bin/update-configs" "update-configs command"
         
         print_success "Development utilities installed"
-        print_info "Available commands: git-init, pr, dev"
+        print_info "Available commands: git-init, pr, dev, update-configs"
         print_info "Commands are organized in modular files under scripts/dev-commands/"
     else
         print_warning "Development utilities script not found: $dev_utils_script"
