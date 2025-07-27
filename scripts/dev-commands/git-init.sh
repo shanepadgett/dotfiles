@@ -11,6 +11,93 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Source common utilities
 source "$SCRIPT_DIR/common.sh"
 
+# Create project directory and navigate to it
+setup_project_directory() {
+    local project_name="$1"
+    
+    if [[ ! -d "$project_name" ]]; then
+        print_info "Creating project directory: $project_name"
+        mkdir -p "$project_name"
+    fi
+    
+    cd "$project_name"
+}
+
+# Initialize git repository
+initialize_git_repo() {
+    if [[ ! -d ".git" ]]; then
+        print_info "Initializing git repository..."
+        git init
+        print_success "Git repository initialized"
+    else
+        print_warning "Git repository already exists"
+    fi
+}
+
+# Create README.md file
+create_readme() {
+    local project_name="$1"
+    local description="$2"
+    
+    if [[ ! -f "README.md" ]]; then
+        print_info "Creating README.md..."
+        local template_path="$SCRIPT_DIR/../../templates/README.md"
+        
+        if [[ -f "$template_path" ]]; then
+            cp "$template_path" "README.md"
+            # Replace placeholders in the template
+            sed -i '' "s/PROJECT_NAME/$project_name/g" "README.md"
+            sed -i '' "s/PROJECT_DESCRIPTION/${description:-A new project}/g" "README.md"
+            print_success "README.md created from template"
+        else
+            print_error "README template not found at $template_path"
+            print_error "Template may have been moved or deleted"
+            return 1
+        fi
+    fi
+}
+
+# Create .gitignore file
+create_gitignore() {
+    if [[ ! -f ".gitignore" ]]; then
+        print_info "Creating .gitignore..."
+        local template_path="$SCRIPT_DIR/../../templates/gitignore"
+        
+        if [[ -f "$template_path" ]]; then
+            cp "$template_path" ".gitignore"
+            print_success ".gitignore created from template"
+        else
+            print_error "Gitignore template not found at $template_path"
+            print_error "Template may have been moved or deleted"
+            return 1
+        fi
+    fi
+}
+
+# Create initial commit
+create_initial_commit() {
+    print_info "Staging files for initial commit..."
+    git add .
+    
+    print_info "Creating initial commit..."
+    git commit -m "Initial commit
+
+- Add README.md with project structure
+- Add comprehensive .gitignore
+- Set up basic project foundation"
+    
+    print_success "Initial commit created"
+}
+
+# Display next steps
+show_next_steps() {
+    print_info "Project initialized in: $(pwd)"
+    print_info "Next steps:"
+    echo "  1. Add remote: git remote add origin <repository-url>"
+    echo "  2. Push to remote: git push -u origin main"
+    echo "  3. Create first PR: pr"
+}
+
 # Initialize a new git project with first commit
 git_init_command() {
     local project_name="${1:-}"
@@ -24,108 +111,12 @@ git_init_command() {
     
     print_header "Initializing Git Project: $project_name"
     
-    # Create project directory if it doesn't exist
-    if [[ ! -d "$project_name" ]]; then
-        print_info "Creating project directory: $project_name"
-        mkdir -p "$project_name"
-    fi
-    
-    cd "$project_name"
-    
-    # Initialize git if not already a repo
-    if [[ ! -d ".git" ]]; then
-        print_info "Initializing git repository..."
-        git init
-        print_success "Git repository initialized"
-    else
-        print_warning "Git repository already exists"
-    fi
-    
-    # Create basic files if they don't exist
-    if [[ ! -f "README.md" ]]; then
-        print_info "Creating README.md..."
-        cat > README.md << EOF
-# $project_name
-
-${description:-A new project}
-
-## Getting Started
-
-TODO: Add setup instructions
-
-## Development
-
-TODO: Add development instructions
-
-## Contributing
-
-TODO: Add contribution guidelines
-EOF
-        print_success "README.md created"
-    fi
-    
-    if [[ ! -f ".gitignore" ]]; then
-        print_info "Creating .gitignore..."
-        cat > .gitignore << EOF
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Dependencies
-node_modules/
-vendor/
-
-# Build outputs
-dist/
-build/
-*.o
-*.so
-*.dylib
-
-# Environment files
-.env
-.env.local
-.env.*.local
-EOF
-        print_success ".gitignore created"
-    fi
-    
-    # Stage and commit files
-    print_info "Staging files for initial commit..."
-    git add .
-    
-    print_info "Creating initial commit..."
-    git commit -m "Initial commit
-
-- Add README.md with project structure
-- Add comprehensive .gitignore
-- Set up basic project foundation"
-    
-    print_success "Initial commit created"
-    print_info "Project initialized in: $(pwd)"
-    print_info "Next steps:"
-    echo "  1. Add remote: git remote add origin <repository-url>"
-    echo "  2. Push to remote: git push -u origin main"
-    echo "  3. Create first PR: pr"
+    setup_project_directory "$project_name"
+    initialize_git_repo
+    create_readme "$project_name" "$description"
+    create_gitignore
+    create_initial_commit
+    show_next_steps
 }
 
 # Main execution
