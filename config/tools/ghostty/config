@@ -6,13 +6,9 @@ font-size = 14
 font-style = normal
 
 # Colors
-background-opacity = 0.90
+background-opacity = 0.95
 background-blur = true
 split-divider-color = #444444
-
-# Window
-window-width = 180
-window-height = 50
 
 # Tabs
 window-decoration = true
