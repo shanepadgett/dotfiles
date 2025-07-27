@@ -73,10 +73,6 @@ run_cmd() {
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "[DRY RUN] Would execute: $*"
     else
-        # Refresh sudo before potentially privileged operations
-        if [[ "$*" == *"brew uninstall"* ]]; then
-            sudo -v 2>/dev/null || true
-        fi
         eval "$*"
     fi
 }
@@ -372,20 +368,25 @@ teardown_main() {
         exit 0
     fi
 
-    # Prompt for sudo access upfront (unless dry run)
+    # Initialize sudo with askpass (unless dry run)
     if [[ "$DRY_RUN" != "true" ]]; then
-        log_info "This teardown may require administrator privileges for uninstalling system applications."
-        log_info "Please enter your password to cache sudo credentials..."
-        sudo -v
+        # Source sudo helper functions
+        local script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        local sudo_helper="$script_dir/../lib/sudo-helper.sh"
         
-        # Keep sudo alive in background for the entire teardown process
-        while true; do sudo -n true; sleep 45; kill -0 "$$" || exit; done 2>/dev/null &
-        local sudo_keepalive_pid=$!
-        
-        # Ensure we clean up the background process on exit
-        trap "kill $sudo_keepalive_pid 2>/dev/null || true" EXIT
-        
-        log_success "Sudo credentials cached for teardown process"
+        if [[ -f "$sudo_helper" ]]; then
+            source "$sudo_helper"
+            init_sudo_askpass "This teardown may require administrator privileges for uninstalling system applications."
+            
+            # Clean up credentials on exit
+            trap "cleanup_sudo_askpass" EXIT
+        else
+            # Fallback to traditional sudo
+            log_info "This teardown may require administrator privileges for uninstalling system applications."
+            log_info "Please enter your password to cache sudo credentials..."
+            sudo -v
+            log_success "Sudo credentials cached for teardown process"
+        fi
     fi
 
     # Execute teardown steps

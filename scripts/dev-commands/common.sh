@@ -116,18 +116,33 @@ check_git_commits() {
     return 0
 }
 
-# Prompt for sudo access and keep it alive
+# Prompt for sudo access using askpass with keychain storage
 prompt_sudo() {
     local message="${1:-This operation may require administrator privileges for some components.}"
     
-    print_info "$message"
-    print_info "Please enter your password to cache sudo credentials..."
+    # Try to use the new askpass approach
+    local script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    local sudo_helper="$script_dir/../lib/sudo-helper.sh"
     
-    # Prompt for sudo and keep it alive
-    sudo -v
+    if [[ -f "$sudo_helper" ]]; then
+        source "$sudo_helper"
+        init_sudo_askpass "$message"
+    else
+        # Fallback to traditional sudo
+        print_info "$message"
+        print_info "Please enter your password to cache sudo credentials..."
+        sudo -v
+        print_success "Sudo credentials cached"
+    fi
+}
+
+# Clean up sudo credentials (for scripts using prompt_sudo)
+cleanup_sudo() {
+    local script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    local sudo_helper="$script_dir/../lib/sudo-helper.sh"
     
-    # Keep sudo alive in background (updates every 60 seconds)
-    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-    
-    print_success "Sudo credentials cached"
+    if [[ -f "$sudo_helper" ]]; then
+        source "$sudo_helper"
+        cleanup_sudo_askpass
+    fi
 }

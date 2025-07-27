@@ -156,13 +156,19 @@ main() {
     # Run checks and installation
     check_macos
     
-    # Prompt for sudo access upfront before any operations that might need it
-    print_info "This installation may require administrator privileges for Homebrew and system configuration."
-    print_info "Please enter your password to cache sudo credentials..."
-    sudo -v
-    
-    # Keep sudo alive in background (updates every 60 seconds)
-    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    # Initialize sudo with keychain-based askpass
+    if [[ -f "$INSTALL_DIR/scripts/lib/sudo-helper.sh" ]]; then
+        source "$INSTALL_DIR/scripts/lib/sudo-helper.sh"
+        init_sudo_askpass "This installation may require administrator privileges for Homebrew and system configuration."
+        
+        # Clean up credentials on exit
+        trap "cleanup_sudo_askpass" EXIT
+    else
+        # Fallback to traditional sudo if helper not available yet
+        print_info "This installation may require administrator privileges for Homebrew and system configuration."
+        print_info "Please enter your password to cache sudo credentials..."
+        sudo -v
+    fi
     
     install_homebrew
     install_git

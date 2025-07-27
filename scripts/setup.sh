@@ -81,6 +81,14 @@ install_homebrew_packages() {
         return 0
     fi
 
+    # Ensure sudo credentials are available for Homebrew operations
+    if check_sudo_askpass 2>/dev/null; then
+        print_info "Using cached credentials for Homebrew installation..."
+    else
+        print_info "Refreshing sudo credentials before Homebrew installation..."
+        sudo -v
+    fi
+
     print_info "Installing packages from Brewfile..."
     cd "$ROOT_DIR"
 
@@ -255,9 +263,22 @@ main() {
     # Initialize log
     init_log
     
-    # Refresh sudo credentials (should already be cached from install.sh)
-    print_info "Refreshing sudo credentials for system configuration..."
-    sudo -v
+    # Initialize or refresh sudo credentials using askpass
+    if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
+        source "$SCRIPT_DIR/lib/sudo-helper.sh"
+        if ! check_sudo_askpass; then
+            init_sudo_askpass "System configuration requires administrator privileges."
+        else
+            print_info "Using cached administrator credentials from keychain"
+        fi
+        
+        # Clean up credentials on exit
+        trap "cleanup_sudo_askpass; trap - EXIT" EXIT
+    else
+        # Fallback to traditional sudo refresh
+        print_info "Refreshing sudo credentials for system configuration..."
+        sudo -v
+    fi
 
     # Check if we're in the right directory
     if [[ ! -f "$ROOT_DIR/Brewfile" ]]; then
