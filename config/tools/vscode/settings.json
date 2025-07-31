@@ -65,4 +65,5 @@
         "zsh",
         "opencode"
     ],
+    "diffEditor.ignoreTrimWhitespace": false,
 }

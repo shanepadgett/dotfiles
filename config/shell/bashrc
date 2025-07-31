@@ -25,3 +25,4 @@ shopt -s checkwinsize
 if [ -f ~/.bashrc.local ]; then
     source ~/.bashrc.local
 fi
+export PATH="$HOME/.local/bin:$PATH"

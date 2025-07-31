@@ -21,13 +21,13 @@ source_logger() {
             LOG_BOLD='\033[1m'
             LOG_RESET='\033[0m'
         fi
-        
+
         log_info() { echo -e "${LOG_CYAN}[INFO]${LOG_RESET} $1"; }
         log_success() { echo -e "${LOG_GREEN}[SUCCESS]${LOG_RESET} $1"; }
         log_error() { echo -e "${LOG_RED}[ERROR]${LOG_RESET} $1"; }
         log_warning() { echo -e "${LOG_YELLOW}[WARNING]${LOG_RESET} $1"; }
         log_header() { echo -e "${LOG_BLUE}[SECTION]${LOG_RESET} ${LOG_BOLD}$1${LOG_RESET}"; }
-        
+
         # Legacy compatibility
         print_success() { log_success "$1"; }
         print_error() { log_error "$1"; }
@@ -118,7 +118,7 @@ setup_repository() {
         print_info "Cloning repository..."
         git clone "$REPO_URL" "$INSTALL_DIR"
         print_success "Repository cloned"
-        
+
         # Now source the proper logger
         source_logger
     fi
@@ -155,12 +155,12 @@ main() {
 
     # Run checks and installation
     check_macos
-    
+
     # Initialize sudo with keychain-based askpass
     if [[ -f "$INSTALL_DIR/scripts/lib/sudo-helper.sh" ]]; then
         source "$INSTALL_DIR/scripts/lib/sudo-helper.sh"
         init_sudo_askpass "This installation may require administrator privileges for Homebrew and system configuration."
-        
+
         # Clean up credentials on exit
         trap "cleanup_sudo_askpass" EXIT
     else
@@ -169,11 +169,11 @@ main() {
         print_info "Please enter your password to cache sudo credentials..."
         sudo -v
     fi
-    
+
     install_homebrew
     install_git
     setup_repository
-    
+
     # Source common utilities now that repository is available
     source_common_utils
 

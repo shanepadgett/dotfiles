@@ -1,7 +1,6 @@
 # Ghostty terminal configuration
 
 # Font
-font-family = JetBrains Mono
 font-size = 14
 font-style = normal
 
@@ -22,3 +21,7 @@ scrollback-limit = 10000
 
 # Shell
 command = /bin/zsh
+
+# Window
+window-height = 35
+window-width = 125
