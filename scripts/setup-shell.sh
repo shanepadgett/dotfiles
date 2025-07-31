@@ -115,6 +115,11 @@ setup_shell_configs() {
     if [[ -d "$CONFIG_SHELL_DIR/exports" ]]; then
         create_symlink "$CONFIG_SHELL_DIR/exports" "$HOME/.exports" ".exports"
     fi
+
+    # .functions directory
+    if [[ -d "$CONFIG_SHELL_DIR/functions" ]]; then
+        create_symlink "$CONFIG_SHELL_DIR/functions" "$HOME/.functions" ".functions"
+    fi
 }
 
 # Setup zoxide configuration
@@ -211,11 +216,11 @@ setup_dev_utils() {
 
     # Create symlinks for development utilities
     local dev_utils_script="$ROOT_DIR/scripts/dev-utils.sh"
-    
+
     if [[ -f "$dev_utils_script" ]]; then
         # Make the script executable
         chmod +x "$dev_utils_script"
-        
+
         # Create individual symlinks for each command
         create_symlink "$dev_utils_script" "$HOME/.local/bin/git-init" "git-init command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/pr" "pr command"
@@ -223,7 +228,7 @@ setup_dev_utils() {
         create_symlink "$dev_utils_script" "$HOME/.local/bin/update-configs" "update-configs command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/reset-configs" "reset-configs command"
         create_symlink "$dev_utils_script" "$HOME/.local/bin/teardown" "teardown command"
-        
+
         print_success "Development utilities installed"
         print_info "Available commands: git-init, pr, dev, update-configs, reset-configs, teardown"
         print_info "Commands are organized in modular files under scripts/dev-commands/"
@@ -242,6 +247,9 @@ cleanup_broken_symlinks() {
     local locations=(
         "$HOME/.zshrc"
         "$HOME/.bashrc"
+        "$HOME/.aliases"
+        "$HOME/.exports"
+        "$HOME/.functions"
         "$HOME/.config/zoxide"
         "$HOME/.config/zed"
         "$HOME/.config/ghostty"

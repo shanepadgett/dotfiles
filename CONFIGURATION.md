@@ -37,6 +37,14 @@ Location: `config/shell/bashrc` → `~/.bashrc`
 
 Fallback configuration for systems where Zsh isn't available. Includes similar features as `.zshrc`.
 
+### Shell Functions
+Location: `config/shell/functions/` → `~/.functions/`
+
+**Included functions:**
+- `git.sh` - Git-related functions like `gcp` (git commit and push)
+
+Functions are automatically sourced by both `.zshrc` and `.bashrc`.
+
 ### Path and Environment Variables
 Location: `config/shell/exports/` → `~/.exports/`
 
@@ -107,7 +115,7 @@ The setup installs several global commands in `~/.local/bin/` that are available
 - **`reset-configs`** - Reset repository to clean state
 - **`teardown`** - Complete removal of dotfiles
 
-### Project Management  
+### Project Management
 - **`git-init <name> [desc]`** - Initialize git project with first commit
 - **`pr [title]`** - Create GitHub pull request
 - **`dev [action] [project]`** - Project environment management

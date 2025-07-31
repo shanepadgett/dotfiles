@@ -10,6 +10,11 @@ if command -v zoxide &> /dev/null; then
     eval "$(zoxide init zsh)"
 fi
 
+# Source functions
+for function_file in ~/.functions/*.sh; do
+    [ -r "$function_file" ] && source "$function_file"
+done
+
 # Source aliases
 if [ -f ~/.aliases ]; then
     source ~/.aliases
