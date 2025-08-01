@@ -44,6 +44,9 @@ alias gl='git log --oneline'
 alias gd='git diff'
 alias gb='git branch'
 alias gco='git checkout'
+alias grh='git reset --hard'
+alias gclean='git clean -fdx'  # Remove untracked files and directories
+alias gnuke='git reset --hard && git clean -fd'  # Reset, remove changes and untracked files
 
 # Modern replacements
 alias top='htop'
