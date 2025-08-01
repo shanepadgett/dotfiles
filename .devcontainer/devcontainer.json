@@ -1,0 +1,34 @@
+{
+  "name": "Dotfiles Development",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/dotfiles",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Augment.vscode-augment",
+        "sst-dev.opencode",
+        "EditorConfig.EditorConfig",
+        "ms-vscode.vscode-json",
+        "timonwong.shellcheck",
+        "mads-hartmann.bash-ide-vscode"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.cwd": "/workspaces/dotfiles",
+        "files.associations": {
+          "*.env": "shellscript",
+          "Brewfile": "ruby"
+        },
+        "shellcheck.enable": true,
+        "shellformat.effectLanguages": [
+          "shellscript",
+          "dockerfile",
+          "dotenv"
+        ]
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
+}
