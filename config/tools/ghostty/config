@@ -2,12 +2,12 @@
 
 # Font
 font-size = 14
-font-style = normal
 
 # Colors
 background-opacity = 0.95
 background-blur = true
 split-divider-color = #444444
+theme = Github-Dark-Default
 
 # Tabs
 window-decoration = true
