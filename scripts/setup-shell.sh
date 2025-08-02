@@ -183,6 +183,15 @@ setup_ghostty() {
     fi
 }
 
+# Setup Ripgrep configuration
+setup_ripgrep() {
+    print_header "Setting up Ripgrep configuration"
+
+    if [[ -f "$INSTALL_DIR/config/tools/ripgreprc" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/ripgreprc" "$HOME/.ripgreprc" "Ripgrep config"
+    fi
+}
+
 # Setup Claude Code configuration
 setup_claude_code() {
     print_header "Setting up Claude Code configuration"
@@ -298,6 +307,7 @@ main() {
     # Setup configurations
     setup_shell_configs
     setup_zoxide
+    setup_ripgrep
     setup_vscode
     setup_zed
     setup_ghostty

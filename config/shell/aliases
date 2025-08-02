@@ -2,27 +2,30 @@
 # This file is sourced by both .zshrc and .bashrc
 
 # Modern replacements for core utilities
+# Check if 'eza' (modern ls replacement) is installed
 if command -v eza &> /dev/null; then
-    alias ls='eza'
-    alias ll='eza -alF'
-    alias la='eza -a'
-    alias l='eza -F'
-    alias lt='eza -a --tree --level=2'
+    alias ls='eza'                      # Modern replacement for basic ls
+    alias ll='eza -alF'                 # List all files in long format
+    alias la='eza -a'                   # List all files including hidden
+    alias l='eza -F'                    # List with file type indicators
+    alias lt='eza -a --tree --level=2'  # List as tree, 2 levels deep
 else
-    alias ll='ls -alF'
-    alias la='ls -A'
-    alias l='ls -CF'
+    alias ll='ls -alF'                  # Fallback: List all files in long format
+    alias la='ls -A'                    # Fallback: List all except . and ..
+    alias l='ls -CF'                    # Fallback: List in columns with indicators
 fi
 
+# Check if 'bat' (modern cat replacement) is installed
 if command -v bat &> /dev/null; then
-    alias cat='bat'
-    alias batp='bat --paging=always'
+    alias cat='bat'                     # Modern replacement with syntax highlighting
+    alias batp='bat --paging=always'    # Always use pager for output
 fi
 
+# Check if 'ripgrep' (modern grep replacement) is installed
 if command -v rg &> /dev/null; then
-    alias grep='rg'
-    alias fgrep='rg'
-    alias egrep='rg'
+    alias grep='rg'                     # Modern, faster text search
+    alias fgrep='rg'                    # Fixed-string search (faster)
+    alias egrep='rg'                    # Extended regex search
 fi
 
 # Directory navigation
