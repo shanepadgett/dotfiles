@@ -8,7 +8,6 @@
     "vscode": {
       "extensions": [
         "Augment.vscode-augment",
-        "sst-dev.opencode",
         "EditorConfig.EditorConfig",
         "ms-vscode.vscode-json",
         "timonwong.shellcheck",
