@@ -224,6 +224,34 @@ setup_shell() {
     fi
 }
 
+# Configure macOS system defaults
+configure_macos_defaults() {
+    print_header "Configuring macOS System Defaults"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        print_info "DRY RUN: Would configure macOS defaults"
+        print_info "  - Dock autohide and application setup"
+        print_info "  - Trackpad navigation settings"
+        print_info "  - Finder preferences"
+        return 0
+    fi
+
+    # Check if macOS defaults script exists
+    if [[ -f "$SCRIPT_DIR/configure-macos-defaults.sh" ]]; then
+        print_info "Running macOS defaults configuration..."
+        chmod +x "$SCRIPT_DIR/configure-macos-defaults.sh"
+        if "$SCRIPT_DIR/configure-macos-defaults.sh"; then
+            print_success "macOS defaults configured"
+            log "macOS defaults configuration completed successfully"
+        else
+            print_warning "macOS defaults configuration had issues"
+            log "WARNING: macOS defaults configuration failed"
+        fi
+    else
+        print_warning "macOS defaults script not found"
+        log "WARNING: configure-macos-defaults.sh not found at $SCRIPT_DIR/configure-macos-defaults.sh"
+    fi
+}
 
 # Main installation
 main() {
@@ -235,61 +263,21 @@ main() {
     # Initialize log
     init_log
     
-    # Confirmation prompt function
-    confirm_step() {
-        local step_name="$1"
-        print_header "Ready to: $step_name"
-        print_info "Continue? [y/n/q] (y=yes, n=skip, q=quit): "
-        
-        # Read from stdin, handling different input methods
-        local response
-        read -r response < /dev/tty
-        
-        # Handle empty response
-        if [[ -z "$response" ]]; then
-            response="n"
-        fi
-        
-        # Take only first character
-        response="${response:0:1}"
-        
-        case "$response" in
-            y|Y)
-                print_success "Proceeding with: $step_name"
-                return 0
-                ;;
-            n|N)
-                print_info "Skipping: $step_name"
-                return 1
-                ;;
-            q|Q)
-                print_warning "Installation cancelled by user"
-                exit 0
-                ;;
-            *)
-                print_warning "Invalid response '$response'. Skipping: $step_name"
-                return 1
-                ;;
-        esac
-    }
-
     # Initialize or refresh sudo credentials using askpass
-    if confirm_step "Initialize administrator privileges"; then
-        if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
-            source "$SCRIPT_DIR/lib/sudo-helper.sh"
-            if ! check_sudo_askpass; then
-                init_sudo_askpass "System configuration requires administrator privileges."
-            else
-                print_info "Using cached administrator credentials from keychain"
-            fi
-            
-            # Clean up credentials on exit
-            trap "cleanup_sudo_askpass; trap - EXIT" EXIT
+    if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
+        source "$SCRIPT_DIR/lib/sudo-helper.sh"
+        if ! check_sudo_askpass; then
+            init_sudo_askpass "System configuration requires administrator privileges."
         else
-            # Fallback to traditional sudo refresh
-            print_info "Refreshing sudo credentials for system configuration..."
-            sudo -v
+            print_info "Using cached administrator credentials from keychain"
         fi
+        
+        # Clean up credentials on exit
+        trap "cleanup_sudo_askpass; trap - EXIT" EXIT
+    else
+        # Fallback to traditional sudo refresh
+        print_info "Refreshing sudo credentials for system configuration..."
+        sudo -v
     fi
 
     # Check if we're in the right directory
@@ -300,42 +288,37 @@ main() {
     fi
 
     # Install Homebrew packages with retry
-    if confirm_step "Install Homebrew packages"; then
-        local retry_count=0
-        local max_retries=3
+    local retry_count=0
+    local max_retries=3
 
-        while [ $retry_count -lt $max_retries ]; do
-            if install_homebrew_packages; then
-                break
+    while [ $retry_count -lt $max_retries ]; do
+        if install_homebrew_packages; then
+            break
+        else
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -lt $max_retries ]; then
+                print_warning "Retrying Homebrew installation (attempt $retry_count/$max_retries)..."
+                sleep 5
             else
-                retry_count=$((retry_count + 1))
-                if [ $retry_count -lt $max_retries ]; then
-                    print_warning "Retrying Homebrew installation (attempt $retry_count/$max_retries)..."
-                    sleep 5
-                else
-                    print_error "Homebrew installation failed after $max_retries attempts"
-                fi
+                print_error "Homebrew installation failed after $max_retries attempts"
             fi
-        done
-    fi
+        fi
+    done
 
     # Install AI tools
-    if confirm_step "Install AI coding tools"; then
-        install_ai_tools
-    fi
+    install_ai_tools
 
     # Create development directories
-    if confirm_step "Create development directories"; then
-        create_development_directories
-    fi
+    create_development_directories
 
     # Setup shell configurations
-    if confirm_step "Setup shell configurations"; then
-        setup_shell
-    fi
+    setup_shell
 
+    # Configure macOS defaults
+    configure_macos_defaults
 
-# Final summary    echo
+    # Final summary
+    echo
     print_header "Installation Summary"
 
     if [[ "$DRY_RUN" == true ]]; then
