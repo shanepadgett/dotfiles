@@ -235,21 +235,49 @@ main() {
     # Initialize log
     init_log
     
+    # Confirmation prompt function
+    confirm_step() {
+        local step_name="$1"
+        print_header "Ready to: $step_name"
+        print_info "Press 'y' to continue, 'n' to skip, or 'q' to quit"
+        read -n 1 -r response
+        echo
+        case "$response" in
+            y|Y)
+                return 0
+                ;;
+            n|N)
+                print_info "Skipping: $step_name"
+                return 1
+                ;;
+            q|Q)
+                print_warning "Installation cancelled by user"
+                exit 0
+                ;;
+            *)
+                print_warning "Invalid response. Skipping: $step_name"
+                return 1
+                ;;
+        esac
+    }
+
     # Initialize or refresh sudo credentials using askpass
-    if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
-        source "$SCRIPT_DIR/lib/sudo-helper.sh"
-        if ! check_sudo_askpass; then
-            init_sudo_askpass "System configuration requires administrator privileges."
+    if confirm_step "Initialize administrator privileges"; then
+        if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
+            source "$SCRIPT_DIR/lib/sudo-helper.sh"
+            if ! check_sudo_askpass; then
+                init_sudo_askpass "System configuration requires administrator privileges."
+            else
+                print_info "Using cached administrator credentials from keychain"
+            fi
+            
+            # Clean up credentials on exit
+            trap "cleanup_sudo_askpass; trap - EXIT" EXIT
         else
-            print_info "Using cached administrator credentials from keychain"
+            # Fallback to traditional sudo refresh
+            print_info "Refreshing sudo credentials for system configuration..."
+            sudo -v
         fi
-        
-        # Clean up credentials on exit
-        trap "cleanup_sudo_askpass; trap - EXIT" EXIT
-    else
-        # Fallback to traditional sudo refresh
-        print_info "Refreshing sudo credentials for system configuration..."
-        sudo -v
     fi
 
     # Check if we're in the right directory
@@ -260,31 +288,39 @@ main() {
     fi
 
     # Install Homebrew packages with retry
-    local retry_count=0
-    local max_retries=3
+    if confirm_step "Install Homebrew packages"; then
+        local retry_count=0
+        local max_retries=3
 
-    while [ $retry_count -lt $max_retries ]; do
-        if install_homebrew_packages; then
-            break
-        else
-            retry_count=$((retry_count + 1))
-            if [ $retry_count -lt $max_retries ]; then
-                print_warning "Retrying Homebrew installation (attempt $retry_count/$max_retries)..."
-                sleep 5
+        while [ $retry_count -lt $max_retries ]; do
+            if install_homebrew_packages; then
+                break
             else
-                print_error "Homebrew installation failed after $max_retries attempts"
+                retry_count=$((retry_count + 1))
+                if [ $retry_count -lt $max_retries ]; then
+                    print_warning "Retrying Homebrew installation (attempt $retry_count/$max_retries)..."
+                    sleep 5
+                else
+                    print_error "Homebrew installation failed after $max_retries attempts"
+                fi
             fi
-        fi
-    done
+        done
+    fi
 
     # Install AI tools
-    install_ai_tools
+    if confirm_step "Install AI coding tools"; then
+        install_ai_tools
+    fi
 
     # Create development directories
-    create_development_directories
+    if confirm_step "Create development directories"; then
+        create_development_directories
+    fi
 
-# Setup shell configurations
-setup_shell
+    # Setup shell configurations
+    if confirm_step "Setup shell configurations"; then
+        setup_shell
+    fi
 
 
 # Final summary    echo
