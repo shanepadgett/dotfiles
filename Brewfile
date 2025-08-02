@@ -34,7 +34,7 @@ cask "brave-browser" # Privacy-focused web browser based on Chromium
 
 # GUI Applications - Utilities
 cask "logi-options-plus"  # Logitech device configuration and management
-cask "logitech-g-hub".    # Logitech gaming device configuration
+cask "logitech-g-hub"     # Logitech gaming device configuration
 cask "voiceink"           # Voice note application
 
 # Fonts
