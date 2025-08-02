@@ -1,5 +1,4 @@
 # Development environment
-export NODE_ENV=development
 export PAGER=less
 export MANPAGER="less -X"
 
