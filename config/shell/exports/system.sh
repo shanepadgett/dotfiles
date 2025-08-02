@@ -9,7 +9,3 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 # Development tools
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
-
-# macOS specific
-export COPYFILE_DISABLE=1
-export ARCHFLAGS="-arch $(uname -m)"
