@@ -239,11 +239,23 @@ main() {
     confirm_step() {
         local step_name="$1"
         print_header "Ready to: $step_name"
-        print_info "Press 'y' to continue, 'n' to skip, or 'q' to quit"
-        read -n 1 -r response
-        echo
+        print_info "Continue? [y/n/q] (y=yes, n=skip, q=quit): "
+        
+        # Read from stdin, handling different input methods
+        local response
+        read -r response < /dev/tty
+        
+        # Handle empty response
+        if [[ -z "$response" ]]; then
+            response="n"
+        fi
+        
+        # Take only first character
+        response="${response:0:1}"
+        
         case "$response" in
             y|Y)
+                print_success "Proceeding with: $step_name"
                 return 0
                 ;;
             n|N)
@@ -255,7 +267,7 @@ main() {
                 exit 0
                 ;;
             *)
-                print_warning "Invalid response. Skipping: $step_name"
+                print_warning "Invalid response '$response'. Skipping: $step_name"
                 return 1
                 ;;
         esac
