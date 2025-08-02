@@ -59,6 +59,7 @@ apps=(
     "/Applications/1Password.app"
     "/Applications/Discord.app"
     "/Applications/OrbStack.app"
+    "/Applications/Goose.app"
 )
 
 # Add each application to dock if it exists
