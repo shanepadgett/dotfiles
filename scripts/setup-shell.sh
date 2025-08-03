@@ -203,8 +203,8 @@ setup_git() {
 
     # Create local config with 1Password data
     if command -v op &> /dev/null && op vault list > /dev/null 2>&1; then
-        if git_name=$(op read "op://Private/Git Config/name" 2>/dev/null) && \
-           git_email=$(op read "op://Private/Git Config/email" 2>/dev/null); then
+        if git_name=$(op read "op://Personal/Git Config/name" 2>/dev/null) && \
+           git_email=$(op read "op://Personal/Git Config/email" 2>/dev/null); then
 
             cat > "$HOME/.gitconfig.local" << EOF
 [user]
@@ -226,6 +226,24 @@ EOF
         print_info "[user]"
         print_info "    name = Your Name"
         print_info "    email = your.email@example.com"
+    fi
+}
+
+# Setup Claude settings
+setup_claude() {
+    print_header "Setting up Claude settings"
+
+    # Claude settings location
+    local claude_dir="$HOME/.claude"
+
+    # Create .claude directory if it doesn't exist
+    if [[ ! -d "$claude_dir" ]]; then
+        mkdir -p "$claude_dir"
+        log "Created directory: $claude_dir"
+    fi
+
+    if [[ -f "$INSTALL_DIR/config/tools/claude/settings.json" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/claude/settings.json" "$claude_dir/settings.json" "Claude settings"
     fi
 }
 
@@ -299,6 +317,7 @@ cleanup_broken_symlinks() {
         "$HOME/.config/zoxide"
         "$HOME/.config/zed"
         "$HOME/.config/ghostty"
+        "$HOME/.claude/settings.json"
         "$HOME/.config/claude-code"
         "$HOME/.config/opencode"
         "$HOME/Library/Application Support/Code/User/settings.json"
@@ -349,6 +368,7 @@ main() {
     setup_vscode
     setup_zed
     setup_ghostty
+    setup_claude
     setup_claude_code
     setup_opencode
     setup_dev_utils

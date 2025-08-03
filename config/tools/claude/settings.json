@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(deno task *)",
+      "Bash(npm run *)",
+      "Bash(cargo *)",
+      "Bash(go *)",
+      "Bash(git status *)",
+      "Bash(git worktree *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(ripgrep *)",
+      "Bash(find *)",
+      "Bash(fd *)",
+      "Bash(fzf *)",
+      "Bash(bat *)",
+      "Bash(eza *)",
+      "Bash(zoxide *)",
+      "Bash(htop *)",
+      "Bash(jq *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(:(){ :|:& };:)",
+      "Bash(dd if=/dev/zero of=/dev/*)",
+      "Bash(mkfs.*)",
+      "Bash(> /dev/sda*)"
+    ],
+    "disableBypassPermissionsMode": "disable"
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "EDITOR": "code",
+    "GIT_EDITOR": "code --wait"
+  },
+  "cleanupPeriodDays": 90,
+  "includeCoAuthoredBy": false,
+  "model": "sonnet",
+  "hooks": {
+    "pre-tool": null,
+    "post-tool": null
+  }
+}
