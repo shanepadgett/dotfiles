@@ -8,6 +8,11 @@ if [ ! -f /.dockerenv ] && [ -z "$REMOTE_CONTAINERS" ] && [ -z "$CODESPACES" ]; 
     exit 1
 fi
 
+echo "Installing Claude Code..."
+curl -fsSL https://claude.ai/install.sh | bash -s latest
+
+echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> ~/.bashrc
+
 # Make scripts executable
 echo "🔧 Making scripts executable..."
 find /workspaces/dotfiles/scripts -name "*.sh" -exec chmod +x {} \;

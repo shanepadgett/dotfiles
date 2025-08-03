@@ -11,7 +11,8 @@
         "EditorConfig.EditorConfig",
         "ms-vscode.vscode-json",
         "timonwong.shellcheck",
-        "mads-hartmann.bash-ide-vscode"
+        "mads-hartmann.bash-ide-vscode",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
