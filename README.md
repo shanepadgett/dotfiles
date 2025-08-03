@@ -10,6 +10,8 @@ Bootstrap your Mac with one command:
 curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.sh | bash
 ```
 
+**Prerequisites:** You'll need a 1Password account as the setup integrates with 1Password for secure credential management.
+
 ## What's Included
 
 ### What's Installed
@@ -18,6 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 - **Fonts**: Programming-optimized fonts for development
 - **Shell**: Shell configurations, editor settings, terminal setup, and tool configurations
 - **macOS Defaults**: System preferences, dock configuration, trackpad settings, and desktop behavior
+- **1Password Integration**: Secure credential management for git configuration and SSH keys
 
 ### Development Environment Management
 - **Smart Project Detection**: Automatic environment setup based on project type
@@ -32,6 +35,28 @@ curl -fsSL https://raw.githubusercontent.com/shanepadgett/dotfiles/main/install.
 ./install.sh --dry-run       # Preview changes without installing
 ./install.sh --skip-shell    # Skip shell configuration
 ./install.sh --skip-apps     # Skip application installation
+```
+
+## 1Password Integration
+
+This setup integrates with 1Password for secure credential management:
+
+### During Installation
+1. **1Password Desktop App**: Installed and launched for initial sign-in
+2. **CLI Integration**: 1Password CLI is configured with app integration
+3. **Git Configuration**: Automatically configured from 1Password credentials
+
+### Required 1Password Setup
+For automatic git configuration, create a **"Git Config"** item in your **Private** vault with:
+- **name** field: Your full name for git commits
+- **email** field: Your git email address
+
+### Manual Configuration
+If 1Password is unavailable, you can manually create `~/.gitconfig.local`:
+```bash
+[user]
+    name = Your Name
+    email = your.email@example.com
 ```
 
 ## Development Workflow

@@ -95,28 +95,78 @@ install_homebrew_packages() {
     # Run brew bundle and capture output
     local brew_output
     local brew_exit_code
-    
+
     brew_output=$(brew bundle install --file="$ROOT_DIR/Brewfile" 2>&1)
     brew_exit_code=$?
-    
+
     # Log the full output
     echo "$brew_output" >> "$LOG_FILE"
-    
+
     if [[ $brew_exit_code -eq 0 ]]; then
         print_success "Homebrew packages installed successfully"
         log "Homebrew bundle install completed successfully"
     else
         print_warning "Some Homebrew packages had issues during installation"
         log "WARNING: Homebrew bundle install exit code: $brew_exit_code"
-        
+
         # Show specific failures if any
         if echo "$brew_output" | grep -q "Error\|Failed"; then
             print_info "Failed packages:"
             echo "$brew_output" | grep -E "Error|Failed" | head -5
         fi
-        
+
         print_info "Check $LOG_FILE for full details"
         # Continue execution even if some packages fail
+    fi
+}
+
+# Setup 1Password for CLI integration
+setup_1password() {
+    print_header "Setting up 1Password Integration"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        print_info "DRY RUN: Would setup 1Password integration"
+        return 0
+    fi
+
+    # Check if 1Password was installed
+    if ! brew list --cask 1password &> /dev/null; then
+        print_warning "1Password not found - skipping integration setup"
+        return 0
+    fi
+
+    # Launch 1Password for initial setup
+    print_info "Launching 1Password for initial setup..."
+    print_warning "Please sign in to 1Password and complete setup before continuing"
+    open -a "1Password 7 - Password Manager" || open -a "1Password" 2>/dev/null || true
+
+    # Wait for user confirmation
+    echo
+    print_info "Press any key after you've signed in to 1Password..."
+    read -n 1 -s
+    echo
+
+    # Guide user to enable CLI integration
+    print_info "Setting up 1Password CLI integration..."
+    print_warning "Please enable 'Integrate with 1Password CLI' in 1Password app:"
+    print_info "1. Open 1Password app"
+    print_info "2. Go to Settings > Developer"
+    print_info "3. Check 'Integrate with 1Password CLI'"
+    print_info "4. Enable Touch ID if desired"
+    echo
+    print_info "Press any key after enabling CLI integration..."
+    read -n 1 -s
+    echo
+
+    # Test authentication
+    print_info "Testing 1Password CLI authentication..."
+    if command -v op &> /dev/null && op vault list > /dev/null 2>&1; then
+        print_success "✅ 1Password CLI authentication successful"
+        log "1Password CLI authentication successful"
+    else
+        print_warning "⚠️  1Password CLI authentication test failed"
+        print_info "This is okay - git configuration will be set up later during shell setup"
+        log "WARNING: 1Password CLI authentication test failed"
     fi
 }
 
@@ -262,7 +312,7 @@ main() {
 
     # Initialize log
     init_log
-    
+
     # Initialize or refresh sudo credentials using askpass
     if [[ -f "$SCRIPT_DIR/lib/sudo-helper.sh" ]]; then
         source "$SCRIPT_DIR/lib/sudo-helper.sh"
@@ -271,7 +321,7 @@ main() {
         else
             print_info "Using cached administrator credentials from keychain"
         fi
-        
+
         # Clean up credentials on exit
         trap "cleanup_sudo_askpass; trap - EXIT" EXIT
     else
@@ -304,6 +354,9 @@ main() {
             fi
         fi
     done
+
+    # Setup 1Password integration
+    setup_1password
 
     # Install AI tools
     install_ai_tools

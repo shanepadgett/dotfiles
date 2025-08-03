@@ -10,7 +10,7 @@ brew "htop"             # Interactive process viewer and system monitor
 brew "jq"               # Command-line JSON processor and query tool
 brew "ripgrep"          # Fast text search tool that respects gitignore
 brew "zoxide"           # Smarter cd command with frecency-based navigation
-brew "1password-cli".   # CLI to manage 1password
+brew "1password-cli"    # CLI to manage 1password
 
 # Development Tools
 cask "orbstack"

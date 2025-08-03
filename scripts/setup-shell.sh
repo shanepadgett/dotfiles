@@ -192,6 +192,43 @@ setup_ripgrep() {
     fi
 }
 
+# Setup Git configuration
+setup_git() {
+    print_header "Setting up Git configuration"
+
+    # Symlink the main gitconfig
+    if [[ -f "$INSTALL_DIR/config/tools/gitconfig" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/gitconfig" "$HOME/.gitconfig" "Git config"
+    fi
+
+    # Create local config with 1Password data
+    if command -v op &> /dev/null && op vault list > /dev/null 2>&1; then
+        if git_name=$(op read "op://Private/Git Config/name" 2>/dev/null) && \
+           git_email=$(op read "op://Private/Git Config/email" 2>/dev/null); then
+
+            cat > "$HOME/.gitconfig.local" << EOF
+[user]
+    name = $git_name
+    email = $git_email
+EOF
+            print_success "Git credentials configured from 1Password"
+            print_info "Name: $git_name"
+            print_info "Email: $git_email"
+        else
+            print_warning "Git config not found in 1Password"
+            print_info "Please add 'Git Config' item to 1Password with 'name' and 'email' fields"
+            print_info "Or manually create ~/.gitconfig.local with your git user settings"
+        fi
+    else
+        print_warning "1Password CLI not available or not authenticated"
+        print_info "Please manually create ~/.gitconfig.local with your git user settings"
+        print_info "Example content:"
+        print_info "[user]"
+        print_info "    name = Your Name"
+        print_info "    email = your.email@example.com"
+    fi
+}
+
 # Setup Claude Code configuration
 setup_claude_code() {
     print_header "Setting up Claude Code configuration"
@@ -306,6 +343,7 @@ main() {
 
     # Setup configurations
     setup_shell_configs
+    setup_git
     setup_zoxide
     setup_ripgrep
     setup_vscode

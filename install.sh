@@ -94,6 +94,8 @@ install_git() {
     fi
 }
 
+
+
 # Clone or update repository
 setup_repository() {
     print_header "Setting up repository"
