@@ -53,13 +53,12 @@ apps=(
     "/Applications/Brave Browser.app"
     "/Applications/Visual Studio Code.app"
     "/Applications/Zed.app"
-    "/Applications/Ghostty.app"
+    "/Applications/Warp.app"
     "/Applications/Bruno.app"
     "/Applications/Obsidian.app"
     "/Applications/1Password.app"
     "/Applications/Discord.app"
     "/Applications/OrbStack.app"
-    "/Applications/Goose.app"
 )
 
 # Add each application to dock if it exists

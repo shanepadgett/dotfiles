@@ -10,6 +10,7 @@ brew "htop"             # Interactive process viewer and system monitor
 brew "jq"               # Command-line JSON processor and query tool
 brew "ripgrep"          # Fast text search tool that respects gitignore
 brew "zoxide"           # Smarter cd command with frecency-based navigation
+brew "1password-cli".   # CLI to manage 1password
 
 # Development Tools
 cask "orbstack"
@@ -25,6 +26,7 @@ cask "bruno"               # Open source API testing and development platform
 cask "ghostty"             # Modern terminal emulator with GPU acceleration
 cask "visual-studio-code"  # Popular extensible code editor
 cask "zed"                 # High-performance collaborative code editor
+cask "warp"                # Modern terminal with agentic capability
 
 # GUI Applications - Communication
 cask "discord"       # Voice, video, and text communication platform
