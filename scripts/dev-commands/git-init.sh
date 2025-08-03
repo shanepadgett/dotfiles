@@ -11,15 +11,30 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Source common utilities
 source "$SCRIPT_DIR/common.sh"
 
+# Check if git user configuration is set
+check_git_user_config() {
+    local git_name=$(git config user.name 2>/dev/null)
+    local git_email=$(git config user.email 2>/dev/null)
+
+    if [ -z "$git_name" ] || [ -z "$git_email" ]; then
+        print_error "Git user configuration is not set"
+        print_info "Please configure your git user name and email:"
+        print_info "  git config --global user.name \"Your Name\""
+        print_info "  git config --global user.email \"your.email@example.com\""
+        return 1
+    fi
+    return 0
+}
+
 # Create project directory and navigate to it
 setup_project_directory() {
     local project_name="$1"
-    
+
     if [[ ! -d "$project_name" ]]; then
         print_info "Creating project directory: $project_name"
         mkdir -p "$project_name"
     fi
-    
+
     cd "$project_name"
 }
 
@@ -38,11 +53,11 @@ initialize_git_repo() {
 create_readme() {
     local project_name="$1"
     local description="$2"
-    
+
     if [[ ! -f "README.md" ]]; then
         print_info "Creating README.md..."
         local template_path="$SCRIPT_DIR/../../templates/README.md"
-        
+
         if [[ -f "$template_path" ]]; then
             cp "$template_path" "README.md"
             # Replace placeholders in the template
@@ -62,7 +77,7 @@ create_gitignore() {
     if [[ ! -f ".gitignore" ]]; then
         print_info "Creating .gitignore..."
         local template_path="$SCRIPT_DIR/../../templates/gitignore"
-        
+
         if [[ -f "$template_path" ]]; then
             cp "$template_path" ".gitignore"
             print_success ".gitignore created from template"
@@ -76,16 +91,21 @@ create_gitignore() {
 
 # Create initial commit
 create_initial_commit() {
+    # Check if git user configuration is set before committing
+    if ! check_git_user_config; then
+        return 1
+    fi
+
     print_info "Staging files for initial commit..."
     git add .
-    
+
     print_info "Creating initial commit..."
     git commit -m "Initial commit
 
 - Add README.md with project structure
 - Add comprehensive .gitignore
 - Set up basic project foundation"
-    
+
     print_success "Initial commit created"
 }
 
@@ -102,15 +122,15 @@ show_next_steps() {
 git_init_command() {
     local project_name="${1:-}"
     local description="${2:-}"
-    
+
     if [[ -z "$project_name" ]]; then
         print_error "Project name is required"
         echo "Usage: git-init <project-name> [description]"
         return 1
     fi
-    
+
     print_header "Initializing Git Project: $project_name"
-    
+
     setup_project_directory "$project_name"
     initialize_git_repo
     create_readme "$project_name" "$description"

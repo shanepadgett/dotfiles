@@ -1,3 +1,5 @@
+#!/bin/bash
 # Editor configuration
-export EDITOR='code'
-export VISUAL='code'
+# Use VS Code with --wait flag for proper git integration
+export EDITOR='code --wait'
+export VISUAL='code --wait'
