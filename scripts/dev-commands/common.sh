@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Common utilities for development commands
 # This file is sourced by other command scripts
 
 # Source centralized logging system
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Use absolute path to logger based on standard dotfiles location
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/../lib/logger.sh"
+source "$HOME/.dotfiles/scripts/lib/logger.sh"
 
 # Check if a command exists
 command_exists() {
@@ -125,9 +125,7 @@ prompt_sudo() {
   local message="${1:-This operation may require administrator privileges for some components.}"
 
   # Try to use the new askpass approach
-  local script_dir
-  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  local sudo_helper="$script_dir/../lib/sudo-helper.sh"
+  local sudo_helper="$HOME/.dotfiles/scripts/lib/sudo-helper.sh"
 
   if [[ -f $sudo_helper ]]; then
     # shellcheck disable=SC1090
@@ -144,9 +142,7 @@ prompt_sudo() {
 
 # Clean up sudo credentials (for scripts using prompt_sudo)
 cleanup_sudo() {
-  local script_dir
-  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  local sudo_helper="$script_dir/../lib/sudo-helper.sh"
+  local sudo_helper="$HOME/.dotfiles/scripts/lib/sudo-helper.sh"
 
   if [[ -f $sudo_helper ]]; then
     # shellcheck disable=SC1090

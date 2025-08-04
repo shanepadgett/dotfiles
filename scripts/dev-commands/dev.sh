@@ -1,16 +1,17 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Development environment management command
 # Handles Docker Compose workflows for containerized development
 
 set -euo pipefail
 
-# Get the directory of this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source common utilities
+# Source configuration for installation paths
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/common.sh"
+source "$HOME/.dotfiles/config/config.env"
+
+# Source common utilities from the actual installation directory
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/scripts/dev-commands/common.sh"
 
 # Check if Docker and Docker Compose are available
 check_docker() {
@@ -429,6 +430,6 @@ main() {
 }
 
 # Only run main if script is executed directly (not sourced)
-if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
+if [[ $0 == *dev.sh ]]; then
   main "$@"
 fi

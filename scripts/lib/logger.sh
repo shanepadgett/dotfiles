@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Centralized logging utility for dotfiles
 # Provides standardized, high-contrast output for transparent terminals

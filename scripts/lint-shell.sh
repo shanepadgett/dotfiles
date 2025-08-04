@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Comprehensive shell script linting with shellcheck
 # Usage: ./scripts/lint-shell.sh [--fix] [--verbose] [file1.sh file2.sh ...]
@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Source centralized logging system
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 
@@ -67,7 +67,9 @@ if [[ ${#SPECIFIC_FILES[@]} -gt 0 ]]; then
   print_info "Checking ${#FILES_TO_CHECK[@]} specified files..."
 else
   # Find all shell scripts
-  mapfile -t FILES_TO_CHECK < <(find . -name "*.sh" -not -path "./.git/*" | sort)
+  while IFS= read -r file; do
+    FILES_TO_CHECK+=("$file")
+  done < <(find . -name "*.sh" -not -path "./.git/*" | sort)
   print_info "Checking ${#FILES_TO_CHECK[@]} shell scripts in repository..."
 fi
 
@@ -93,8 +95,8 @@ for file in "${FILES_TO_CHECK[@]}"; do
     continue
   fi
 
-  # Run shellcheck and capture output
-  if shellcheck_output=$(shellcheck "$file" 2>&1); then
+  # Run shellcheck and capture output (force bash mode for ZSH scripts)
+  if shellcheck_output=$(shellcheck -s bash "$file" 2>&1); then
     # File is clean
     clean_files=$((clean_files + 1))
     clean_file_list+=("$file")
@@ -160,7 +162,7 @@ else
   echo
   print_info "Files with issues:"
   for file in "${problematic_files[@]}"; do
-    issue_count=$(shellcheck "$file" 2>&1 | grep -c "^In.*line" || true)
+    issue_count=$(shellcheck -s bash "$file" 2>&1 | grep -c "^In.*line" || true)
     echo "  ❌ $file ($issue_count issues)"
   done
 
@@ -170,7 +172,9 @@ else
   echo "   ./scripts/lint-shell.sh --fix"
   echo
   echo "2. Or check specific files:"
-  echo "   ./scripts/lint-shell.sh --fix ${problematic_files[0]}"
+  if [[ ${#problematic_files[@]} -gt 0 ]]; then
+    echo "   ./scripts/lint-shell.sh --fix ${problematic_files[0]}"
+  fi
   echo
   echo "3. After fixing, run again to verify:"
   echo "   ./scripts/lint-shell.sh"

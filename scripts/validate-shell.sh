@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Combined shell script validation: linting + formatting
 # Usage: ./scripts/validate-shell.sh [--fix] [files...]
@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Source centralized logging system
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 

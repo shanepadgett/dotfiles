@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     software-properties-common \
     shellcheck \
+    zsh \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Go
@@ -38,7 +39,7 @@ ENV PATH="${GOPATH}/bin:${PATH}"
 RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg
 
 # Create non-root user
-RUN useradd -m -s /bin/bash devuser \
+RUN useradd -m -s /bin/zsh devuser \
     && usermod -aG sudo devuser \
     && echo "devuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 

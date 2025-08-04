@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Update Brewfile based on currently installed packages
 # Usage: ./scripts/update-brewfile.sh
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 BREWFILE="$PROJECT_DIR/Brewfile"
 

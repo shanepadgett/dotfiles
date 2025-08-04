@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 # Git-related shell functions
 
 # Check if git user configuration is set

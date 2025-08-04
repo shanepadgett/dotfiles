@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Helper functions for managing NODE_ENV without breaking Electron apps
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # sudo-askpass helper that uses macOS keychain for temporary password storage
 # This script is called by sudo when SUDO_ASKPASS is set

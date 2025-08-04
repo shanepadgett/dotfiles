@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Health check script to verify installation state
 # Usage: ./scripts/check-health.sh
@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Source centralized logging system
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 
@@ -57,7 +57,7 @@ check_symlink() {
 }
 
 # Source configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 # shellcheck disable=SC1091
 source "$ROOT_DIR/config/config.env"

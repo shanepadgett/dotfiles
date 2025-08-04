@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(shellcheck:*)"
+      "Bash(shellcheck:*)",
+      "Bash(./scripts/lint-shell.sh:*)",
+      "Bash(./scripts/validate-shell.sh:*)"
     ],
     "deny": []
   }

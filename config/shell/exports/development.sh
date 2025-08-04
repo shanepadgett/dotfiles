@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 # Development environment
 export PAGER=less
 export MANPAGER="less -X"

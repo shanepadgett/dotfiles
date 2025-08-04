@@ -1,16 +1,23 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Git project initialization command
 # Creates a new project with git repo, README, .gitignore, and initial commit
 
+# ZSH has native associative array support
+
 set -euo pipefail
 
-# Get the directory of this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source common utilities
+# Source configuration for installation paths
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/common.sh"
+source "$HOME/.dotfiles/config/config.env"
+
+# Source common utilities from the actual installation directory
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/scripts/dev-commands/common.sh"
+
+# Source git functions for gcp alias
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/config/shell/functions/git.sh"
 
 # Check if git user configuration is set
 check_git_user_config() {
@@ -36,10 +43,16 @@ check_github_auth() {
   fi
 
   if ! gh auth status &>/dev/null; then
-    print_error "GitHub CLI is not authenticated"
-    print_info "Please authenticate with GitHub:"
-    print_info "  gh auth login"
-    return 1
+    print_warning "GitHub CLI is not authenticated"
+    print_info "Starting GitHub authentication process..."
+
+    if gh auth login; then
+      print_success "GitHub CLI authentication completed"
+      return 0
+    else
+      print_error "GitHub CLI authentication failed"
+      return 1
+    fi
   fi
 
   print_success "GitHub CLI is authenticated"
@@ -76,7 +89,7 @@ create_readme() {
 
   if [[ ! -f "README.md" ]]; then
     print_info "Creating README.md..."
-    local template_path="$SCRIPT_DIR/../../templates/README.md"
+    local template_path="$INSTALL_DIR/templates/README.md"
 
     if [[ -f $template_path ]]; then
       cp "$template_path" "README.md"
@@ -96,7 +109,7 @@ create_readme() {
 create_gitignore() {
   if [[ ! -f ".gitignore" ]]; then
     print_info "Creating .gitignore..."
-    local template_path="$SCRIPT_DIR/../../templates/gitignore"
+    local template_path="$INSTALL_DIR/templates/gitignore"
 
     if [[ -f $template_path ]]; then
       cp "$template_path" ".gitignore"
@@ -109,38 +122,33 @@ create_gitignore() {
   fi
 }
 
-# Create initial commit
+# Create initial commit and push
 create_initial_commit() {
-  # Check if git user configuration is set before committing
-  if ! check_git_user_config; then
-    return 1
-  fi
+  print_info "Creating initial commit and pushing to remote..."
 
-  print_info "Staging files for initial commit..."
-  git add .
-
-  print_info "Creating initial commit..."
-  git commit -m "Initial commit
+  # Use gcp alias for add, commit, and push in one command
+  if gcp "feat: initial project setup
 
 - Add README.md with project structure
 - Add comprehensive .gitignore
-- Set up basic project foundation"
-
-  print_success "Initial commit created"
+- Set up basic project foundation"; then
+    print_success "Initial commit created and pushed to remote"
+  else
+    print_error "Failed to create initial commit and push"
+    return 1
+  fi
 }
 
 # Interactive prompt for repository details
 prompt_for_repo_details() {
-  # shellcheck disable=SC2178
-  local -n details_ref=$1
-
   # Project name
   while true; do
     echo
-    read -r -p "Repository name: " 'details_ref[name]'
-    if [[ -n ${details_ref[name]} ]]; then
+    read -r "repo_name?Repository name: "
+    if [[ -n $repo_name ]]; then
       # Validate repository name (basic GitHub rules)
-      if [[ ${details_ref[name]} =~ ^[a-zA-Z0-9._-]+$ ]]; then
+      if [[ $repo_name =~ ^[a-zA-Z0-9._-]+$ ]]; then
+        repo_details[name]="$repo_name"
         break
       else
         print_error "Repository name can only contain alphanumeric characters, dots, dashes, and underscores"
@@ -152,27 +160,32 @@ prompt_for_repo_details() {
 
   # Description
   echo
-  read -r -p "Description (optional): " 'details_ref[description]'
+  local repo_description
+  read -r "repo_description?Description (optional): "
+  repo_details[description]="$repo_description"
 
   # Visibility
   echo
   print_info "Repository visibility:"
-  echo "  1) Public (anyone can see)"
-  echo "  2) Private (only you and collaborators)"
+  echo "  1) Private (only you and collaborators) [default]"
+  echo "  2) Public (anyone can see)"
   echo "  3) Internal (organization members only)"
+  local visibility_choice
   while true; do
-    read -r -p "Choose visibility [1-3]: " visibility_choice
+    read -r "visibility_choice?Choose visibility [1-3] (default: 1): "
+    # Use default if empty
+    visibility_choice=${visibility_choice:-1}
     case $visibility_choice in
       1)
-        details_ref['visibility']="public"
+        repo_details[visibility]="private"
         break
         ;;
       2)
-        details_ref['visibility']="private"
+        repo_details[visibility]="public"
         break
         ;;
       3)
-        details_ref['visibility']="internal"
+        repo_details[visibility]="internal"
         break
         ;;
       *) print_error "Please choose 1, 2, or 3" ;;
@@ -182,23 +195,27 @@ prompt_for_repo_details() {
   # Template options
   echo
   print_info "Template options:"
-  echo "  1) Create from existing template repository"
-  echo "  2) Create standard repository"
+  echo "  1) Create standard repository [default]"
+  echo "  2) Create from existing template repository"
   echo "  3) Create repository to be used as template"
+  local template_choice template_repo
   while true; do
-    read -r -p "Choose template option [1-3]: " template_choice
+    read -r "template_choice?Choose template option [1-3] (default: 1): "
+    # Use default if empty
+    template_choice=${template_choice:-1}
     case $template_choice in
       1)
-        details_ref['template_mode']="from"
-        read -r -p "Template repository (owner/repo): " 'details_ref[template_repo]'
+        repo_details[template_mode]="none"
         break
         ;;
       2)
-        details_ref['template_mode']="none"
+        repo_details[template_mode]="from"
+        read -r "template_repo?Template repository (owner/repo): "
+        repo_details[template_repo]="$template_repo"
         break
         ;;
       3)
-        details_ref['template_mode']="as"
+        repo_details[template_mode]="as"
         break
         ;;
       *) print_error "Please choose 1, 2, or 3" ;;
@@ -208,17 +225,20 @@ prompt_for_repo_details() {
   # Directory location
   echo
   print_info "Project location:"
-  echo "  1) Create in current directory"
-  echo "  2) Create in new subdirectory ./${details_ref[name]}"
+  echo "  1) Create in new subdirectory ./${repo_details[name]} [default]"
+  echo "  2) Create in current directory"
+  local location_choice
   while true; do
-    read -r -p "Choose location [1-2]: " location_choice
+    read -r "location_choice?Choose location [1-2] (default: 1): "
+    # Use default if empty
+    location_choice=${location_choice:-1}
     case $location_choice in
       1)
-        details_ref['location']="current"
+        repo_details[location]="subdirectory"
         break
         ;;
       2)
-        details_ref['location']="subdirectory"
+        repo_details[location]="current"
         break
         ;;
       *) print_error "Please choose 1 or 2" ;;
@@ -228,21 +248,24 @@ prompt_for_repo_details() {
   # GitHub features
   echo
   print_info "GitHub repository features:"
-  read -r -p "Add README.md? [Y/n]: " add_readme
-  details_ref['add_readme']=$([ "${add_readme,,}" != "n" ] && echo "true" || echo "false")
+  # Always use local README template
+  repo_details[add_readme]="false"
 
-  read -r -p "Add .gitignore? [Y/n]: " add_gitignore
-  details_ref['add_gitignore']=$([ "${add_gitignore,,}" != "n" ] && echo "true" || echo "false")
+  local add_gitignore gitignore_template
+  read -r "add_gitignore?Add .gitignore? [Y/n] (default: Y): "
+  # Default to Y if empty, convert to lowercase for comparison
+  add_gitignore=${add_gitignore:-Y}
+  repo_details[add_gitignore]=$([ "${add_gitignore:l}" != "n" ] && echo "true" || echo "false")
 
-  if [[ ${details_ref[add_gitignore]} == "true" ]]; then
-    read -r -p "Gitignore template (e.g., Node, Python, Go) [blank for general]: " 'details_ref[gitignore_template]'
+  if [[ ${repo_details[add_gitignore]} == "true" ]]; then
+    read -r "gitignore_template?Gitignore template (e.g., Node, Python, Go) [blank for general]: "
+    repo_details[gitignore_template]="$gitignore_template"
   fi
 }
 
 # Create GitHub repository using GitHub CLI
 create_github_repo() {
-  # shellcheck disable=SC2178
-  local -n repo_details=$1
+  # Use global repo_details array instead of nameref
 
   print_info "Creating GitHub repository: ${repo_details[name]}"
 
@@ -264,15 +287,11 @@ create_github_repo() {
 
   # Add GitHub-managed files only if not using a template
   if [[ ${repo_details[template_mode]} != "from" ]]; then
-    if [[ ${repo_details[add_readme]} == "true" ]]; then
-      gh_command+=" --add-readme"
-    fi
+    # Never add GitHub README - always use local template
 
     if [[ ${repo_details[add_gitignore]} == "true" ]]; then
       if [[ -n ${repo_details[gitignore_template]} ]]; then
         gh_command+=" --gitignore ${repo_details[gitignore_template]}"
-      else
-        gh_command+=" --gitignore"
       fi
     fi
   fi
@@ -306,7 +325,7 @@ setup_remote_origin() {
   github_user=$(gh api user --jq '.login' 2>/dev/null || true)
 
   if [[ -n $github_user ]]; then
-    local repo_url="https://github.com/${github_user}/${repo_name}.git"
+    local repo_url="git@github.com:${github_user}/${repo_name}.git"
     print_info "Adding remote origin: $repo_url"
     git remote add origin "$repo_url"
     print_success "Remote origin configured"
@@ -318,24 +337,20 @@ setup_remote_origin() {
 
 # Handle template repository setup
 handle_template_setup() {
-  # shellcheck disable=SC2178
-  local -n repo_details=$1
-
+  # Use global repo_details array
   if [[ ${repo_details[template_mode]} == "as" ]]; then
     print_info "Repository will be marked as template..."
     print_warning "GitHub CLI doesn't support marking repositories as templates during creation"
     print_info "You'll need to manually enable this in GitHub settings after creation"
 
     # Store template instructions for later display
-    repo_details['needs_template_setup']="true"
+    repo_details[needs_template_setup]="true"
   fi
 }
 
 # Display next steps
 show_next_steps() {
-  # shellcheck disable=SC2178
-  local -n repo_details=$1
-
+  # Use global repo_details array
   print_info "Project initialized in: $(pwd)"
   print_info "GitHub repository: https://github.com/$(gh api user --jq '.login' 2>/dev/null)/${repo_details[name]}"
 
@@ -343,17 +358,15 @@ show_next_steps() {
   print_info "Next steps:"
 
   # Show template setup instructions if needed
-  if [[ ${repo_details[needs_template_setup]} == "true" ]]; then
+  if [[ ${repo_details[needs_template_setup]:-false} == "true" ]]; then
     echo "  1. Mark repository as template:"
     echo "     - Visit: https://github.com/$(gh api user --jq '.login' 2>/dev/null)/${repo_details[name]}/settings"
     echo "     - Check 'Template repository' option"
-    echo "  2. Make changes and commit: git add . && git commit -m 'Update'"
-    echo "  3. Push changes: git push"
-    echo "  4. Create pull requests: pr"
-  else
-    echo "  1. Make changes and commit: git add . && git commit -m 'Your changes'"
-    echo "  2. Push changes: git push"
+    echo "  2. Make changes and commit: gcp 'feat: your changes'"
     echo "  3. Create pull requests: pr"
+  else
+    echo "  1. Make changes and commit: gcp 'feat: your changes'"
+    echo "  2. Create pull requests: pr"
   fi
 
   echo
@@ -370,10 +383,13 @@ git_init_command() {
   print_header "GitHub Repository Creation Wizard"
 
   # Declare associative array for repository details
-  declare -A repo_details
+  typeset -A repo_details
+
+  # Initialize template setup flag to prevent "parameter not set" errors
+  repo_details[needs_template_setup]="false"
 
   # Get repository details from user
-  prompt_for_repo_details repo_details
+  prompt_for_repo_details
 
   echo
   print_header "Creating Repository: ${repo_details[name]}"
@@ -384,10 +400,10 @@ git_init_command() {
   fi
 
   # Handle template setup notifications
-  handle_template_setup repo_details
+  handle_template_setup
 
   # Create GitHub repository (this will clone it locally)
-  if ! create_github_repo repo_details; then
+  if ! create_github_repo; then
     print_error "Failed to create GitHub repository"
     return 1
   fi
@@ -398,32 +414,35 @@ git_init_command() {
     return 1
   }
 
-  # If not using a template and GitHub didn't create files, create them locally
+  # If not using a template, create local files
   if [[ ${repo_details[template_mode]} != "from" ]]; then
-    if [[ ${repo_details[add_readme]} == "false" ]]; then
-      create_readme "${repo_details[name]}" "${repo_details[description]}"
-    fi
+    # Always create README from local template
+    create_readme "${repo_details[name]}" "${repo_details[description]}"
 
     if [[ ${repo_details[add_gitignore]} == "false" ]]; then
       create_gitignore
     fi
 
-    # Create initial commit if we added local files
-    if [[ ${repo_details[add_readme]} == "false" || ${repo_details[add_gitignore]} == "false" ]]; then
-      create_initial_commit
-    fi
+    # Always create initial commit since we always add local files
+    create_initial_commit
   fi
 
   # Show next steps and completion
-  show_next_steps repo_details
+  show_next_steps
+
+  print_info "Script completed successfully. Exiting..."
+  return 0
 }
 
 # Main execution
 main() {
   git_init_command "$@"
+  local exit_code=$?
+  exit $exit_code
 }
 
 # Only run main if script is executed directly (not sourced)
-if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
+# This prevents double execution when sourced from dev-utils.sh
+if [[ ${BASH_SOURCE[0]} == "${0}" ]] && [[ $0 != *dev-utils.sh ]]; then
   main "$@"
 fi

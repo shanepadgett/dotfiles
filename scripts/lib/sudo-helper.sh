@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Sudo helper functions using askpass with keychain storage
 
 KEYCHAIN_SERVICE="dotfiles-sudo"
 KEYCHAIN_ACCOUNT="$(whoami)"
-ASKPASS_SCRIPT="$(dirname "${BASH_SOURCE[0]}")/sudo-askpass.sh"
+ASKPASS_SCRIPT="$(dirname "$0")/sudo-askpass.sh"
 
 # Initialize sudo with askpass
 init_sudo_askpass() {

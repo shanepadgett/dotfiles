@@ -16,7 +16,7 @@
         "Anthropic.claude-code"
       ],
       "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.cwd": "/workspaces/dotfiles",
         "files.associations": {
           "*.env": "shellscript",

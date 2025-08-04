@@ -1,38 +1,33 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Development utilities dispatcher
 # Routes commands to appropriate specialized scripts
 
 set -euo pipefail
 
-# Get the directory of this script (resolve symlinks - macOS compatible)
-get_script_dir() {
-  local source="${BASH_SOURCE[0]}"
-  while [[ -L $source ]]; do
-    local dir
-    dir="$(cd -P "$(dirname "$source")" && pwd)"
-    source="$(readlink "$source")"
-    [[ $source != /* ]] && source="$dir/$source"
-  done
-  cd -P "$(dirname "$source")" && pwd
-}
-SCRIPT_DIR="$(get_script_dir)"
-COMMANDS_DIR="$SCRIPT_DIR/dev-commands"
-ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+# No longer need script directory calculation since we use absolute paths
 
 # Source configuration for INSTALL_DIR
-if [[ -f "$ROOT_DIR/config/config.env" ]]; then
-  # shellcheck disable=SC1091
-  source "$ROOT_DIR/config/config.env"
-fi
-
-# Source common utilities
+# Always use the standard dotfiles location
 # shellcheck disable=SC1091
-source "$COMMANDS_DIR/common.sh"
+source "$HOME/.dotfiles/config/config.env"
+
+# Source common utilities from the actual installation directory
+# Use INSTALL_DIR from config.env to locate common.sh correctly
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/scripts/dev-commands/common.sh"
+
+# Store the original script name for later use (since $0 changes in functions)
+SCRIPT_NAME="$0"
 
 # Get the command name from how the script was called
 get_command_name() {
-  basename "$0"
+  # Use the stored script name to avoid issues with $0 changing in functions
+  if [[ -n ${SCRIPT_NAME:-} ]]; then
+    basename "$SCRIPT_NAME"
+  else
+    basename "$0"
+  fi
 }
 
 # Main function to route commands based on script name
@@ -43,32 +38,32 @@ main() {
   case "$command_name" in
     "git-init")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/git-init.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/git-init.sh"
       git_init_command "$@"
       ;;
     "pr")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/pr.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/pr.sh"
       pr_command "$@"
       ;;
     "dev")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/dev.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/dev.sh"
       dev_command "$@"
       ;;
     "update-configs")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/update-configs.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/update-configs.sh"
       update_configs_command "$@"
       ;;
     "reset-configs")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/reset-configs.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/reset-configs.sh"
       reset_configs_command "$@"
       ;;
     "teardown")
       # shellcheck disable=SC1091
-      source "$COMMANDS_DIR/teardown.sh"
+      source "$INSTALL_DIR/scripts/dev-commands/teardown.sh"
       teardown_command "$@"
       ;;
     "dev-utils.sh")
@@ -104,6 +99,8 @@ main() {
 }
 
 # Only run main if script is executed directly (not sourced)
-if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
+# Check if script is being executed (not sourced)
+# Handle both direct execution and symlinked execution
+if [[ $0 == *dev-utils.sh ]] || [[ $0 == */git-init ]] || [[ $0 == */pr ]] || [[ $0 == */dev ]] || [[ $0 == */update-configs ]] || [[ $0 == */reset-configs ]] || [[ $0 == */teardown ]]; then
   main "$@"
 fi

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 set -e
 
 # Check if running in a container environment
@@ -13,6 +13,8 @@ curl -fsSL https://claude.ai/install.sh | bash -s latest
 
 # shellcheck disable=SC2016
 echo 'export PATH="$HOME/.local/bin:$PATH"' >>~/.bashrc
+# shellcheck disable=SC2016
+echo 'export PATH="$HOME/.local/bin:$PATH"' >>~/.zshrc
 
 # Install shfmt (shell formatter)
 echo "🔧 Installing shfmt (shell formatter)..."
@@ -23,6 +25,11 @@ if ! grep -q "GOPATH" ~/.bashrc; then
   echo "export GOPATH=/go" >>~/.bashrc
   # shellcheck disable=SC2016
   echo 'export PATH="$GOPATH/bin:$PATH"' >>~/.bashrc
+fi
+if ! grep -q "GOPATH" ~/.zshrc; then
+  echo "export GOPATH=/go" >>~/.zshrc
+  # shellcheck disable=SC2016
+  echo 'export PATH="$GOPATH/bin:$PATH"' >>~/.zshrc
 fi
 
 # Fix Claude symlinks for devcontainer

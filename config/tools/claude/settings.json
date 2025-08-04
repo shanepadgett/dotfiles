@@ -18,6 +18,7 @@
       "Bash(zoxide:*)",
       "Bash(htop:*)",
       "Bash(jq:*)",
+      "Bash(ls:*)",
       "WebFetch(domain:cli.github.com)"
     ],
     "deny": [

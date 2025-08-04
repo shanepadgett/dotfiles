@@ -1,21 +1,20 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Development Environment Teardown Script
 # Reverses the setup process by uninstalling packages, removing symlinks, and cleaning up
 
 set -euo pipefail
 
-# Source common utilities
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Source configuration for installation paths
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/common.sh"
+source "$HOME/.dotfiles/config/config.env"
+
+# Source common utilities from the actual installation directory
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/scripts/dev-commands/common.sh"
 
 # Configuration
-ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
-if [[ -f "$ROOT_DIR/config/config.env" ]]; then
-  # shellcheck disable=SC1091
-  source "$ROOT_DIR/config/config.env"
-fi
+ROOT_DIR="$INSTALL_DIR"
 
 # Set REPO_DIR to INSTALL_DIR for consistency
 REPO_DIR="${INSTALL_DIR:-$ROOT_DIR}"
@@ -210,8 +209,10 @@ restore_backups() {
   log "Restoring original configurations..."
 
   local backup_dirs
-  # Use mapfile to safely split the backup directory pattern
-  mapfile -t backup_dirs < <(find "$HOME" -maxdepth 1 -type d -name ".config-backup-20*" 2>/dev/null)
+  # Use while loop to safely populate backup directories array
+  while IFS= read -r dir; do
+    backup_dirs+=("$dir")
+  done < <(find "$HOME" -maxdepth 1 -type d -name ".config-backup-20*" 2>/dev/null)
   if [[ ${#backup_dirs[@]} -eq 0 ]]; then
     warn "No backup directories found"
     return
@@ -305,7 +306,7 @@ remove_repository() {
   # Copy this script to temp location and re-exec to finish removal
   local temp_script="/tmp/teardown-final-$$.sh"
   cat >"$temp_script" <<'EOF'
-#!/bin/bash
+#!/bin/zsh
 REPO_DIR="$1"
 echo "Removing dotfiles repository: $REPO_DIR"
 rm -rf "$REPO_DIR"
@@ -381,7 +382,7 @@ teardown_main() {
   if [[ $DRY_RUN != "true" ]]; then
     # Source sudo helper functions
     local script_dir
-    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    script_dir="$(cd "$(dirname "$0")" && pwd)"
     local sudo_helper="$script_dir/../lib/sudo-helper.sh"
 
     if [[ -f $sudo_helper ]]; then

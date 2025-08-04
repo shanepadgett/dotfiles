@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # macOS System Defaults Configuration
 # Sets up system preferences and dock configuration
@@ -6,7 +6,7 @@
 set -e
 
 # Source centralized logging system
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 

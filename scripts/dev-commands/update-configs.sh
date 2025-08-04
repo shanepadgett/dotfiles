@@ -1,17 +1,20 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Update dotfiles configuration
 # Pulls latest changes and re-runs setup
 
 set -euo pipefail
 
-# Source common utilities
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Source configuration for installation paths
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/common.sh"
+source "$HOME/.dotfiles/config/config.env"
+
+# Source common utilities from the actual installation directory
+# shellcheck disable=SC1091
+source "$INSTALL_DIR/scripts/dev-commands/common.sh"
 
 # Configuration
-ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+ROOT_DIR="$INSTALL_DIR"
 
 # Debug path resolution
 if [[ ! -f "$ROOT_DIR/config/config.env" ]]; then
