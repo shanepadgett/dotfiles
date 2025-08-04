@@ -13,6 +13,17 @@ curl -fsSL https://claude.ai/install.sh | bash -s latest
 
 echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> ~/.bashrc
 
+# Fix Claude symlinks for devcontainer
+echo "🔗 Fixing Claude configuration symlinks..."
+if [ -L ~/.claude/settings.json ]; then
+    rm ~/.claude/settings.json
+    ln -sf /workspaces/dotfiles/config/tools/claude/settings.json ~/.claude/settings.json
+fi
+if [ -L ~/.claude/mcp.json ]; then
+    rm ~/.claude/mcp.json
+    ln -sf /workspaces/dotfiles/config/tools/claude/mcp.json ~/.claude/mcp.json
+fi
+
 # Make scripts executable
 echo "🔧 Making scripts executable..."
 find /workspaces/dotfiles/scripts -name "*.sh" -exec chmod +x {} \;

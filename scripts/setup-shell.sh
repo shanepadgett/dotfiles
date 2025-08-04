@@ -245,6 +245,10 @@ setup_claude() {
     if [[ -f "$INSTALL_DIR/config/tools/claude/settings.json" ]]; then
         create_symlink "$INSTALL_DIR/config/tools/claude/settings.json" "$claude_dir/settings.json" "Claude settings"
     fi
+
+    if [[ -f "$INSTALL_DIR/config/tools/claude/mcp.json" ]]; then
+        create_symlink "$INSTALL_DIR/config/tools/claude/mcp.json" "$claude_dir/mcp.json" "Claude MCP config"
+    fi
 }
 
 # Setup Claude Code configuration

@@ -26,7 +26,8 @@
       "Bash(mkfs.*)",
       "Bash(> /dev/sda*)"
     ],
-    "disableBypassPermissionsMode": "disable"
+    "disableBypassPermissionsMode": "disable",
+    "defaultMode": "plan"
   },
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
@@ -37,7 +38,7 @@
   "includeCoAuthoredBy": false,
   "model": "sonnet",
   "hooks": {
-    "pre-tool": null,
-    "post-tool": null
+    "PreToolUse": [],
+    "PostToolUse": []
   }
 }
