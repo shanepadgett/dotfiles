@@ -185,6 +185,7 @@ remove_symlinks() {
     ".config/ghostty"
     ".config/claude-code"
     ".config/opencode"
+    ".config/fzf"
     ".local/bin/pr"
     ".local/bin/dev"
     ".local/bin/update-configs"
@@ -244,6 +245,9 @@ cleanup_directories() {
     "$HOME/config.log"
     "$HOME/teardown.log"
     "$HOME/.orbstack"
+    "$HOME/.dotfiles/config/shell/functions"
+    "$HOME/.local/share/zoxide"
+    "$HOME/.fzf"
   )
 
   for dir in "${dirs_to_clean[@]}"; do
@@ -278,6 +282,14 @@ cleanup_directories() {
     "$HOME/.cargo"
   )
 
+  local cli_tool_configs=(
+    "$HOME/.config/bat"
+    "$HOME/.config/eza"
+    "$HOME/.config/htop"
+    "$HOME/.config/ripgrep"
+    "$HOME/.ripgreprc"
+  )
+
   for cache_dir in "${cache_dirs[@]}"; do
     if [[ -d $cache_dir ]]; then
       info "Cleaning cache directory: $cache_dir"
@@ -289,6 +301,13 @@ cleanup_directories() {
     if [[ -d $pm_dir ]]; then
       info "Removing entire package manager directory: $pm_dir"
       run_cmd "rm -rf '$pm_dir'"
+    fi
+  done
+
+  for cli_config in "${cli_tool_configs[@]}"; do
+    if [[ -e $cli_config ]]; then
+      info "Removing CLI tool configuration: $cli_config"
+      run_cmd "rm -rf '$cli_config'"
     fi
   done
 }

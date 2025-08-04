@@ -119,6 +119,119 @@ Edit files in `config/shell/` or `config/tools/` directories, then run:
 ### Machine-Specific Overrides
 See [CONFIGURATION.md](CONFIGURATION.md) for detailed customization options.
 
+## Shell Functions & Aliases
+
+After installation, you'll have access to numerous shell functions and aliases for enhanced productivity:
+
+### Development Workflow Functions
+
+**Repository Management:**
+```bash
+git-init <name> [desc]         # Initialize new git project with GitHub integration
+delete-repo <name>             # Delete repository (both GitHub and local)
+dr <name>                      # Alias for delete-repo
+gcp "commit message"           # Git add, commit, and push in one command
+```
+
+**Examples:**
+```bash
+# Create new repository with interactive wizard
+git-init
+
+# Delete current repository (if inside a git repo)
+delete-repo .
+
+# Delete specific repository by name
+dr my-old-project
+
+# Quick commit and push
+gcp "fix: resolve authentication issue"
+```
+
+**Docker Development:**
+```bash
+docker-cleanup                 # Complete Docker cleanup (containers, images, volumes, networks)
+dnuke                          # Alias for docker-cleanup
+```
+
+**Example:**
+```bash
+# Clean up all Docker resources (with confirmation)
+docker-cleanup
+
+# Quick cleanup (same as above)
+dnuke
+```
+**⚠️ Warning:** `docker-cleanup` removes ALL Docker containers, images, volumes, and networks. Use with caution as this will delete persistent data.
+
+**Environment Management:**
+```bash
+node-env [development|production|test]  # Set NODE_ENV for current session
+with-node-env <env> <command>  # Run command with specific NODE_ENV
+dev-env                        # Set NODE_ENV to development
+prod-env                       # Set NODE_ENV to production
+test-env                       # Set NODE_ENV to test
+clear-env                      # Unset NODE_ENV
+npm-dev <command>              # Run npm with NODE_ENV=development
+yarn-dev <command>             # Run yarn with NODE_ENV=development
+pnpm-dev <command>             # Run pnpm with NODE_ENV=development
+```
+
+### Modern CLI Tool Aliases
+
+**File Operations (when available):**
+```bash
+ls                             # eza (modern ls replacement)
+ll                             # eza -alF (detailed list)
+la                             # eza -a (show hidden files)
+l                              # eza -F (with file type indicators)
+lt                             # eza -a --tree --level=2 (tree view)
+cat                            # bat (syntax highlighted cat)
+grep                           # rg (ripgrep - faster text search)
+cd                             # z (zoxide - smart directory navigation)
+top                            # htop (better process viewer)
+```
+
+**FZF Integration (when available):**
+```bash
+f                              # fzf (fuzzy finder)
+fh                             # fzf --history
+fe                             # fzf --exact
+fzf-git-branch                 # Browse git branches with fzf
+fzf-git-log                    # Browse git commits with fzf
+fzf-git-stash                  # Browse git stashes with fzf
+fzf-history                    # Browse shell history with fzf
+fzf-files                      # Browse files with fzf
+```
+
+### Git Shortcuts
+```bash
+gs                             # git status
+ga                             # git add
+gaa                            # git add --all
+gc                             # git commit
+gcm                            # git commit -m
+gp                             # git push
+gpl                            # git pull
+gl                             # git log --oneline
+gd                             # git diff
+gb                             # git branch
+gco                            # git checkout
+grh                            # git reset --hard
+gclean                         # git clean -fdx
+gnuke                          # git reset --hard && git clean -fd
+```
+
+### System Utilities
+```bash
+..                             # cd ..
+...                            # cd ../..
+....                           # cd ../../..
+reload                         # Reload shell configuration
+path                           # Display PATH entries line by line
+hosts                          # Edit /etc/hosts file
+```
+
 ## Available Commands
 
 **Global Development Utilities:**
