@@ -145,8 +145,8 @@ setup_1password() {
 
   # Wait for user confirmation
   echo
-  print_info "Press any key after you've signed in to 1Password..."
-  read -r -n 1 -s
+  print_info "Press ENTER after you've signed in to 1Password..."
+  read -r </dev/tty
   echo
 
   # Guide user to enable CLI integration
@@ -157,8 +157,8 @@ setup_1password() {
   print_info "3. Check 'Integrate with 1Password CLI'"
   print_info "4. Enable Touch ID if desired"
   echo
-  print_info "Press any key after enabling CLI integration..."
-  read -r -n 1 -s
+  print_info "Press ENTER after enabling CLI integration..."
+  read -r </dev/tty
   echo
 
   # Test authentication

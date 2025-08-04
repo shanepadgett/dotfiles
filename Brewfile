@@ -10,13 +10,13 @@ brew "htop"             # Interactive process viewer and system monitor
 brew "jq"               # Command-line JSON processor and query tool
 brew "ripgrep"          # Fast text search tool that respects gitignore
 brew "zoxide"           # Smarter cd command with frecency-based navigation
-brew "1password-cli"    # CLI to manage 1password
 
 # Development Tools
 cask "orbstack"
 
 # GUI Applications - Productivity
 cask "1password"     # Password manager with team sharing capabilities
+cask "1password-cli" # CLI to manage 1password
 cask "obsidian"      # Knowledge base and note-taking with markdown
 cask "raycast"       # Launcher and productivity tool (Spotlight replacement)
 cask "rectangle"     # Window management utility for keyboard-based resizing
