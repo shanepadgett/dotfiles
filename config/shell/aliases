@@ -53,6 +53,7 @@ alias gnuke='git reset --hard && git clean -fd'  # Reset, remove changes and unt
 
 # Development commands shortcuts
 alias dr='delete-repo'  # Delete repository (both local and GitHub)
+alias dnuke='docker-cleanup'  # Completely nukes everything in docker
 
 # Modern replacements
 alias top='htop'
@@ -95,7 +96,7 @@ source "$HOME/.dotfiles/config/config.env"
 if [ -f "$SCRIPTS_DIR/dev-utils.sh" ]; then
     # Ensure ~/.local/bin directory exists
     [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
-    
+
     # Create individual symlinks if they don't exist
     [ ! -f ~/.local/bin/pr ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/pr
     [ ! -f ~/.local/bin/dev ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/dev
