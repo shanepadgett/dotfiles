@@ -1,0 +1,11 @@
+# shfmt configuration file
+# Format: shfmt [options] [files...]
+
+# Indent with 2 spaces
+-i 2
+
+# Indent case statements
+-ci
+
+# Simplify code
+-s

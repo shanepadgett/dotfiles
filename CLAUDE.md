@@ -32,6 +32,9 @@ pr [title]                 # Create GitHub pull request
 ./scripts/update-brewfile.sh   # Update Brewfile from current system
 ./scripts/cleanup.sh           # Uninstall and cleanup
 ./scripts/setup-shell.sh       # Re-run shell configuration
+./scripts/lint-shell.sh        # Lint all shell scripts with shellcheck
+./scripts/format-shell.sh      # Format all shell scripts with shfmt
+./scripts/validate-shell.sh    # Run both linting and formatting (recommended)
 ```
 
 ## Architecture
@@ -57,6 +60,8 @@ pr [title]                 # Create GitHub pull request
 - **Symlink Management**: Shell and tool configs symlinked from repository to home directory
 - **Logging**: All operations logged to `~/config.log` with timestamps
 - **Docker Compose Dev Environment**: `dev` command for container-based development workflows
+- **Code Quality**: All shell scripts pass shellcheck linting and shfmt formatting
+- **Automated Validation**: Comprehensive shell script linting with detailed error reporting
 
 ## Development Workflow
 
@@ -65,6 +70,47 @@ When modifying configuration files:
 1. Edit files in `config/shell/` or `config/tools/`
 2. Run `./scripts/setup-shell.sh` to apply changes
 3. Use `./scripts/check-health.sh` to verify installation state
+
+### Code Quality
+When modifying shell scripts:
+1. All scripts are linted with `shellcheck` and formatted with `shfmt`
+2. **REQUIRED**: Run `./scripts/lint-shell.sh` after any shell script changes
+3. **REQUIRED**: Run `./scripts/format-shell.sh` after any shell script changes
+4. VS Code automatically formats on save in dev container
+
+#### Shell Script Validation Commands
+```bash
+# Check all shell scripts for issues (Claude Code should run this)
+./scripts/lint-shell.sh
+
+# Show detailed fix suggestions for issues
+./scripts/lint-shell.sh --fix
+
+# Check specific files only
+./scripts/lint-shell.sh install.sh scripts/setup.sh
+
+# Format all shell scripts
+./scripts/format-shell.sh
+
+# Check formatting without changing files
+./scripts/format-shell.sh --check
+```
+
+#### For Claude Code Users
+When making changes to shell scripts, **always run this command** to ensure code quality:
+```bash
+./scripts/validate-shell.sh
+```
+
+This single command will:
+1. Run `shellcheck` on all scripts and show any issues
+2. Auto-format all scripts with `shfmt`
+3. Re-run `shellcheck` to verify all issues are resolved
+
+**Alternative manual approach:**
+1. `./scripts/lint-shell.sh` - Shows all shellcheck issues that need fixing
+2. `./scripts/format-shell.sh` - Ensures consistent formatting
+3. `./scripts/lint-shell.sh` - Verify all issues are resolved
 
 ### Adding New Packages
 1. Edit `Brewfile` to add new packages

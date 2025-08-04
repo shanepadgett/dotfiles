@@ -5,19 +5,16 @@
 
 set -euo pipefail
 
-FORCE=false
-if [[ "${1:-}" == "--force" ]]; then
-    FORCE=true
-fi
-
 # Source centralized logging system
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 
 BACKUP_DIR="$HOME/.config-backup"
 # Source configuration
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+# shellcheck disable=SC1091
 source "$ROOT_DIR/config/config.env"
 
 remove_symlink "$CONFIG_SHELL_DIR/zshrc" "$HOME/.zshrc"

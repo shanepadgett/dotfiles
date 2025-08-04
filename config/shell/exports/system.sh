@@ -1,3 +1,4 @@
+#!/bin/bash
 # System configuration
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -12,4 +13,6 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 # macOS specific
 export COPYFILE_DISABLE=1
-export ARCHFLAGS="-arch $(uname -m)"
+# Separate declaration and assignment to avoid masking return values
+ARCHFLAGS="-arch $(uname -m)"
+export ARCHFLAGS

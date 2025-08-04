@@ -12,6 +12,7 @@
         "ms-vscode.vscode-json",
         "timonwong.shellcheck",
         "mads-hartmann.bash-ide-vscode",
+        "foxundermoon.shell-format",
         "Anthropic.claude-code"
       ],
       "settings": {
@@ -22,11 +23,18 @@
           "Brewfile": "ruby"
         },
         "shellcheck.enable": true,
+        "shellformat.useShfmt": true,
+        "shellformat.shfmtPath": "/go/bin/shfmt",
+        "shellformat.flag": "-i 2 -ci -s",
         "shellformat.effectLanguages": [
           "shellscript",
           "dockerfile",
           "dotenv"
-        ]
+        ],
+        "[shellscript]": {
+          "editor.defaultFormatter": "foxundermoon.shell-format",
+          "editor.formatOnSave": true
+        }
       }
     }
   },

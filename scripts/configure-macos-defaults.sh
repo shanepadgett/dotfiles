@@ -6,7 +6,8 @@
 set -e
 
 # Source centralized logging system
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/logger.sh"
 
 log_header "Configuring macOS system defaults"
@@ -50,25 +51,25 @@ log_step "Adding applications to dock"
 
 # Define applications to add to dock (in order)
 apps=(
-    "/Applications/Brave Browser.app"
-    "/Applications/Visual Studio Code.app"
-    "/Applications/Zed.app"
-    "/Applications/Warp.app"
-    "/Applications/Bruno.app"
-    "/Applications/Obsidian.app"
-    "/Applications/1Password.app"
-    "/Applications/Discord.app"
-    "/Applications/OrbStack.app"
+  "/Applications/Brave Browser.app"
+  "/Applications/Visual Studio Code.app"
+  "/Applications/Zed.app"
+  "/Applications/Warp.app"
+  "/Applications/Bruno.app"
+  "/Applications/Obsidian.app"
+  "/Applications/1Password.app"
+  "/Applications/Discord.app"
+  "/Applications/OrbStack.app"
 )
 
 # Add each application to dock if it exists
 for app in "${apps[@]}"; do
-    if [ -d "$app" ]; then
-        log_info "Adding $(basename "$app" .app) to dock"
-        defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
-    else
-        log_warning "$(basename "$app" .app) not found, skipping"
-    fi
+  if [ -d "$app" ]; then
+    log_info "Adding $(basename "$app" .app) to dock"
+    defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+  else
+    log_warning "$(basename "$app" .app) not found, skipping"
+  fi
 done
 
 # Restart affected services
