@@ -51,6 +51,9 @@ alias grh='git reset --hard'
 alias gclean='git clean -fdx'  # Remove untracked files and directories
 alias gnuke='git reset --hard && git clean -fd'  # Reset, remove changes and untracked files
 
+# Development commands shortcuts
+alias dr='delete-repo'  # Delete repository (both local and GitHub)
+
 # Modern replacements
 alias top='htop'
 
@@ -90,11 +93,13 @@ fi
 source "$HOME/.dotfiles/config/config.env"
 
 if [ -f "$SCRIPTS_DIR/dev-utils.sh" ]; then
-    # Create symlinks if they don't exist
-    if [ ! -f ~/.local/bin/git-init ]; then
-        mkdir -p ~/.local/bin
-        ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/git-init
-        ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/pr
-        ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/dev
-    fi
+    # Ensure ~/.local/bin directory exists
+    [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
+    
+    # Create individual symlinks if they don't exist
+    [ ! -f ~/.local/bin/pr ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/pr
+    [ ! -f ~/.local/bin/dev ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/dev
+    [ ! -f ~/.local/bin/update-configs ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/update-configs
+    [ ! -f ~/.local/bin/reset-configs ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/reset-configs
+    [ ! -f ~/.local/bin/teardown ] && ln -sf "$INSTALL_DIR/scripts/dev-utils.sh" ~/.local/bin/teardown
 fi

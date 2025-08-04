@@ -24,9 +24,13 @@ SCRIPT_NAME="$0"
 get_command_name() {
   # Use the stored script name to avoid issues with $0 changing in functions
   if [[ -n ${SCRIPT_NAME:-} ]]; then
-    basename "$SCRIPT_NAME"
+    local cmd_name
+    cmd_name=$(basename "$SCRIPT_NAME")
+    echo "$cmd_name"
   else
-    basename "$0"
+    local cmd_name
+    cmd_name=$(basename "$0")
+    echo "$cmd_name"
   fi
 }
 
@@ -36,11 +40,6 @@ main() {
   command_name=$(get_command_name)
 
   case "$command_name" in
-    "git-init")
-      # shellcheck disable=SC1091
-      source "$INSTALL_DIR/scripts/dev-commands/git-init.sh"
-      git_init_command "$@"
-      ;;
     "pr")
       # shellcheck disable=SC1091
       source "$INSTALL_DIR/scripts/dev-commands/pr.sh"
@@ -70,21 +69,21 @@ main() {
       # If called directly, show help
       print_header "Development Utilities"
       echo "This script provides multiple commands:"
-      echo "  git-init <name> [desc]    Initialize new git project with first commit"
+      echo "  git-init <name> [desc]    Initialize new git project with first commit (shell function)"
       echo "  pr [title]                Create pull request using gh CLI"
       echo "  dev [action] [project]    Manage development environments"
+      echo "  delete-repo [name|.] [opt] Delete repository locally and on GitHub (shell function)"
       echo "  update-configs [opts]     Update dotfiles from repository"
       echo "  reset-configs [opts]      Reset dotfiles to repository state"
       echo "  teardown [opts]           Remove dotfiles and applications"
       echo
       echo "Commands are organized in modular files:"
-      echo "  scripts/dev-commands/git-init.sh"
+      echo "  config/shell/functions/git-init.sh (shell function)"
       echo "  scripts/dev-commands/pr.sh"
       echo "  scripts/dev-commands/dev.sh"
       echo "  scripts/dev-commands/common.sh (shared utilities)"
       echo
       echo "Create symlinks to use these commands:"
-      echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/git-init"
       echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/pr"
       echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/dev"
       echo "  ln -sf ${INSTALL_DIR:-\$INSTALL_DIR}/scripts/dev-utils.sh ~/.local/bin/update-configs"
@@ -101,6 +100,6 @@ main() {
 # Only run main if script is executed directly (not sourced)
 # Check if script is being executed (not sourced)
 # Handle both direct execution and symlinked execution
-if [[ $0 == *dev-utils.sh ]] || [[ $0 == */git-init ]] || [[ $0 == */pr ]] || [[ $0 == */dev ]] || [[ $0 == */update-configs ]] || [[ $0 == */reset-configs ]] || [[ $0 == */teardown ]]; then
+if [[ $0 == *dev-utils.sh ]] || [[ $0 == */pr ]] || [[ $0 == */dev ]] || [[ $0 == */update-configs ]] || [[ $0 == */reset-configs ]] || [[ $0 == */teardown ]]; then
   main "$@"
 fi

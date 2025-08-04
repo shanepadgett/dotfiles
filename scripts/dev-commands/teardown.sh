@@ -185,7 +185,6 @@ remove_symlinks() {
     ".config/ghostty"
     ".config/claude-code"
     ".config/opencode"
-    ".local/bin/git-init"
     ".local/bin/pr"
     ".local/bin/dev"
     ".local/bin/update-configs"

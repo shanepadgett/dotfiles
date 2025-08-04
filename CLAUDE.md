@@ -22,7 +22,7 @@ update-configs               # Pull latest changes and re-run setup
 reset-configs               # Reset to clean repository state
 teardown                    # Complete removal of dotfiles and applications
 dev <command>              # Docker Compose development environment management
-git-init <name> [desc]     # Initialize new git project
+git-init <name> [desc]     # Initialize new git project (shell function)
 pr [title]                 # Create GitHub pull request
 ```
 
@@ -111,6 +111,25 @@ This single command will:
 1. `./scripts/lint-shell.sh` - Shows all shellcheck issues that need fixing
 2. `./scripts/format-shell.sh` - Ensures consistent formatting
 3. `./scripts/lint-shell.sh` - Verify all issues are resolved
+
+### Testing Commands in Dev Container
+
+**IMPORTANT**: Claude Code should NEVER attempt to execute the following commands in the dev container:
+- Global symlinked commands: `pr`, `update-configs`, `reset-configs`, `teardown`, `dev`
+- Commands requiring root access or system installation
+- Commands that interact with GitHub authentication or 1Password
+
+**NOTE**: `delete-repo` and `git-init` are now sourced shell functions and may work in dev container, but should still be tested carefully.
+
+Instead, after making changes to these scripts:
+1. Run `./scripts/validate-shell.sh` to ensure code quality
+2. **Ask the user to test the changes** on their host system
+3. Request feedback on the functionality and any issues encountered
+
+**Testing workflow for Claude Code:**
+1. Make code changes
+2. Validate with shell linting/formatting tools
+3. State: "Please test the updated script by running [command] and report back the results"
 
 ### Adding New Packages
 1. Edit `Brewfile` to add new packages
