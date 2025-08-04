@@ -17,7 +17,8 @@
       "Bash(eza *)",
       "Bash(zoxide *)",
       "Bash(htop *)",
-      "Bash(jq *)"
+      "Bash(jq *)",
+      "WebFetch(domain:cli.github.com)"
     ],
     "deny": [
       "Bash(rm -rf /)",
