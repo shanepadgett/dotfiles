@@ -4,7 +4,8 @@
 
 KEYCHAIN_SERVICE="dotfiles-sudo"
 KEYCHAIN_ACCOUNT="$(whoami)"
-ASKPASS_SCRIPT="$(dirname "${BASH_SOURCE[0]}")/sudo-askpass.sh"
+# Use absolute path to ensure we find the askpass script regardless of where this is sourced from
+ASKPASS_SCRIPT="${HOME}/.dotfiles/scripts/lib/sudo-askpass.sh"
 
 # Initialize sudo with askpass
 init_sudo_askpass() {
