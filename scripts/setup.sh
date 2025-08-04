@@ -362,14 +362,14 @@ main() {
   # Setup 1Password integration
   setup_1password
 
-  # Install AI tools
-  install_ai_tools
-
   # Create development directories
   create_development_directories
 
   # Setup shell configurations
   setup_shell
+
+  # Install AI tools (after shell setup so they can inject into shell configs)
+  install_ai_tools
 
   # Configure macOS defaults
   configure_macos_defaults
