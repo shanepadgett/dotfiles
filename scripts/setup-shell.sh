@@ -52,6 +52,27 @@ backup_existing() {
     return 0
 }
 
+# Calculate relative path from target to source
+# This ensures symlinks work across different environments (host/container)
+get_relative_path() {
+    local source="$1"
+    local target="$2"
+    
+    # Get absolute paths
+    local source_abs="$(cd "$(dirname "$source")" && pwd)/$(basename "$source")"
+    local target_dir="$(dirname "$target")"
+    
+    # Calculate relative path using Python for reliability
+    python3 -c "
+import os
+import sys
+source = sys.argv[1]
+target_dir = sys.argv[2]
+rel_path = os.path.relpath(source, target_dir)
+print(rel_path)
+" "$source_abs" "$target_dir" 2>/dev/null || echo "$source"
+}
+
 # Create symlink with conflict detection
 create_symlink() {
     local source="$1"
@@ -86,10 +107,13 @@ create_symlink() {
         log "Created directory: $parent_dir"
     fi
 
-    # Create symlink
-    ln -s "$source" "$target"
+    # Calculate relative path for the symlink
+    local relative_source=$(get_relative_path "$source" "$target")
+    
+    # Create symlink with relative path
+    ln -s "$relative_source" "$target"
     print_success "Linked $display_name"
-    log "Created symlink: $target -> $source"
+    log "Created symlink: $target -> $relative_source (relative)"
 }
 
 # Setup shell configurations

@@ -80,8 +80,9 @@ The `dev` command provides Docker Compose management:
 
 ## Important Notes
 
-- The repository uses absolute paths and expects to be cloned to a specific location during setup
+- The repository expects to be cloned to `~/.dotfiles` for proper operation
 - Shell configurations are stored without leading dots in the repository and symlinked with dots
+- **Symlinks use relative paths** to ensure compatibility between host machines and devcontainers
 - The teardown process must be run from Terminal.app or iTerm2, not from applications that will be uninstalled
 - All global commands are installed to `/usr/local/bin` via symlinks from `scripts/dev-commands/`
 - The setup integrates with 1Password - ensure a "Git Config" item exists in the Private vault with name and email fields
