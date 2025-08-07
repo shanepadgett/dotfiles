@@ -198,6 +198,18 @@ setup_zoxide() {
   fi
 }
 
+# Setup direnv configuration
+setup_direnv() {
+  print_header "Setting up direnv configuration"
+
+  # Direnv config location
+  local direnv_dir="$HOME/.config/direnv"
+
+  if [[ -d "$INSTALL_DIR/config/tools/direnv" ]]; then
+    create_symlink "$INSTALL_DIR/config/tools/direnv" "$direnv_dir" "direnv config"
+  fi
+}
+
 # Setup VS Code configuration
 setup_vscode() {
   print_header "Setting up VS Code configuration"
@@ -385,6 +397,7 @@ cleanup_broken_symlinks() {
     "$HOME/.exports"
     "$HOME/.functions"
     "$HOME/.config/zoxide"
+    "$HOME/.config/direnv"
     "$HOME/.config/zed"
     "$HOME/.config/ghostty"
     "$HOME/.claude/settings.json"
@@ -419,7 +432,7 @@ main() {
   print_header "Shell Configuration Setup"
 
   log "Starting shell configuration setup"
-  
+
   # Auto-detect container environment and set SKIP_GIT if detected
   if is_container_env && [[ "$SKIP_GIT" = false ]]; then
     print_info "Container environment detected, automatically skipping git setup"
@@ -442,7 +455,7 @@ main() {
 
   # Setup configurations
   setup_shell_configs
-  
+
   # Setup git only if not skipped
   if [[ "$SKIP_GIT" = false ]]; then
     setup_git
@@ -450,8 +463,9 @@ main() {
     print_info "Skipping git configuration setup"
     log "Git configuration setup skipped"
   fi
-  
+
   setup_zoxide
+  setup_direnv
   setup_ripgrep
   setup_vscode
   setup_zed

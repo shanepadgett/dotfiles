@@ -89,7 +89,7 @@ After installation, you'll have access to several global development utilities:
 
 ### File Organization
 - `config/shell/` - Shell configuration files (stored without leading dots)
-- `config/tools/` - Application-specific configurations (VS Code, Zed, Ghostty, etc.)
+- `config/tools/` - Application-specific configurations (VS Code, Zed, Ghostty, direnv, etc.)
 - `scripts/` - Automation and utility scripts
 - `scripts/dev-commands/` - Development utility commands
 - `Brewfile` - Package definitions for Homebrew

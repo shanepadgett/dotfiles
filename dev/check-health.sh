@@ -76,6 +76,7 @@ check_symlink "$CONFIG_SHELL_DIR/bashrc" "$HOME/.bashrc" "Bash configuration"
 check_symlink "$CONFIG_TOOLS_DIR/vscode" "$HOME/.config/Code/User" "VS Code settings"
 check_symlink "$CONFIG_TOOLS_DIR/zed" "$HOME/.config/zed" "Zed settings"
 check_symlink "$CONFIG_TOOLS_DIR/ghostty" "$HOME/.config/ghostty" "Ghostty configuration"
+check_symlink "$CONFIG_TOOLS_DIR/direnv" "$HOME/.config/direnv" "direnv configuration"
 
 # Check applications
 echo

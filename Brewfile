@@ -3,6 +3,7 @@
 
 # CLI Tools
 brew "bat"              # Cat clone with syntax highlighting and Git integration
+brew "direnv"           # Environment variable manager for project-specific configs
 brew "eza"              # Modern replacement for ls with colors and icons
 brew "fzf"              # Command-line fuzzy finder for files and history
 brew "gh"               # GitHub CLI for repository management
