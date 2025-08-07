@@ -13,9 +13,44 @@ source "$SCRIPT_DIR/lib/logger.sh"
 BACKUP_DIR="$HOME/.config-backup-$(date +%Y-%m-%d-%H%M%S)"
 LOG_FILE="$HOME/config.log"
 
+# Command line options
+SKIP_GIT=false
+
 # Enhanced logging with file output
 log() {
   log_to_file "$LOG_FILE" "$1"
+}
+
+# Parse command line arguments
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --skip-git)
+        SKIP_GIT=true
+        shift
+        ;;
+      -h|--help)
+        echo "Usage: $0 [OPTIONS]"
+        echo "Options:"
+        echo "  --skip-git    Skip git configuration setup (useful for dev containers)"
+        echo "  -h, --help    Show this help message"
+        exit 0
+        ;;
+      *)
+        print_warning "Unknown option: $1"
+        shift
+        ;;
+    esac
+  done
+}
+
+# Detect if running in a container environment
+is_container_env() {
+  # Check for common container indicators
+  [[ -f /.dockerenv ]] || \
+  [[ -n "${REMOTE_CONTAINERS:-}" ]] || \
+  [[ -n "${CODESPACES:-}" ]] || \
+  [[ -n "${DEVCONTAINER:-}" ]]
 }
 
 # Create backup directory
@@ -378,9 +413,19 @@ cleanup_broken_symlinks() {
 
 # Main execution
 main() {
+  # Parse command line arguments first
+  parse_args "$@"
+
   print_header "Shell Configuration Setup"
 
   log "Starting shell configuration setup"
+  
+  # Auto-detect container environment and set SKIP_GIT if detected
+  if is_container_env && [[ "$SKIP_GIT" = false ]]; then
+    print_info "Container environment detected, automatically skipping git setup"
+    SKIP_GIT=true
+    log "Container environment detected, skipping git setup"
+  fi
 
   # Check if shell directory exists
   if [[ ! -d $CONFIG_SHELL_DIR ]]; then
@@ -397,7 +442,15 @@ main() {
 
   # Setup configurations
   setup_shell_configs
-  setup_git
+  
+  # Setup git only if not skipped
+  if [[ "$SKIP_GIT" = false ]]; then
+    setup_git
+  else
+    print_info "Skipping git configuration setup"
+    log "Git configuration setup skipped"
+  fi
+  
   setup_zoxide
   setup_ripgrep
   setup_vscode

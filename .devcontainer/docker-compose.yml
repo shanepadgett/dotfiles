@@ -7,9 +7,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../:/workspaces/dotfiles:cached
-      - ~/.dotfiles:/home/devuser/.dotfiles:cached
-      - ~/.claude:/home/devuser/.claude:cached
-      - ~/.claude.json:/home/devuser/.claude.json:cached
     command: sleep infinity
     environment:
       - SHELL=/bin/bash

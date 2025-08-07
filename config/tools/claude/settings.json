@@ -1,4 +1,11 @@
 {
+  "cleanupPeriodDays": 90,
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "EDITOR": "code",
+    "GIT_EDITOR": "code --wait"
+  },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(deno task:*)",
@@ -28,16 +35,9 @@
       "Bash(mkfs.*)",
       "Bash(> /dev/sda*)"
     ],
-    "disableBypassPermissionsMode": "disable",
-    "defaultMode": "plan"
+    "defaultMode": "plan",
+    "disableBypassPermissionsMode": "disable"
   },
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
-    "EDITOR": "code",
-    "GIT_EDITOR": "code --wait"
-  },
-  "cleanupPeriodDays": 90,
-  "includeCoAuthoredBy": false,
   "model": "sonnet",
   "hooks": {
     "PreToolUse": [],

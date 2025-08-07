@@ -1,14 +1,23 @@
 #!/bin/zsh
 
 # Health check script to verify installation state
-# Usage: ./scripts/check-health.sh
+# Usage: ./dev/check-health.sh
 
 set -euo pipefail
 
+# Check if running in dev container environment
+if ! ([ -f /.dockerenv ] || [ -n "$REMOTE_CONTAINERS" ] || [ -n "$CODESPACES" ] || [ -n "$DEVCONTAINER" ]); then
+  echo "❌ This script requires the dev container environment"
+  echo "Please open this project in a dev container and try again."
+  echo "The dev container includes required tools for health checking."
+  exit 1
+fi
+
 # Source centralized logging system
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/lib/logger.sh"
+source "$ROOT_DIR/scripts/lib/logger.sh"
 
 log_header "Mac Setup Health Check"
 echo

@@ -1,14 +1,23 @@
 #!/bin/zsh
 
 # Format all shell scripts in the repository using shfmt
-# Usage: ./scripts/format-shell.sh [--check]
+# Usage: ./dev/format-shell.sh [--check]
 
 set -euo pipefail
 
+# Check if running in dev container environment
+if ! ([ -f /.dockerenv ] || [ -n "$REMOTE_CONTAINERS" ] || [ -n "$CODESPACES" ] || [ -n "$DEVCONTAINER" ]); then
+  echo "❌ This script requires the dev container environment"
+  echo "Please open this project in a dev container and try again."
+  echo "The dev container includes shfmt and other required tools."
+  exit 1
+fi
+
 # Source centralized logging system
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/lib/logger.sh"
+source "$ROOT_DIR/scripts/lib/logger.sh"
 
 # Check if shfmt is available
 if ! command -v shfmt &>/dev/null; then

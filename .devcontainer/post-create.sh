@@ -8,9 +8,6 @@ if [ ! -f /.dockerenv ] && [ -z "$REMOTE_CONTAINERS" ] && [ -z "$CODESPACES" ]; 
   exit 1
 fi
 
-echo "Installing Claude Code..."
-curl -fsSL https://claude.ai/install.sh | bash -s latest
-
 # shellcheck disable=SC2016
 echo 'export PATH="$HOME/.local/bin:$PATH"' >>~/.bashrc
 # shellcheck disable=SC2016
@@ -46,6 +43,13 @@ fi
 # Make scripts executable
 echo "🔧 Making scripts executable..."
 find /workspaces/dotfiles/scripts -name "*.sh" -exec chmod +x {} \;
+# Make scripts executable
+echo "🔧 Making dev scripts executable..."
+find /workspaces/dotfiles/dev -name "*.sh" -exec chmod +x {} \;
+
+# Setup shell configurations (skip git since it's handled by dev container extension)
+echo "🔗 Setting up shell configurations..."
+/workspaces/dotfiles/scripts/setup-shell.sh --skip-git
 
 echo "✅ Development environment ready!"
 echo ""

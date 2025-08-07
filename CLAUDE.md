@@ -6,6 +6,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a comprehensive macOS development environment setup repository that automates the configuration of development tools, applications, and shell configurations. The repository uses Bash scripts to orchestrate the installation and management of a complete development environment.
 
+## Environment Detection (Critical for Claude Code)
+
+**IMPORTANT**: Before performing any file operations, always detect whether you're running in a dev container or on the host machine, as file paths differ between environments.
+
+### Detection Method
+Use this bash command to detect the environment:
+```bash
+# Detect environment before any file operations
+if [[ -d "/workspaces" ]] || [[ -n "${REMOTE_CONTAINERS:-}" ]] || [[ -n "${CODESPACES:-}" ]] || [[ -n "${DEVCONTAINER:-}" ]] || [[ -f "/.dockerenv" ]]; then
+    echo "Dev container environment detected"
+    REPO_PATH="/workspaces/dotfiles"
+else
+    echo "Host machine environment detected"  
+    REPO_PATH="$HOME/.dotfiles"
+fi
+```
+
+### Environment-Specific File Paths
+- **Host Machine**: Repository is at `~/.dotfiles` (`/Users/username/.dotfiles`)
+- **Dev Container**: Repository is at `/workspaces/dotfiles`
+
+### Claude Code Usage Guidelines
+1. **Always detect environment first** before reading files or listing directories
+2. Use `$PWD` or run detection script to determine correct paths
+3. Never assume file paths - always verify the environment first
+4. If unsure, run `pwd` and `ls` to orient yourself
+
+Example workflow:
+```bash
+# Step 1: Detect environment
+pwd
+ls -la
+
+# Step 2: Use appropriate paths based on detection
+# Dev container: use /workspaces/dotfiles/...
+# Host machine: use ~/.dotfiles/... or current working directory
+```
+
 ## Key Commands
 
 ### Installation and Setup
@@ -26,15 +64,21 @@ git-init <name> [desc]     # Initialize new git project (shell function)
 pr [title]                 # Create GitHub pull request
 ```
 
-### Maintenance Scripts
+### Production Scripts
 ```bash
-./scripts/check-health.sh      # Verify installation state
+./scripts/setup.sh             # Main setup orchestrator
+./scripts/setup-shell.sh       # Re-run shell configuration
 ./scripts/update-brewfile.sh   # Update Brewfile from current system
 ./scripts/cleanup.sh           # Uninstall and cleanup
-./scripts/setup-shell.sh       # Re-run shell configuration
-./scripts/lint-shell.sh        # Lint all shell scripts with shellcheck
-./scripts/format-shell.sh      # Format all shell scripts with shfmt
-./scripts/validate-shell.sh    # Run both linting and formatting (recommended)
+```
+
+### Development Scripts (Dev Container Only)
+These scripts require the dev container environment with shellcheck, shfmt, and other tools:
+```bash
+./dev/check-health.sh          # Verify installation state
+./dev/lint-shell.sh            # Lint all shell scripts with shellcheck
+./dev/format-shell.sh          # Format all shell scripts with shfmt
+./dev/validate-shell.sh        # Run both linting and formatting (recommended)
 ```
 
 ## Architecture
@@ -43,9 +87,10 @@ pr [title]                 # Create GitHub pull request
 - `config/` - Configuration files
   - `shell/` - Shell configurations (bashrc, zshrc, aliases, functions, exports)
   - `tools/` - Application configs (VS Code, Zed, Ghostty, Git, etc.)
-- `scripts/` - Automation scripts
+- `scripts/` - Production automation scripts
   - `dev-commands/` - Global development utilities
   - `lib/` - Shared libraries (logger, sudo helpers)
+- `dev/` - Development scripts (require dev container)
 - `templates/` - Project templates
 - `Brewfile` - Homebrew package definitions
 
@@ -78,39 +123,41 @@ When modifying shell scripts:
 3. **REQUIRED**: Run `./scripts/format-shell.sh` after any shell script changes
 4. VS Code automatically formats on save in dev container
 
-#### Shell Script Validation Commands
-```bash
-# Check all shell scripts for issues (Claude Code should run this)
-./scripts/lint-shell.sh
+#### Shell Script Validation Commands (Dev Container Only)
+**IMPORTANT:** These scripts require the dev container environment and will fail on the host machine.
 
-# Show detailed fix suggestions for issues
-./scripts/lint-shell.sh --fix
+```bash
+# Check all shell scripts for issues (run in dev container)
+./dev/lint-shell.sh
+
+# Show detailed fix suggestions
+./dev/lint-shell.sh --fix
 
 # Check specific files only
-./scripts/lint-shell.sh install.sh scripts/setup.sh
+./dev/lint-shell.sh install.sh scripts/setup.sh
 
 # Format all shell scripts
-./scripts/format-shell.sh
+./dev/format-shell.sh
 
 # Check formatting without changing files
-./scripts/format-shell.sh --check
+./dev/format-shell.sh --check
 ```
 
 #### For Claude Code Users
-When making changes to shell scripts, **always run this command** to ensure code quality:
+When making changes to shell scripts:
+
+**If in dev container:**
 ```bash
-./scripts/validate-shell.sh
+./dev/validate-shell.sh
 ```
 
-This single command will:
-1. Run `shellcheck` on all scripts and show any issues
-2. Auto-format all scripts with `shfmt`
-3. Re-run `shellcheck` to verify all issues are resolved
+**If on host machine:**
+Claude Code will detect the environment and instruct you to open the project in a dev container to run validation.
 
-**Alternative manual approach:**
-1. `./scripts/lint-shell.sh` - Shows all shellcheck issues that need fixing
-2. `./scripts/format-shell.sh` - Ensures consistent formatting
-3. `./scripts/lint-shell.sh` - Verify all issues are resolved
+The validation script:
+1. Runs `shellcheck` on all scripts and shows any issues
+2. Auto-formats all scripts with `shfmt`
+3. Re-runs `shellcheck` to verify all issues are resolved
 
 ### Testing Commands in Dev Container
 
@@ -128,8 +175,9 @@ Instead, after making changes to these scripts:
 
 **Testing workflow for Claude Code:**
 1. Make code changes
-2. Validate with shell linting/formatting tools
-3. State: "Please test the updated script by running [command] and report back the results"
+2. **Check environment first** - if on host machine, instruct user to open dev container
+3. If in dev container: validate with `./dev/validate-shell.sh`
+4. If on host: instruct user to test in dev container
 
 ### Adding New Packages
 1. Edit `Brewfile` to add new packages

@@ -1,14 +1,23 @@
 #!/bin/zsh
 
 # Comprehensive shell script linting with shellcheck
-# Usage: ./scripts/lint-shell.sh [--fix] [--verbose] [file1.sh file2.sh ...]
+# Usage: ./dev/lint-shell.sh [--fix] [--verbose] [file1.sh file2.sh ...]
 
 set -euo pipefail
 
+# Check if running in dev container environment
+if ! ([ -f /.dockerenv ] || [ -n "$REMOTE_CONTAINERS" ] || [ -n "$CODESPACES" ] || [ -n "$DEVCONTAINER" ]); then
+  echo "❌ This script requires the dev container environment"
+  echo "Please open this project in a dev container and try again."
+  echo "The dev container includes shellcheck and other required tools."
+  exit 1
+fi
+
 # Source centralized logging system
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/lib/logger.sh"
+source "$ROOT_DIR/scripts/lib/logger.sh"
 
 # Check if shellcheck is available
 if ! command -v shellcheck &>/dev/null; then

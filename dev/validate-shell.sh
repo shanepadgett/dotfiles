@@ -1,14 +1,23 @@
 #!/bin/zsh
 
 # Combined shell script validation: linting + formatting
-# Usage: ./scripts/validate-shell.sh [--fix] [files...]
+# Usage: ./dev/validate-shell.sh [--fix] [files...]
 
 set -euo pipefail
 
+# Check if running in dev container environment
+if ! ([ -f /.dockerenv ] || [ -n "$REMOTE_CONTAINERS" ] || [ -n "$CODESPACES" ] || [ -n "$DEVCONTAINER" ]); then
+  echo "❌ This script requires the dev container environment"
+  echo "Please open this project in a dev container and try again."
+  echo "The dev container includes shellcheck, shfmt and other required tools."
+  exit 1
+fi
+
 # Source centralized logging system
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/lib/logger.sh"
+source "$ROOT_DIR/scripts/lib/logger.sh"
 
 print_header "Shell Script Validation (Lint + Format)"
 
