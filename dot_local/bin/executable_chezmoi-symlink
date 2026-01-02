@@ -1,0 +1,455 @@
+#!/usr/bin/env bash
+#
+# chezmoi-symlink - Manage externally-modified config files with chezmoi symlinks
+#
+# Usage:
+#   chezmoi-symlink [add] <target-file>
+#   chezmoi-symlink remove <target-file> [--purge]
+#   chezmoi-symlink --help
+#
+# This script implements the pattern from:
+# https://www.chezmoi.io/user-guide/manage-different-types-of-file/#handle-configuration-files-which-are-externally-modified
+#
+# But stores files in .chezmoi_symlinks/<encoded-path>/ to avoid filename collisions.
+
+set -euo pipefail
+
+SCRIPT_NAME="$(basename "$0")"
+STORAGE_DIR=".chezmoi_symlinks"
+
+# --- Helper functions ---
+
+die() {
+    echo "error: $*" >&2
+    exit 1
+}
+
+info() {
+    echo ":: $*"
+}
+
+usage() {
+    cat <<EOF
+Usage:
+  $SCRIPT_NAME [add] <target-file>       Add a file to be managed via symlink
+  $SCRIPT_NAME remove <target-file>      Remove symlink management, restore real file
+  $SCRIPT_NAME edit <target-file>        Edit the stored file (triggers chezmoi git hooks)
+  $SCRIPT_NAME --help                    Show this help
+
+Options:
+  --dry-run     Show what would be done without making changes
+  --purge       (remove only) Also delete the stored copy in .chezmoi_symlinks
+  --no-apply    Skip running 'chezmoi apply' at the end
+
+Examples:
+  $SCRIPT_NAME ~/.claude/settings.json
+  $SCRIPT_NAME add ~/.config/Code/User/settings.json
+  $SCRIPT_NAME edit ~/.config/opencode/opencode.json
+  $SCRIPT_NAME remove ~/.claude/settings.json --purge
+EOF
+}
+
+# Encode a path segment for chezmoi source state
+# - Dots at start: .foo -> dot_foo
+# - If should_private is set: prefix with private_
+encode_segment() {
+    local seg="$1"
+    local should_private="${2:-false}"
+    local encoded=""
+
+    # Handle dot prefix
+    if [[ "$seg" == .* ]]; then
+        encoded="dot_${seg:1}"
+    else
+        encoded="$seg"
+    fi
+
+    # Handle private prefix
+    if [[ "$should_private" == "true" ]]; then
+        encoded="private_$encoded"
+    fi
+
+    echo "$encoded"
+}
+
+# Convert a target path (under $HOME) to chezmoi-encoded relative path
+# Rules:
+#   - seg1 (first dir under ~) is always private
+#   - if seg1 is .config, seg2 is also private
+#   - all other segments are not private
+encode_target_path() {
+    local target="$1"
+    local home_prefix="$HOME/"
+
+    # Ensure target is under $HOME
+    if [[ "$target" != "$home_prefix"* ]]; then
+        die "Target must be under \$HOME: $target"
+    fi
+
+    # Get path relative to $HOME
+    local rel_path="${target#$home_prefix}"
+
+    # Split into segments
+    IFS='/' read -ra segments <<< "$rel_path"
+
+    local encoded_parts=()
+    local seg1=""
+
+    for i in "${!segments[@]}"; do
+        local seg="${segments[$i]}"
+        local should_private="false"
+
+        if [[ $i -eq 0 ]]; then
+            # First segment is always private
+            should_private="true"
+            seg1="$seg"
+        elif [[ $i -eq 1 && "$seg1" == ".config" ]]; then
+            # Second segment is private if first is .config
+            should_private="true"
+        fi
+
+        encoded_parts+=("$(encode_segment "$seg" "$should_private")")
+    done
+
+    # Join with /
+    local IFS='/'
+    echo "${encoded_parts[*]}"
+}
+
+# Get chezmoi source directory
+get_source_dir() {
+    chezmoi source-path
+}
+
+# Ensure .chezmoi_symlinks is ignored
+ensure_ignore_entry() {
+    local src_dir="$1"
+    local ignore_file="$src_dir/.chezmoiignore"
+    local entry="$STORAGE_DIR/**"
+
+    if [[ -f "$ignore_file" ]]; then
+        if grep -qxF "$entry" "$ignore_file" 2>/dev/null; then
+            return 0  # Already present
+        fi
+    fi
+
+    echo "$entry" >> "$ignore_file"
+    info "Added '$entry' to .chezmoiignore"
+}
+
+# Check if target is already set up
+is_already_setup() {
+    local symlink_tmpl="$1"
+    [[ -f "$symlink_tmpl" ]]
+}
+
+# --- Main commands ---
+
+cmd_add() {
+    local target="$1"
+    local dry_run="$2"
+    local no_apply="$3"
+
+    # Expand ~ and resolve to absolute path
+    target="${target/#\~/$HOME}"
+    target="$(cd "$(dirname "$target")" && pwd)/$(basename "$target")"
+
+    # Validate target exists and is a regular file
+    if [[ ! -e "$target" ]]; then
+        die "Target does not exist: $target"
+    fi
+    if [[ -L "$target" ]]; then
+        die "Target is already a symlink: $target"
+    fi
+    if [[ ! -f "$target" ]]; then
+        die "Target is not a regular file: $target"
+    fi
+
+    local src_dir
+    src_dir="$(get_source_dir)"
+
+    local basename
+    basename="$(basename "$target")"
+
+    local parent_dir
+    parent_dir="$(dirname "$target")"
+
+    # Encode the parent directory path (not including filename)
+    local encoded_parent
+    encoded_parent="$(encode_target_path "$parent_dir")"
+
+    # Paths we'll create/use
+    local storage_dir="$src_dir/$STORAGE_DIR/$encoded_parent"
+    local stored_file="$storage_dir/$basename"
+    local symlink_dir="$src_dir/$encoded_parent"
+    local symlink_tmpl="$symlink_dir/symlink_$basename.tmpl"
+    local symlink_content="{{ .chezmoi.sourceDir }}/$STORAGE_DIR/$encoded_parent/$basename"
+
+    # Check idempotency
+    if is_already_setup "$symlink_tmpl"; then
+        info "Already set up: $target"
+        info "  Symlink template: $symlink_tmpl"
+        return 0
+    fi
+
+    info "Adding: $target"
+    info "  Encoded path: $encoded_parent"
+    info "  Storage: $stored_file"
+    info "  Symlink template: $symlink_tmpl"
+
+    if [[ "$dry_run" == "true" ]]; then
+        info "(dry-run) Would create backup, copy file, create symlink template"
+        return 0
+    fi
+
+    # 1. Backup original
+    local timestamp
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+    local backup="$target.bak.$timestamp"
+    cp "$target" "$backup"
+    info "Created backup: $backup"
+
+    # 2. Copy file to storage
+    mkdir -p "$storage_dir"
+    cp "$target" "$stored_file"
+    info "Copied to storage: $stored_file"
+
+    # 3. Ensure storage dir is ignored
+    ensure_ignore_entry "$src_dir"
+
+    # 4. Create symlink template
+    mkdir -p "$symlink_dir"
+    echo -n "$symlink_content" > "$symlink_tmpl"
+    info "Created symlink template: $symlink_tmpl"
+
+    # 5. Apply
+    if [[ "$no_apply" == "true" ]]; then
+        info "Skipping chezmoi apply (--no-apply)"
+    else
+        info "Running chezmoi apply..."
+        chezmoi apply -v
+    fi
+
+    info "Done! $target is now a symlink to the file in your chezmoi source."
+}
+
+cmd_remove() {
+    local target="$1"
+    local dry_run="$2"
+    local no_apply="$3"
+    local purge="$4"
+
+    # Expand ~ and resolve to absolute path
+    target="${target/#\~/$HOME}"
+    # For remove, target might be a symlink, so don't resolve through it
+    local target_dir
+    target_dir="$(cd "$(dirname "$target")" && pwd)"
+    target="$target_dir/$(basename "$target")"
+
+    local src_dir
+    src_dir="$(get_source_dir)"
+
+    local basename
+    basename="$(basename "$target")"
+
+    local parent_dir
+    parent_dir="$(dirname "$target")"
+
+    # Encode the parent directory path
+    local encoded_parent
+    encoded_parent="$(encode_target_path "$parent_dir")"
+
+    # Paths
+    local storage_dir="$src_dir/$STORAGE_DIR/$encoded_parent"
+    local stored_file="$storage_dir/$basename"
+    local symlink_dir="$src_dir/$encoded_parent"
+    local symlink_tmpl="$symlink_dir/symlink_$basename.tmpl"
+
+    # Validate symlink template exists
+    if [[ ! -f "$symlink_tmpl" ]]; then
+        die "No symlink template found at: $symlink_tmpl"
+    fi
+
+    # Validate stored file exists
+    if [[ ! -f "$stored_file" ]]; then
+        die "No stored file found at: $stored_file"
+    fi
+
+    info "Removing symlink management for: $target"
+    info "  Stored file: $stored_file"
+    info "  Symlink template: $symlink_tmpl"
+
+    if [[ "$dry_run" == "true" ]]; then
+        info "(dry-run) Would restore file, remove symlink template"
+        if [[ "$purge" == "true" ]]; then
+            info "(dry-run) Would also delete stored file (--purge)"
+        fi
+        return 0
+    fi
+
+    # 1. Remove symlink template first (so chezmoi doesn't recreate symlink)
+    rm "$symlink_tmpl"
+    info "Removed symlink template"
+
+    # 2. If target is a symlink, remove it
+    if [[ -L "$target" ]]; then
+        rm "$target"
+    fi
+
+    # 3. Copy stored file back to target
+    cp "$stored_file" "$target"
+    info "Restored file: $target"
+
+    # 4. Optionally purge stored copy
+    if [[ "$purge" == "true" ]]; then
+        rm "$stored_file"
+        info "Purged stored file: $stored_file"
+        # Clean up empty directories
+        rmdir "$storage_dir" 2>/dev/null || true
+    fi
+
+    # 5. Apply
+    if [[ "$no_apply" == "true" ]]; then
+        info "Skipping chezmoi apply (--no-apply)"
+    else
+        info "Running chezmoi apply..."
+        chezmoi apply -v
+    fi
+
+    info "Done! $target is now a regular file again."
+}
+
+cmd_edit() {
+    local target="$1"
+
+    # Expand ~ and resolve to absolute path
+    target="${target/#\~/$HOME}"
+    # Target might be a symlink, so don't resolve through it
+    local target_dir
+    target_dir="$(cd "$(dirname "$target")" && pwd)"
+    target="$target_dir/$(basename "$target")"
+
+    local src_dir
+    src_dir="$(get_source_dir)"
+
+    local basename
+    basename="$(basename "$target")"
+
+    local parent_dir
+    parent_dir="$(dirname "$target")"
+
+    # Encode the parent directory path
+    local encoded_parent
+    encoded_parent="$(encode_target_path "$parent_dir")"
+
+    # Paths
+    local stored_file="$src_dir/$STORAGE_DIR/$encoded_parent/$basename"
+    local symlink_tmpl="$src_dir/$encoded_parent/symlink_$basename.tmpl"
+
+    # Validate this target is managed by chezmoi-symlink
+    if [[ ! -f "$symlink_tmpl" ]]; then
+        die "Target is not managed by chezmoi-symlink: $target"
+    fi
+
+    if [[ ! -f "$stored_file" ]]; then
+        die "Stored file not found: $stored_file"
+    fi
+
+    info "Editing: $stored_file"
+    
+    # Get the editor (respect $EDITOR, fall back to vi)
+    local editor
+    editor="${EDITOR:-vi}"
+    
+    # Edit the file (use eval to handle editors with arguments like "zed --wait")
+    eval "$editor" "\"$stored_file\""
+    
+    # Check if there are changes to commit
+    if chezmoi git -- diff --quiet "$stored_file" 2>/dev/null; then
+        info "No changes detected."
+    else
+        # Use chezmoi git to trigger autopush (which implies auto-commit per docs)
+        info "Committing and pushing changes..."
+        chezmoi git -- add "$stored_file"
+        chezmoi git -- commit -m "Update $basename"
+        # autopush should handle push, but call explicitly to be safe
+        chezmoi git -- push
+        info "Done!"
+    fi
+}
+
+# --- Argument parsing ---
+
+main() {
+    local cmd="add"
+    local target=""
+    local dry_run="false"
+    local no_apply="false"
+    local purge="false"
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            add)
+                cmd="add"
+                shift
+                ;;
+            remove|--remove|-r)
+                cmd="remove"
+                shift
+                ;;
+            edit)
+                cmd="edit"
+                shift
+                ;;
+            --dry-run|-n)
+                dry_run="true"
+                shift
+                ;;
+            --no-apply)
+                no_apply="true"
+                shift
+                ;;
+            --purge)
+                purge="true"
+                shift
+                ;;
+            --help|-h)
+                usage
+                exit 0
+                ;;
+            -*)
+                die "Unknown option: $1"
+                ;;
+            *)
+                if [[ -z "$target" ]]; then
+                    target="$1"
+                else
+                    die "Unexpected argument: $1"
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -z "$target" ]]; then
+        usage
+        exit 1
+    fi
+
+    case "$cmd" in
+        add)
+            cmd_add "$target" "$dry_run" "$no_apply"
+            ;;
+        remove)
+            cmd_remove "$target" "$dry_run" "$no_apply" "$purge"
+            ;;
+        edit)
+            cmd_edit "$target"
+            ;;
+        *)
+            die "Unknown command: $cmd"
+            ;;
+    esac
+}
+
+main "$@"
