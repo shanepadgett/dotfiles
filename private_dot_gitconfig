@@ -1,0 +1,15 @@
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
+[user]
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyc2VwV8Fsuld2DkNHgVkR0R+RHNI4aQWAX1VYU2lsu
+	name = Shane Padgett
+	email = contact@shanepadgett.dev
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
