@@ -8,6 +8,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # Exports here:
 export EDITOR="zed --wait"
+export GITHUB_USERNAME="shanepadgett"
 export DO_NOT_TRACK=1
 
 # Aliases here:
