@@ -17,6 +17,7 @@ alias cma="chezmoi add"
 alias cme="chezmoi edit --apply"
 alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
+alias cmu="chezmoi update"
 
 # Must remain at the end of this file
 eval "$(zoxide init zsh)"
