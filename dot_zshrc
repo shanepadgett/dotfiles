@@ -14,7 +14,7 @@ export DO_NOT_TRACK=1
 # Aliases here:
 alias cm="chezmoi"
 alias cma="chezmoi add"
-alias cme="chezmoi edit"
+alias cme="chezmoi edit --apply"
 alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
 
