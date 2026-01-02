@@ -8,6 +8,12 @@ Managed with [chezmoi](https://chezmoi.io).
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply shanepadgett
 ```
 
+### Homesbrew and Apps
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 2>/dev/null || true && brew bundle --file="$HOME/Brewfile"
+
+```
+
 ## What's Included
 
 - **zsh** - Shell config with nvm, zoxide, aliases
