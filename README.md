@@ -34,9 +34,3 @@ chezmoi-symlink edit <file>     # Edit + auto commit/push
 - `--dry-run` - Show what would be done
 - `--purge` - (remove only) Delete stored copy
 - `--no-apply` - Skip `chezmoi apply`
-
-### Files Currently Managed
-
-- `~/.claude/settings.json`
-- `~/.config/opencode/opencode.json`
-- `~/.config/zed/settings.json`
