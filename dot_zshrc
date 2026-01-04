@@ -60,6 +60,9 @@ alias lc='less -N -S -R'
 alias cc='pbcopy <'
 alias source='source ~/.zshrc'
 
+# Sync Brewfile from home directory
+alias brewup="brew bundle --file=~/Brewfile"
+
 # Must remain at the end of this file
 eval "$(zoxide init zsh)"
 . "/Users/shanepadgett/.deno/env"
