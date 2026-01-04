@@ -1,9 +1,6 @@
 # Global Configuration
 cask_args appdir: "/Applications"
 
-# Taps
-tap "homebrew/bundle"
-
 # Core Version Control & Shell
 brew "git"          # Latest version of Git
 brew "gh"           # GitHub CLI
