@@ -24,7 +24,7 @@ brew "lazygit"                  # Git TUI
 brew "xcodes"                   # Xcode version manager
 brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
-brwe "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
+brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
 
 # Casks: Dev Environments
 cask "ghostty"
