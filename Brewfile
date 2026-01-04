@@ -41,7 +41,7 @@ cask "rectangle"
 cask "obsidian"
 cask "discord"
 cask "voiceink"
-cask "logi-options-plus"
+cask "logi-options+"
 
 # Custom / Third-party (Ensure the formula name is exact)
 brew "opencode"
