@@ -88,6 +88,7 @@ alias deno='mise exec -- deno'
 
 # npm workflow helpers
 alias ni='npm install'              # Install dependencies
+alias nig='npm install -g'          # Install dependencies
 alias nr='npm run'                  # Run a script from package.json (ex: nr dev)
 alias ndev='npm run dev'            # Common dev script shortcut
 alias ntest='npm test'              # Run test script
@@ -98,13 +99,14 @@ alias nrel='npm install'            # Reinstall after running nclean (ex: nclean
 alias nver='node -v && npm -v'      # Print active node + npm version quickly
 
 # Bun shortcuts
-alias bi='bun install'    # Install dependencies
-alias br='bun run'        # Run a script from package.json
-alias bx='bunx'           # Execute packages without installing (like npx)
-alias bdev='bun run dev'  # Run the "dev" script quickly
-alias btest='bun test'    # Run Bun test runner
-alias bup='bun upgrade'   # Upgrade dependencies
-alias bout='bun outdated' # Check outdated deps
+alias bi='bun install'      # Install dependencies
+alias big='bun install -g'  # Install dependencies
+alias br='bun run'          # Run a script from package.json
+alias bx='bunx'             # Execute packages without installing (like npx)
+alias bdev='bun run dev'    # Run the "dev" script quickly
+alias btest='bun test'      # Run Bun test runner
+alias bup='bun upgrade'     # Upgrade dependencies
+alias bout='bun outdated'   # Check outdated deps
 
 # Deno shortcuts
 alias dr='deno run -A'    # Run a Deno script with all permissions
