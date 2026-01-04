@@ -1,18 +1,47 @@
+# Global Configuration
 cask_args appdir: "/Applications"
 
-cask "1password"
-cask "1password-cli"
-cask "brave-browser"
-cask "bruno"
-cask "discord"
+# Taps
+tap "homebrew/bundle"
+
+# Core Version Control & Shell
+brew "git"          # Latest version of Git
+brew "gh"           # GitHub CLI
+brew "bash"         # Modern Bash (v5+)
+brew "fnm"          # Fast Node Manager (Rust-based, faster than nvm)
+
+# Modern Unix Toolkit
+brew "bat"          # Better 'cat'
+brew "eza"          # Better 'ls'
+brew "fd"           # Better 'find'
+brew "ripgrep"      # Better 'grep'
+brew "zoxide"       # Smart 'cd'
+brew "fzf"          # Fuzzy finder
+brew "tldr"         # Practical man pages
+brew "jq"           # JSON processor
+brew "btop"         # System monitor
+brew "lazygit"      # Git TUI
+brew "xcodes"       # Xcode version manager
+
+# Casks: Dev Environments
 cask "ghostty"
-cask "logi-options-plus"
-cask "obsidian"
-cask "orbstack"
-cask "raycast"
-cask "rectangle"
-cask "voiceink"
 cask "warp"
 cask "zed"
+cask "orbstack"
+cask "bruno"
 
-brew "xcodes"
+# Casks: Browsers & Security
+cask "brave-browser"
+cask "1password"
+cask "1password-cli"
+
+# Casks: Productivity
+cask "raycast"
+cask "rectangle"
+cask "obsidian"
+cask "discord"
+cask "voiceink"
+cask "logi-options-plus"
+
+# Custom / Third-party (Ensure the formula name is exact)
+brew "opencode"
