@@ -102,7 +102,7 @@ fo() {
 
 proj() {
   local dir
-  dir=$(fd --type d --max-depth 4 . $DEV_PATH 2>/dev/null | fzf) && cd "$dir"
+  dir=$(fd --type d --max-depth 2 . $DEV_PATH 2>/dev/null | fzf) && cd "$dir"
 }
 
 # --- Inits (Must remain at the end) ---
