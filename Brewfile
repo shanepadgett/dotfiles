@@ -3,6 +3,7 @@ cask_args appdir: "/Applications"
 
 # Core Version Control & Shell
 brew "git"          # Latest version of Git
+brew "jujutsu"      # Modern alternative to Git
 brew "gh"           # GitHub CLI
 brew "bash"         # Modern Bash (v5+)
 brew "mise"         # Polyglot runtime manager (Node, Go, Ruby, Elixir, etc.)
