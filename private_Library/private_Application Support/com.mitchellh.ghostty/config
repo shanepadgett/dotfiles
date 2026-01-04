@@ -26,6 +26,9 @@ window-height = 45
 window-save-state = always
 working-directory = default
 
+# Launch with zsh as interactive login shell
+command = /bin/zsh -l
+
 # This is the configuration file for Ghostty.
 #
 # This template file has been automatically created at the following
