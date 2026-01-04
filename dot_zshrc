@@ -64,5 +64,6 @@ alias source='source ~/.zshrc'
 alias brewup="brew bundle --file=~/Brewfile"
 
 # Must remain at the end of this file
+eval "$(fnm env --use-on-cd)"
 eval "$(zoxide init zsh)"
 . "/Users/shanepadgett/.deno/env"
