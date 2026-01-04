@@ -1,11 +1,10 @@
 # --- Completion system ---
 autoload -Uz compinit
-# Rebuild completion cache only when needed (keeps startup faster)
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+compinit -C
+
+
+BREW_PREFIX=$(brew --prefix 2>/dev/null)
+[[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # Homebrew completions
 if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
@@ -112,3 +111,4 @@ eval "$(starship init zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 . "/Users/shanepadgett/.deno/env"
+[[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
