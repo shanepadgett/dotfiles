@@ -16,6 +16,7 @@ brew "zoxide"                   # Smart 'cd'
 brew "fzf"                      # Fuzzy finder
 brew "tldr"                     # Practical man pages
 brew "jq"                       # JSON processor
+brew "yq"                       # YAML processor
 brew "btop"                     # System monitor
 brew "lazygit"                  # Git TUI
 brew "xcodes"                   # Xcode version manager
