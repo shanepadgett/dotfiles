@@ -19,7 +19,7 @@ if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export F
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
-export DEV_PATH="~/dev"
+export DEV_PATH="$HOME/dev"
 export DO_NOT_TRACK=1
 
 # --- Modern Replacements (The "Big Upgrades") ---
@@ -55,7 +55,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-alias ~='cd ~'
+#alias ~='cd ~'
 alias dev='cd $DEV_PATH'
 
 # Teach me helpers
