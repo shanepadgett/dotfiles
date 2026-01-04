@@ -5,7 +5,7 @@ cask_args appdir: "/Applications"
 brew "git"          # Latest version of Git
 brew "gh"           # GitHub CLI
 brew "bash"         # Modern Bash (v5+)
-brew "fnm"          # Fast Node Manager (Rust-based, faster than nvm)
+brew "mise"         # Polyglot runtime manager (Node, Go, Ruby, Elixir, etc.)
 
 # Modern Unix Toolkit
 brew "bat"                      # Better 'cat'
@@ -23,7 +23,6 @@ brew "xcodes"                   # Xcode version manager
 brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
-brew "mise"                     # Polyglot runtime manager (Node, Go, Ruby, Elixir, etc.)
 
 # Tools
 brew "shellcheck"    # Shell linter
