@@ -55,7 +55,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-#alias ~='cd ~'
+alias ~='cd ~'
 alias dev='cd $DEV_PATH'
 
 # Teach me helpers
