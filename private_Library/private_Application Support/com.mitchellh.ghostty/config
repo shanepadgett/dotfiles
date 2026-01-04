@@ -5,7 +5,8 @@ font-feature = -calt
 
 # --- THEME ---
 #theme = Everforest Dark Hard
-theme = Sea Shells
+#theme = Sea Shells
+theme = Twilight
 
 # --- CURSOR ---
 cursor-style = block
