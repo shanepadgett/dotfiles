@@ -4,7 +4,8 @@ font-size = 16
 font-feature = -calt
 
 # --- THEME ---
-theme = Everforest Dark Hard
+#theme = Everforest Dark Hard
+theme = Sea Shells
 
 # --- CURSOR ---
 cursor-style = block
