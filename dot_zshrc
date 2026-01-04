@@ -1,3 +1,17 @@
+# --- Completion system ---
+autoload -Uz compinit
+# Rebuild completion cache only when needed (keeps startup faster)
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# Homebrew completions
+if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
+  fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+fi
+
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export FPATH="/Users/shanepadgett/.zsh/completions:$FPATH"; fi
 
@@ -5,6 +19,7 @@ if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export F
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
+export DEV_PATH="~/dev"
 export DO_NOT_TRACK=1
 
 # --- Modern Replacements (The "Big Upgrades") ---
@@ -24,9 +39,6 @@ alias grep='rg'
 # Replace find with fd
 alias find='fd'
 
-# Replace cd with zoxide (your nav aliases already work with this)
-alias cd='z'
-
 # --- Tool Specific Aliases ---
 # Chezmoi
 alias cm="chezmoi"
@@ -39,9 +51,19 @@ alias cmu="chezmoi update"
 alias cz="cme ~/.zshrc"
 
 # Directory Nav
-alias ..='z ..'
-alias ...='z ../..'
-alias ~='z ~'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ~='cd ~'
+alias dev='cd $DEV_PATH'
+
+# Teach me helpers
+alias h='history 0'
+alias hg='history 0 | rg'     # search history with ripgrep
+alias which='type -a'         # more informative than macOS which
+alias path='echo $PATH | tr ":" "\n"'
+alias fpath='echo $fpath | tr " " "\n"'
 
 # Git (Keeping your flow, but adding lazygit)
 alias g='git'
@@ -70,12 +92,23 @@ alias reload='source ~/.zshrc' # Renamed from 'source' to avoid shadowing the co
 # usage: fo <filename>
 fo() {
   local file
-  file=$(fd --type f | fzf) && zed "$file"
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    file=$(git ls-files | fzf)
+  else
+    file=$(fd --type f | fzf)
+  fi
+  [[ -n "$file" ]] && zed "$file"
+}
+
+proj() {
+  local dir
+  dir=$(fd --type d --max-depth 4 . $DEV_PATH 2>/dev/null | fzf) && cd "$dir"
 }
 
 # --- Inits (Must remain at the end) ---
 eval "$(fnm env --use-on-cd)"
 eval "$(zoxide init zsh)"
+eval "$(starship init zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 . "/Users/shanepadgett/.deno/env"
