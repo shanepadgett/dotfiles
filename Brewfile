@@ -23,6 +23,10 @@ brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
 
+# Tools
+brew "shellcheck"    # Shell linter
+brew "git-delta"     # Make diffs readable
+
 # Casks: Dev Environments
 cask "ghostty"
 cask "warp"
