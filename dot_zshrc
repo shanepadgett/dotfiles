@@ -1,12 +1,33 @@
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export FPATH="/Users/shanepadgett/.zsh/completions:$FPATH"; fi
 
-# Exports here:
+# Exports
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
 export DO_NOT_TRACK=1
 
+# --- Modern Replacements (The "Big Upgrades") ---
+# Replace ls with eza (adds icons, git status, and better colors)
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -lah --icons --group-directories-first --git'
+alias la='eza -A --icons'
+alias tree='eza --tree --icons'
+
+# Replace cat with bat (syntax highlighting and paging)
+alias cat='bat --paging=never'
+alias preview='bat'
+
+# Replace grep with ripgrep (way faster, respects .gitignore)
+alias grep='rg'
+
+# Replace find with fd
+alias find='fd'
+
+# Replace cd with zoxide (your nav aliases already work with this)
+alias cd='z'
+
+# --- Tool Specific Aliases ---
 # Chezmoi
 alias cm="chezmoi"
 alias cma="chezmoi add"
@@ -18,14 +39,13 @@ alias cmu="chezmoi update"
 alias cz="cme ~/.zshrc"
 
 # Directory Nav
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ~='cd ~'
+alias ..='z ..'
+alias ...='z ../..'
+alias ~='z ~'
 
-# Git
+# Git (Keeping your flow, but adding lazygit)
 alias g='git'
+alias lg='lazygit'  # This is a game changer for staging hunks
 alias ga='git add'
 alias gaa='git add --all'
 alias gc='git commit -m'
@@ -35,29 +55,27 @@ alias gpl='git pull'
 alias gst='git status'
 alias gl='git log --oneline --graph --decorate'
 alias gco='git checkout'
-alias gb='git branch'
-alias gbd='git branch -d'
-alias gdf='git diff'
-alias grh='git reset --hard'
-alias grs='git restore'
-alias grss='git restore --staged'
-alias gcm='git checkout main || git checkout master'
 
-# List
-alias ll='ls -lah'
-alias la='ls -A'
-
-# File browsing
-alias lc='less -N -S -R'
-
-# Other
-alias cc='pbcopy <'
-alias source='source ~/.zshrc'
-
-# Sync Brewfile from home directory
+# System
+alias top='btop'    # Use that aesthetic system monitor instead of top
+alias help='tldr'   # Use tldr for quick command examples
 alias brewup="brew bundle --file=~/Brewfile"
 
-# Must remain at the end of this file
+# Utilities
+alias cc='pbcopy <'
+alias reload='source ~/.zshrc' # Renamed from 'source' to avoid shadowing the command
+
+# --- Advanced FZF Integration ---
+# This allows you to use 'fzf' to quickly find and open files in Zed
+# usage: fo <filename>
+fo() {
+  local file
+  file=$(fd --type f | fzf) && zed "$file"
+}
+
+# --- Inits (Must remain at the end) ---
 eval "$(fnm env --use-on-cd)"
 eval "$(zoxide init zsh)"
+# Initialize fzf (enables Ctrl+R history search and Tab completion)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 . "/Users/shanepadgett/.deno/env"
