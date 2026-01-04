@@ -13,7 +13,7 @@ export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
 export DO_NOT_TRACK=1
 
-# Aliases here:
+# Chezmoi
 alias cm="chezmoi"
 alias cma="chezmoi add"
 alias cme="chezmoi edit --apply"
@@ -21,6 +21,7 @@ alias cmes="chezmoi-symlink edit"
 alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
 alias cmu="chezmoi update"
+alias cz="cme ~/.zshrc"
 
 # Directory Nav
 alias ..='cd ..'
@@ -51,6 +52,9 @@ alias gcm='git checkout main || git checkout master'
 # List
 alias ll='ls -lah'
 alias la='ls -A'
+
+# File browsing
+alias lc='less -N -S -R'
 
 # Must remain at the end of this file
 eval "$(zoxide init zsh)"
