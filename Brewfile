@@ -23,6 +23,7 @@ brew "xcodes"                   # Xcode version manager
 brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
+brew "mise"                     # Polyglot runtime manager (Node, Go, Ruby, Elixir, etc.)
 
 # Tools
 brew "shellcheck"    # Shell linter
