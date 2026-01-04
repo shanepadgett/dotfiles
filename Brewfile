@@ -11,17 +11,20 @@ brew "bash"         # Modern Bash (v5+)
 brew "fnm"          # Fast Node Manager (Rust-based, faster than nvm)
 
 # Modern Unix Toolkit
-brew "bat"          # Better 'cat'
-brew "eza"          # Better 'ls'
-brew "fd"           # Better 'find'
-brew "ripgrep"      # Better 'grep'
-brew "zoxide"       # Smart 'cd'
-brew "fzf"          # Fuzzy finder
-brew "tldr"         # Practical man pages
-brew "jq"           # JSON processor
-brew "btop"         # System monitor
-brew "lazygit"      # Git TUI
-brew "xcodes"       # Xcode version manager
+brew "bat"                      # Better 'cat'
+brew "eza"                      # Better 'ls'
+brew "fd"                       # Better 'find'
+brew "ripgrep"                  # Better 'grep'
+brew "zoxide"                   # Smart 'cd'
+brew "fzf"                      # Fuzzy finder
+brew "tldr"                     # Practical man pages
+brew "jq"                       # JSON processor
+brew "btop"                     # System monitor
+brew "lazygit"                  # Git TUI
+brew "xcodes"                   # Xcode version manager
+brew "starship"                 # Cross shell prompt
+brew "zsh-autosuggestions"      # Fish-like autosuggestions
+brwe "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
 
 # Casks: Dev Environments
 cask "ghostty"
