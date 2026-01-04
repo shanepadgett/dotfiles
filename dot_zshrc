@@ -2,6 +2,7 @@
 autoload -Uz compinit
 compinit -C
 
+COLORTERM=truecolor
 
 BREW_PREFIX=$(brew --prefix 2>/dev/null)
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
