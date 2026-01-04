@@ -17,6 +17,8 @@ if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export F
 
 # Exports
 export PATH="$HOME/.local/bin:$PATH"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
 export DEV_PATH="$HOME/dev"
