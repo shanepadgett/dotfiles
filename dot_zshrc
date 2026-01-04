@@ -58,6 +58,7 @@ alias lc='less -N -S -R'
 
 # Other
 alias cc='pbcopy <'
+alias source='source ~/.zshrc'
 
 # Must remain at the end of this file
 eval "$(zoxide init zsh)"
