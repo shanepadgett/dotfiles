@@ -108,9 +108,9 @@ proj() {
 }
 
 # --- Inits (Must remain at the end) ---
-eval "$(fnm env --use-on-cd)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
+eval "$(mise activate zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 . "/Users/shanepadgett/.deno/env"
