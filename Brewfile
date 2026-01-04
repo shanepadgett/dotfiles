@@ -25,8 +25,9 @@ brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
 
 # Tools
-brew "shellcheck"    # Shell linter
-brew "git-delta"     # Make diffs readable
+brew "shellcheck"       # Shell linter
+brew "git-delta"        # Make diffs readable
+brew "golangci-lint"    # Lint Go files
 
 # Casks: Dev Environments
 cask "ghostty"
