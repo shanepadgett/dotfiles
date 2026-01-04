@@ -48,6 +48,7 @@ alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
 alias cmu="chezmoi update"
 alias cz="cme ~/.zshrc"
+alias cmeo="cmes ~/.config/opencode/opencode.json"
 
 # Directory Nav
 alias ..='cd ..'
