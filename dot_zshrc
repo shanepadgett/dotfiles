@@ -22,6 +22,36 @@ alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
 alias cmu="chezmoi update"
 
+# Directory Nav
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ~='cd ~'
+
+# Git
+alias g='git'
+alias ga='git add'
+alias gaa='git add --all'
+alias gc='git commit -m'
+alias gca='git commit -am'
+alias gp='git push'
+alias gpl='git pull'
+alias gst='git status'
+alias gl='git log --oneline --graph --decorate'
+alias gco='git checkout'
+alias gb='git branch'
+alias gbd='git branch -d'
+alias gdf='git diff'
+alias grh='git reset --hard'
+alias grs='git restore'
+alias grss='git restore --staged'
+alias gcm='git checkout main || git checkout master'
+
+# List
+alias ll='ls -lah'
+alias la='ls -A'
+
 # Must remain at the end of this file
 eval "$(zoxide init zsh)"
 . "/Users/shanepadgett/.deno/env"
