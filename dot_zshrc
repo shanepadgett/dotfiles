@@ -13,7 +13,7 @@ if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
 fi
 
 # Add deno completions to search path
-if [[ ":$FPATH:" != *":/Users/shanepadgett/.zsh/completions:"* ]]; then export FPATH="/Users/shanepadgett/.zsh/completions:$FPATH"; fi
+if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
 
 # Exports
 export PATH="$HOME/.local/bin:$PATH"
@@ -33,5 +33,5 @@ eval "$(starship init zsh)"
 eval "$(mise activate zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-. "/Users/shanepadgett/.deno/env"
+. "$HOME/.deno/env"
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
