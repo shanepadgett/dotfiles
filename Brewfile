@@ -24,6 +24,7 @@ brew "xcodes"                   # Xcode version manager
 brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
+brew "ripgrep"                  # Faster grep alternative
 
 # Tools
 brew "shellcheck"       # Shell linter
@@ -48,7 +49,6 @@ cask "rectangle"
 cask "obsidian"
 cask "discord"
 cask "voiceink"
-cask "logi-options+"
 
 # Custom / Third-party (Ensure the formula name is exact)
 brew "opencode"

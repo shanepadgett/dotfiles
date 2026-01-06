@@ -42,9 +42,9 @@
   "ui_font_size": 18.0,
   "buffer_font_size": 16.0,
   "theme": "Yue Moon",
-  "terminal": {
-    "dock": "right",
-  },
+  // "terminal": {
+  //   "dock": "right",
+  // },
   "lsp": {
     "deno": {
       "settings": {
