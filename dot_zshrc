@@ -33,5 +33,4 @@ eval "$(starship init zsh)"
 eval "$(mise activate zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-. "$HOME/.deno/env"
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
