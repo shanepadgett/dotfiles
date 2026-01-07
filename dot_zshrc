@@ -1,4 +1,4 @@
-# --- Completion system ---
+# --- Completion system ----
 autoload -Uz compinit
 compinit -C
 
