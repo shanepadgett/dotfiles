@@ -18,6 +18,7 @@ if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.z
 # Exports
 export PATH="$HOME/.local/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
+export PATH="$HOME/.opencode/bin:$PATH"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export EDITOR="zed --wait"
 export GITHUB_USERNAME="shanepadgett"
@@ -34,6 +35,3 @@ eval "$(mise activate zsh)"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-# opencode
-export PATH=/Users/shanepadgett/.opencode/bin:$PATH
