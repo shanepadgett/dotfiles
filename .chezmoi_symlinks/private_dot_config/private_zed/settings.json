@@ -46,7 +46,7 @@
   "ui_font_size": 18.0,
   "buffer_font_size": 16.0,
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": "Yue Moon",
     "dark": "Yue Moon"
   },
