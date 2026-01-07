@@ -26,7 +26,7 @@ scrollback-limit = 10000
 window-width = 200
 window-height = 45
 window-save-state = always
-working-directory = default
+working-directory = $HOME
 
 # Launch with zsh as interactive login shell
 command = /bin/zsh -l

@@ -38,10 +38,18 @@
     "diagnostics": false,
     "metrics": false,
   },
-  "icon_theme": "Zed (Default)",
+  "icon_theme": {
+    "mode": "light",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "ui_font_size": 18.0,
   "buffer_font_size": 16.0,
-  "theme": "Yue Moon",
+  "theme": {
+    "mode": "light",
+    "light": "Yue Moon",
+    "dark": "Yue Moon"
+  },
   // "terminal": {
   //   "dock": "right",
   // },
