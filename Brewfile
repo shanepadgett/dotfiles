@@ -30,6 +30,7 @@ brew "ripgrep"                  # Faster grep alternative
 brew "shellcheck"       # Shell linter
 brew "git-delta"        # Make diffs readable
 brew "golangci-lint"    # Lint Go files
+brew "devcontainer-cli"         # Run devcontainers from command line
 
 # Casks: Dev Environments
 cask "ghostty"
