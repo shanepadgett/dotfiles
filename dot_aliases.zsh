@@ -78,13 +78,8 @@ alias mc='mise current'
 alias md='mise doctor'
 alias mr='mise reshim'
 
-# Runtimes (forced through mise)
-alias node='mise exec -- node'
-alias npm='mise exec -- npm'
-alias npx='mise exec -- npx'
-alias bun='mise exec -- bun'
-alias go='mise exec -- go'
-alias deno='mise exec -- deno'
+# Runtimes
+# Managed by `mise` (see lazy activation in `~/.zshrc`).
 
 # npm workflow helpers
 alias ni='npm install'              # Install dependencies
