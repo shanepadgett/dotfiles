@@ -7,7 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "restore_on_startup": "none",
+  "restore_on_startup": "empty_tab",
   "show_edit_predictions": false,
   "autosave": {
     "after_delay": {
@@ -32,7 +32,7 @@
     "auggie": {
       "default_model": "claude-opus-4-5",
       "type": "extension",
-      "default_mode": "default",
+      "default_mode": "ask",
     },
   },
   "telemetry": {
@@ -46,11 +46,7 @@
   },
   "ui_font_size": 18.0,
   "buffer_font_size": 16.0,
-  "theme": {
-    "mode": "dark",
-    "light": "Yue Moon",
-    "dark": "Ayu Dark"
-  },
+  "theme": "Yue Fullmoon",
   // "terminal": {
   //   "dock": "right",
   // },
