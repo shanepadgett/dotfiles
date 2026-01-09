@@ -15,6 +15,7 @@
     },
   },
   "agent": {
+    "play_sound_when_agent_done": true,
     "model_parameters": [],
     "use_modifier_to_send": true,
   },
