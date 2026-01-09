@@ -7,7 +7,15 @@
       "model": "github-copilot/gpt-5.2"
     },
     "plan": {
-      "model": "github-copilot/gpt-5.2"
+      "model": "github-copilot/gpt-5.2",
+      "permission": {
+        "edit": {
+          "*.md": "allow"
+        },
+        "write": {
+          "*.md": "allow"
+        }
+      }
     }
   },
   "default_agent": "chat",
