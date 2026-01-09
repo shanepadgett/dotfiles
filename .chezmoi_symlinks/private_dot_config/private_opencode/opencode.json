@@ -16,6 +16,7 @@
     }
   },
   "permission": {
+    "*": "allow",
     "bash": {
       "sudo ": "deny",
       "rm -rf ": "deny",
