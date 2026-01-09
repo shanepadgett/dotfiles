@@ -8,7 +8,7 @@
       "model": "github-copilot/gpt-5.2"
     },
     "build": {
-      "model": "github-copilot/claude-opus-4.5"
+      "model": "github-copilot/gpt-5.2"
     },
     "explore": {
       "model": "github-copilot/gemini-3-flash-preview",
@@ -27,5 +27,38 @@
       "enabled": true
     }
   },
-  "permission": {}
+  "permission": {
+    "sudo ": "deny",
+    "rm -rf ": "deny",
+    "rm -r ": "deny",
+    "mkfs": "deny",
+    "dd ": "deny",
+    "diskutil ": "deny",
+    " | sh": "deny",
+    " | bash": "deny",
+    "curl * | ": "deny",
+    "wget * | ": "deny",
+    "chmod ": "deny",
+    "chown ": "deny",
+    "git add": "ask",
+    "git commit": "ask",
+    "git reset": "ask",
+    "git rebase": "ask",
+    "git merge": "ask",
+    "git cherry-pick": "ask",
+    "git revert*": "ask",
+    "git clean*": "ask",
+    "git stash*": "ask",
+    "git push*": "ask",
+    "git pull*": "ask",
+    "git checkout*": "ask",
+    "git switch*": "ask",
+    "rm *": "ask",
+    "mv *": "ask",
+    "cp ": "ask",
+    "mkdir ": "ask",
+    "touch *": "ask",
+    "sed ": "ask",
+    "awk ": "ask"
+  }
 }
