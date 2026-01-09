@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "custom",
+  "theme": "cursor",
   "model": "opencode/glm-4.7-free",
   "default_agent": "chat",
   "agent": {
@@ -26,11 +26,5 @@
       "command": ["auggie", "--mcp"],
       "enabled": true
     }
-  },
-  "tui": {
-    "scroll_acceleration": {
-      "enabled": false
-    },
-    "scroll_speed": 0.5
   }
 }
