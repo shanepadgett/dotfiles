@@ -16,6 +16,8 @@ fi
 if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
 
 # Exports
+# mise shims (also in ~/.zprofile) so interactive shells find runtimes
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$HOME/.opencode/bin:$PATH"
