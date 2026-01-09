@@ -1,3 +1,6 @@
+# mise (shims-first): ensure runtimes available to non-interactive tools
+# Put this first so GUI apps / subprocesses can find node/npx/etc.
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
