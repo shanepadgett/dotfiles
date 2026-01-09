@@ -38,25 +38,8 @@ _starship_init_once() {
 }
 add-zsh-hook precmd _starship_init_once
 
-# Lazy-load mise (activates on first use of runtimes)
-_mise_activate_once() {
-  unfunction _mise_activate_once 2>/dev/null || true
-  eval "$(command mise activate zsh)"
-}
-
-# Some of these (node/bun/deno/go) are aliases in `~/.aliases.zsh`.
-# Functions can't be defined over an existing alias, so remove aliases first.
-unsetopt aliases 2>/dev/null || true
-unalias node npm npx bun deno go mise 2>/dev/null || true
-setopt aliases 2>/dev/null || true
-
-mise() { _mise_activate_once; unfunction mise 2>/dev/null || true; command mise "$@"; }
-node() { _mise_activate_once; unfunction node 2>/dev/null || true; command node "$@"; }
-npm() { _mise_activate_once; unfunction npm 2>/dev/null || true; command npm "$@"; }
-npx() { _mise_activate_once; unfunction npx 2>/dev/null || true; command npx "$@"; }
-bun() { _mise_activate_once; unfunction bun 2>/dev/null || true; command bun "$@"; }
-deno() { _mise_activate_once; unfunction deno 2>/dev/null || true; command deno "$@"; }
-go() { _mise_activate_once; unfunction go 2>/dev/null || true; command go "$@"; }
+# Lazy-load mise
+[ -f "$HOME/.zsh/mise-lazy.zsh" ] && source "$HOME/.zsh/mise-lazy.zsh"
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
