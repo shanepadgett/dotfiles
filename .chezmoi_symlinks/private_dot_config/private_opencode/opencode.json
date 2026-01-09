@@ -3,18 +3,6 @@
   "theme": "cursor",
   "model": "opencode/glm-4.7-free",
   "default_agent": "chat",
-  "agent": {
-    "plan": {
-      "model": "github-copilot/gpt-5.2"
-    },
-    "build": {
-      "model": "github-copilot/gpt-5.2"
-    },
-    "explore": {
-      "model": "github-copilot/gemini-3-flash-preview",
-      "disable": true
-    }
-  },
   "mcp": {
     "osgrep": {
       "type": "local",
