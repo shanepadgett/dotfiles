@@ -8,8 +8,8 @@ BREW_PREFIX=$(brew --prefix 2>/dev/null)
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # Homebrew completions
-if [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
-  fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+if [[ -n "$BREW_PREFIX" && -d "$BREW_PREFIX/share/zsh/site-functions" ]]; then
+  fpath=("$BREW_PREFIX/share/zsh/site-functions" $fpath)
 fi
 
 # Add deno completions to search path
@@ -30,8 +30,20 @@ export DO_NOT_TRACK=1
 
 # --- Inits (Must remain at the end) ---
 eval "$(zoxide init zsh)"
-eval "$(starship init zsh)"
-eval "$(mise activate zsh)"
+# Lazy-load starship prompt (runs at first prompt render)
+autoload -Uz add-zsh-hook
+_starship_init_once() {
+  add-zsh-hook -d precmd _starship_init_once
+  eval "$(starship init zsh)"
+}
+add-zsh-hook precmd _starship_init_once
+
+# Lazy-load mise (activates on first `mise` call)
+mise() {
+  unfunction mise
+  eval "$(command mise activate zsh)"
+  mise "$@"
+}
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
