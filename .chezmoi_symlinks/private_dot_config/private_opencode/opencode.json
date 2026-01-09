@@ -13,6 +13,11 @@
       "type": "local",
       "command": ["auggie", "--mcp"],
       "enabled": true
+    },
+    "exa": {
+      "type": "remote",
+      "url": "https://mcp.exa.ai/mcp",
+      "headers": {}
     }
   }
 }
