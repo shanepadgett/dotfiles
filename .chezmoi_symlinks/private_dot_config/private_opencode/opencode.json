@@ -26,5 +26,6 @@
       "command": ["auggie", "--mcp"],
       "enabled": true
     }
-  }
+  },
+  "permission": {}
 }
