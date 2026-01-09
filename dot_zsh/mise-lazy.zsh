@@ -3,6 +3,7 @@
 _mise_activate_once() {
   unfunction _mise_activate_once 2>/dev/null || true
   eval "$(command mise activate zsh)"
+  eval "$(/opt/homebrew/bin/mise hook-env -s zsh)"
 }
 
 # If any of these are defined as aliases (e.g. via ~/.aliases.zsh), remove them.
