@@ -14,42 +14,5 @@
       "command": ["auggie", "--mcp"],
       "enabled": true
     }
-  },
-  "permission": {
-    "*": "allow",
-    "bash": {
-      "sudo ": "deny",
-      "rm -rf ": "deny",
-      "rm -r ": "deny",
-      "mkfs": "deny",
-      "dd ": "deny",
-      "diskutil ": "deny",
-      " | sh": "ask",
-      " | bash": "ask",
-      "curl * | ": "ask",
-      "wget * | ": "ask",
-      "chmod ": "ask",
-      "chown ": "ask",
-      "git add": "ask",
-      "git commit": "ask",
-      "git reset": "ask",
-      "git rebase": "ask",
-      "git merge": "ask",
-      "git cherry-pick": "ask",
-      "git revert*": "ask",
-      "git clean*": "ask",
-      "git stash*": "ask",
-      "git push*": "ask",
-      "git pull*": "ask",
-      "git checkout*": "ask",
-      "git switch*": "ask",
-      "rm *": "ask",
-      "mv *": "ask",
-      "cp ": "ask",
-      "mkdir ": "ask",
-      "touch *": "ask",
-      "sed ": "ask",
-      "awk ": "ask"
-    }
   }
 }
