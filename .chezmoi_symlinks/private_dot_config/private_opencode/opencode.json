@@ -127,7 +127,7 @@
       "kubectl delete*": "deny",
       "mkfs*": "deny",
       "reboot*": "deny",
-      "rm *": "deny",
+      "rm *": "ask",
       "rm -fr *": "deny",
       "rm -rf *": "deny",
       "shutdown*": "deny",
