@@ -102,7 +102,7 @@ alias bdev='bun run dev'    # Run the "dev" script quickly
 alias btest='bun test'      # Run Bun test runner
 alias bup='bun upgrade'     # Upgrade dependencies
 alias bout='bun outdated'   # Check outdated deps
-alias bs='bun ./**/*.html'  # Serve static content from directory
+alias bs='bunx serve'  # Serve static content from directory
 
 # Deno shortcuts
 alias dr='deno run -A'    # Run a Deno script with all permissions
