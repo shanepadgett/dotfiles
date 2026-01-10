@@ -119,7 +119,7 @@
       "doas *": "deny",
       "docker system prune*": "deny",
       "git clean -fd*": "deny",
-      "git commit*": "deny",
+      "git commit*": "ask",
       "git push*": "deny",
       "git reset --hard*": "deny",
       "halt*": "deny",
