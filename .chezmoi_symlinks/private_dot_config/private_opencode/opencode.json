@@ -4,10 +4,10 @@
   "model": "opencode/glm-4.7-free",
   "agent": {
     "build": {
-      "model": "github-copilot/gpt-5.2"
+      "model": "github-copilot/gpt-5.2-codex"
     },
     "plan": {
-      "model": "github-copilot/gpt-5.2",
+      "model": "github-copilot/gpt-5.2-codex",
       "permission": {
         "edit": {
           "*.md": "allow"
