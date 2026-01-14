@@ -44,3 +44,6 @@ add-zsh-hook precmd _starship_init_once
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# Added by Antigravity
+export PATH="/Users/shanepadgett/.antigravity/antigravity/bin:$PATH"
