@@ -19,6 +19,14 @@
     }
   },
   "default_agent": "chat",
+  "compaction": {
+    "auto": false
+  },
+  "tui": {
+    "scroll_acceleration": {
+      "enabled": true
+    }
+  },
   "plugin": ["opencode-antigravity-auth@beta"],
   "mcp": {
     "osgrep": {
