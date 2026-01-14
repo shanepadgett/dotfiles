@@ -27,6 +27,11 @@ export GITHUB_USERNAME="shanepadgett"
 export DEV_PATH="$HOME/dev"
 export DO_NOT_TRACK=1
 
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/spadgett/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
 # Load custom aliases
 [ -f "$HOME/.aliases.zsh" ] && source "$HOME/.aliases.zsh"
 
@@ -44,6 +49,3 @@ add-zsh-hook precmd _starship_init_once
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-# Added by Antigravity
-export PATH="/Users/shanepadgett/.antigravity/antigravity/bin:$PATH"
