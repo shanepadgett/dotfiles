@@ -29,11 +29,6 @@
   },
   "plugin": ["opencode-antigravity-auth@beta"],
   "mcp": {
-    "osgrep": {
-      "type": "local",
-      "command": ["osgrep", "mcp"],
-      "enabled": true
-    },
     "exa": {
       "type": "remote",
       "url": "https://mcp.exa.ai/mcp",
