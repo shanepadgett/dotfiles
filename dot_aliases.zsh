@@ -96,6 +96,7 @@ alias nver='node -v && npm -v'      # Print active node + npm version quickly
 # Bun shortcuts
 alias bi='bun install'      # Install dependencies
 alias big='bun install -g'  # Install dependencies
+alias bug='bun uninstall -g'  # Install dependencies
 alias br='bun run'          # Run a script from package.json
 alias bx='bunx'             # Execute packages without installing (like npx)
 alias bdev='bun run dev'    # Run the "dev" script quickly
