@@ -1,13 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "cursor",
-  "model": "github-copilot/gpt-5.2",
+  "model": "github-copilot/gpt-5.2-codex",
   "agent": {
     "build": {
-      "model": "github-copilot/gpt-5.2"
+      "model": "github-copilot/gpt-5.2-codex"
     },
     "plan": {
-      "model": "github-copilot/gpt-5.2",
+      "model": "github-copilot/gpt-5.2-codex",
       "permission": {
         "edit": {
           "*.md": "allow"
