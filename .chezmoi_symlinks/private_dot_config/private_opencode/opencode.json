@@ -35,9 +35,9 @@
       "command": ["osgrep", "mcp"],
       "enabled": false
     },
-    "augment": {
+    "augment-context-engine": {
       "type": "local",
-      "command": ["auggie", "mcp"],
+      "command": ["auggie", "--mcp"],
       "enabled": true
     }
   },
