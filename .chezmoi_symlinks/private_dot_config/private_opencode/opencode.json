@@ -33,7 +33,7 @@
     "osgrep": {
       "type": "local",
       "command": ["osgrep", "mcp"],
-      "enabled": true
+      "enabled": false
     },
     "augment": {
       "type": "local",
