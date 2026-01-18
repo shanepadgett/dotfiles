@@ -126,8 +126,8 @@ alias gom='go mod tidy'          # Clean up and sync go.mod dependencies
 alias gomu='go get -u ./...'     # Update all module dependencies
 alias gov='go version'           # Show installed Go version
 alias godoc='go doc'             # Quick docs for a symbol/package
-alias gofmt='gofmt -w .'         # Format all Go files in place
-alias golint='golangci-lint run' # Run linter (after you install golangci-lint)
+alias gof='gofmt -w .'         # Format all Go files in place
+alias gol='golangci-lint run' # Run linter (after you install golangci-lint)
 alias gocov='go test -cover ./...' # Run tests with coverage summary
 alias gobench='go test -bench=.' # Run benchmarks in current package
 alias goclean='go clean -modcache' # Clear module cache if things get weird
