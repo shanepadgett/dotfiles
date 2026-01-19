@@ -25,6 +25,7 @@ brew "starship"                 # Cross shell prompt
 brew "zsh-autosuggestions"      # Fish-like autosuggestions
 brew "zsh-syntax-highlighting"  # Fish-like shell syntax highlighting
 brew "ripgrep"                  # Faster grep alternative
+brew "direnv"                   # Automatically set up environment with Nix
 
 # Tools
 brew "shellcheck"       # Shell linter
