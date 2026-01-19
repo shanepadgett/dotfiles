@@ -1,0 +1,5 @@
+{{- $email := .email_home -}}
+{{- if eq .chezmoi.hostname .work_hostname -}}
+{{- $email = .email_work -}}
+{{- end -}}
+{{ $email }} ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDyc2VwV8Fsuld2DkNHgVkR0R+RHNI4aQWAX1VYU2lsu
