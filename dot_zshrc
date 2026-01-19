@@ -37,6 +37,7 @@ export PATH="/Users/spadgett/.rd/bin:$PATH"
 
 # --- Inits (Must remain at the end) ---
 eval "$(zoxide init zsh)"
+eval "$(direnv hook zsh)"
 # Lazy-load starship prompt (runs at first prompt render)
 autoload -Uz add-zsh-hook
 _starship_init_once() {
