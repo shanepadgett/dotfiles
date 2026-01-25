@@ -26,7 +26,8 @@
   "plugin": [
     "opencode-antigravity-auth@beta",
     "@mohak34/opencode-notifier@latest",
-    "@franlol/opencode-md-table-formatter@0.0.3"
+    "@franlol/opencode-md-table-formatter@0.0.3",
+    "opencode-pty"
   ],
   "mcp": {
     "exa": {
