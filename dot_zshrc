@@ -21,8 +21,6 @@ fi
 if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
 
 # Exports
-# mise shims (also in ~/.zprofile) so interactive shells find runtimes
-export PATH="$HOME/.local/share/mise/shims:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$HOME/.opencode/bin:$PATH"
@@ -41,8 +39,9 @@ export PATH="/Users/spadgett/.rd/bin:$PATH"
 [ -f "$HOME/.aliases.zsh" ] && source "$HOME/.aliases.zsh"
 
 # --- Inits (Must remain at the end) ---
+eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
-eval "$(direnv hook zsh)"
+
 # Lazy-load starship prompt (runs at first prompt render)
 autoload -Uz add-zsh-hook
 _starship_init_once() {
@@ -51,7 +50,7 @@ _starship_init_once() {
 }
 add-zsh-hook precmd _starship_init_once
 
-# mise: shims-first (see ~/.zprofile). Avoid `mise activate` here.
+
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
