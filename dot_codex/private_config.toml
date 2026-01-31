@@ -1,0 +1,25 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+model = "gpt-5.2-codex"
+model_personality = "pragmatic"
+
+[tui]
+notifications = true
+
+[features]
+apply_patch_freeform = true
+collab = true
+collaboration_modes = true
+exec_policy = true
+unified_exec = true
+steer = true
+shell_snapshot = true
+include_apply_patch_tool = true
+child_agents_md = true
+personality = true
+
+[otel]
+log_user_prompt = false
+
+[analytics]
+enabled = false
