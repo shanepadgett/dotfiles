@@ -23,3 +23,6 @@ log_user_prompt = false
 
 [analytics]
 enabled = false
+
+[projects."/Users/shanepadgett/dev/work/capstan"]
+trust_level = "trusted"
