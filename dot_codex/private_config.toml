@@ -14,7 +14,6 @@ exec_policy = true
 unified_exec = true
 steer = true
 shell_snapshot = true
-include_apply_patch_tool = true
 child_agents_md = true
 personality = true
 
