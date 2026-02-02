@@ -190,6 +190,8 @@
       "git show*": "allow",
       "git status*": "allow",
       "gofmt*": "allow",
+      "go mod tidy": "allow",
+      "go test*": "allow",
       "grep *": "allow",
       "head *": "allow",
       "id *": "allow",
