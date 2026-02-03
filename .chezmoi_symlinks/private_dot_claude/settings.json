@@ -12,5 +12,6 @@
     "typescript-lsp@claude-plugins-official": true,
     "example-skills@anthropic-agent-skills": true,
     "document-skills@anthropic-agent-skills": false
-  }
+  },
+  "model": "opus"
 }
