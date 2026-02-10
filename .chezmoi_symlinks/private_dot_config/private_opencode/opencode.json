@@ -20,7 +20,7 @@
     }
   },
   "plugin": [
-    "opencode-antigravity-auth@beta",
+    "opencode-google-antigravity-auth@latest",
     "@mohak34/opencode-notifier@latest",
     "@franlol/opencode-md-table-formatter@0.0.3",
     "opencode-pty"
