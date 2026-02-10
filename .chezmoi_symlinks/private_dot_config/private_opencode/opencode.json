@@ -19,6 +19,9 @@
       "enabled": true
     }
   },
+  "experimental": {
+    "batch_tool": true
+  },
   "plugin": [
     "opencode-google-antigravity-auth@latest",
     "@mohak34/opencode-notifier@latest",
