@@ -180,8 +180,8 @@
             }
           }
         },
-        "gemini-claude-opus-4-5-thinking": {
-          "id": "gemini-claude-opus-4-5-thinking",
+        "gemini-claude-opus-4-6-thinking": {
+          "id": "gemini-claude-opus-4-6-thinking",
           "name": "Claude Opus 4.5",
           "release_date": "2025-11-24",
           "reasoning": true,
