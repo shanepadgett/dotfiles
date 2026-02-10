@@ -4,6 +4,28 @@ compinit -C
 
 COLORTERM=truecolor
 
+# **************************
+# Path Exports
+# **************************
+if [[ -d "/opt/homebrew/bin" ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+fi
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.opencode/bin:$PATH"
+export PATH="$HOME/.rd/bin:$PATH"
+
+# **************************
+# Other Exports
+# **************************
+export EDITOR="zed --wait"
+export GITHUB_USERNAME="shanepadgett"
+export DEV_PATH="$HOME/dev"
+export DO_NOT_TRACK=1
+
+# Load custom aliases
+[ -f "$HOME/.aliases.zsh" ] && source "$HOME/.aliases.zsh"
+
 BREW_PREFIX=$(brew --prefix 2>/dev/null)
 [[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -11,32 +33,6 @@ BREW_PREFIX=$(brew --prefix 2>/dev/null)
 if [[ -n "$BREW_PREFIX" && -d "$BREW_PREFIX/share/zsh/site-functions" ]]; then
   fpath=("$BREW_PREFIX/share/zsh/site-functions" $fpath)
 fi
-
-# Homebrew bin first to avoid system git wrapper
-if [[ -d "/opt/homebrew/bin" ]]; then
-  export PATH="/opt/homebrew/bin:$PATH"
-fi
-
-# Add deno completions to search path
-if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then export FPATH="$HOME/.zsh/completions:$FPATH"; fi
-
-# Exports
-export PATH="$HOME/.local/bin:$PATH"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$HOME/.opencode/bin:$PATH"
-export PATH="$BUN_INSTALL/bin:$PATH"
-export EDITOR="zed --wait"
-export GITHUB_USERNAME="shanepadgett"
-export DEV_PATH="$HOME/dev"
-export DO_NOT_TRACK=1
-
-export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/spadgett/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
-# Load custom aliases
-[ -f "$HOME/.aliases.zsh" ] && source "$HOME/.aliases.zsh"
 
 # --- Inits (Must remain at the end) ---
 eval "$(mise activate zsh)"
@@ -49,7 +45,6 @@ _starship_init_once() {
   eval "$(starship init zsh)"
 }
 add-zsh-hook precmd _starship_init_once
-
 
 # Initialize fzf (enables Ctrl+R history search and Tab completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
