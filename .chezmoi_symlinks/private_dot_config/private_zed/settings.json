@@ -15,6 +15,14 @@
     },
   },
   "agent": {
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5.2-codex"
+    },
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5-mini"
+    },
     "play_sound_when_agent_done": true,
     "model_parameters": [],
     "use_modifier_to_send": true,
