@@ -7,6 +7,9 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "calls": {
+    "mute_on_join": true
+  },
   "restore_on_startup": "empty_tab",
   "show_edit_predictions": false,
   "autosave": {
@@ -38,9 +41,7 @@
       "default_mode": "plan",
     },
     "auggie": {
-      "default_model": "claude-opus-4-5",
       "type": "extension",
-      "default_mode": "ask",
     },
   },
   "telemetry": {

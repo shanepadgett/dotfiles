@@ -1,5 +1,13 @@
 {
+<<<<<<< Updated upstream
   "model": "opus",
+=======
+  "permissions": {
+    "allow": [
+      "mcp__pencil"
+    ]
+  },
+>>>>>>> Stashed changes
   "enabledPlugins": {
     "code-review@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
