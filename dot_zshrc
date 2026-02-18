@@ -36,6 +36,7 @@ fi
 
 # --- Inits (Must remain at the end) ---
 eval "$(mise activate zsh)"
+eval "$(mise activate zsh --shims)"
 eval "$(zoxide init zsh)"
 
 # Lazy-load starship prompt (runs at first prompt render)
