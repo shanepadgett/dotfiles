@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [],
+    "defaultMode": "acceptEdits"
+  },
+  "enabledPlugins": {},
+  "effortLevel": "medium",
+  "tui": "fullscreen"
+}

@@ -1,0 +1,188 @@
+suppress_unstable_features_warning = true
+personality = "pragmatic"
+model = "gpt-5.5"
+model_reasoning_effort = "low"
+sandbox_mode = "workspace-write"
+service_tier = "default"
+
+[features]
+responses_websockets_v2 = true
+js_repl = false
+
+[tui]
+notifications = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
+
+[mcp_servers.ide-bitbucket-mcp]
+command = "npx"
+startup_timeout_sec = 60
+args = [ "-y", "@athena/ide-bitbucket-mcp@latest", "stdio" ]
+enabled = false
+
+[mcp_servers.ide-bitbucket-mcp.tools.get_bitbucket_pr_details]
+approval_mode = "approve"
+
+[mcp_servers.atlassian-mcp]
+command = "npx"
+args = [ "-y", "mcp-remote", "https://mcp-atlassian-server.srv.athena.io/mcp/", "8085", "--static-oauth-client-info", "{ \"client_id\": \"0oazmbclz7cmBZnR8297\"}", "--static-oauth-client-metadata", "{\"scope\": \"openid profile offline_access athena/user/IdpAiTools.Atlassianmcp.write\"}", "--transport=http-first", "--header", "X-Jira-Token: ${JIRA_PERSONAL_TOKEN}", "--header", "X-Confluence-Token: ${CONFLUENCE_PERSONAL_TOKEN}", "--header", "X-Bitbucket-Token: ${BITBUCKET_PERSONAL_TOKEN}" ]
+startup_timeout_sec = 60
+enabled = true
+
+[mcp_servers.atlassian-mcp.env]
+NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
+[mcp_servers.atlassian-mcp.tools.bitbucket_get_file_content]
+approval_mode = "approve"
+
+[mcp_servers.atlassian-mcp.tools.bitbucket_get_pull_requests]
+approval_mode = "approve"
+
+[mcp_servers.atlassian-mcp.tools.bitbucket_get_pull_request_diff]
+approval_mode = "approve"
+
+[mcp_servers.atlassian-mcp.tools.bitbucket_add_pull_request_comment]
+approval_mode = "approve"
+
+[mcp_servers.pencil]
+command = "/Users/spadgett/.pencil/mcp/visual_studio_code/out/mcp-server-darwin-arm64"
+args = [ "--app", "visual_studio_code", "--agent", "codexCLI" ]
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/Codex.app/Contents/Resources/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = ""
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/spadgett/.codex"
+CODEX_HOME = "/Users/spadgett/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "4b6bfaf4ed2ce9b5cd68e60a61642eb4927a36306ba8c8993f6058607b3530fb"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
+
+[projects."/Users/spadgett/dev/work/agent-readiness"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenafoundry"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/personal/workbench"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenafoundry-explorations"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/personal/crumbs"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenavoice"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/personal/crumbs-github"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/.codex"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/Downloads"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenaloom"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenapeek"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/athenaFoundry-mcp"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/Library/CloudStorage/OneDrive-athenahealth/Documents/Codex/2026-05-12/outlook-calendar-plugin-outlook-calendar-openai"]
+trust_level = "trusted"
+
+[projects."/Users/spadgett/dev/work/foundry"]
+trust_level = "trusted"
+
+[sandbox_workspace_write]
+network_access = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-06-05T06:54:41Z"
+source_type = "local"
+source = "/Users/spadgett/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-06-02T20:16:28Z"
+source_type = "local"
+source = "/Users/spadgett/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."teams@openai-curated"]
+enabled = true
+
+[plugins."outlook-email@openai-curated"]
+enabled = true
+
+[plugins."figma@openai-curated"]
+enabled = true
+
+[plugins."outlook-calendar@openai-curated"]
+enabled = true
+
+[plugins."sharepoint@openai-curated"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[desktop]
+ambient-suggestions-enabled = false
+appearanceTheme = "dark"
+appearanceDarkCodeThemeId = "gruvbox"
+usePointerCursors = true
+mac-menu-bar-enabled = false
+followUpQueueMode = "steer"
+composerEnterBehavior = "cmdIfMultiline"
+reviewDelivery = "detached"
+preventSleepWhileRunning = true
+keepRemoteControlAwakeWhilePluggedIn = true
+git-pull-request-merge-method = "squash"
+git-commit-instructions = "use conventional commits. stick to simple one line commit messages that capture the utility of the change. reserve feat/fix for user facing things that should end up on a changelog."
+notifications-turn-mode = "always"
+hotkey-window-projectless-default-enabled = true
+
+[desktop.appearanceDarkChromeTheme]
+accent = "#458588"
+contrast = 60
+ink = "#ebdbb2"
+opaqueWindows = false
+surface = "#282828"
+
+[desktop.appearanceDarkChromeTheme.fonts]
+[desktop.appearanceDarkChromeTheme.semanticColors]
+diffAdded = "#ebdbb2"
+diffRemoved = "#cc241d"
+skill = "#b16286"

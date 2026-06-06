@@ -1,0 +1,2 @@
+prefix_rule(pattern=["mise", "exec", "--", "bun", "add"], decision="allow")
+prefix_rule(pattern=["agent-browser", "--session"], decision="allow")

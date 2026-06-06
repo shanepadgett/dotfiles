@@ -1,1 +1,5 @@
-{{ .chezmoi.sourceDir }}/.chezmoi_symlinks/private_dot_claude/settings.json
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/claude/settings.work.json
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/claude/settings.personal.json
+{{- end -}}

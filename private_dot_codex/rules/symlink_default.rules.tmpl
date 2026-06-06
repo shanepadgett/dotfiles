@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/codex/rules/default.work.rules
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/codex/rules/default.personal.rules
+{{- end -}}

@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/codex/config.work.toml
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/codex/config.personal.toml
+{{- end -}}

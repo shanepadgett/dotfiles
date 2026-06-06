@@ -1,0 +1,43 @@
+{
+  "model": "opus",
+  "permissions": {
+    "allow": [
+      "MCP__atlassian-mcp",
+      "WebFetch(domain:sarunw.com)",
+      "WebFetch(domain:www.swiftyplace.com)",
+      "WebFetch(domain:swiftwithmajid.com)",
+      "Bash(grep -E '\\\\.\\(md|txt|json|yaml|yml\\)$')",
+      "Bash(fd '\\\\.swift$' athenavoice --not-path '*/UIExploration/*')",
+      "Bash(fd '\\\\.swift$' athenavoice/)",
+      "WebSearch",
+      "Bash(grep -E \"\\\\.\\(swift|h|m|json|plist\\)$\")",
+      "Bash(find:*)",
+      "Bash(fd -- '\\\\.swift$' .)",
+      "Bash(ls /Users/spadgett/dev/work/athenavoice/athenavoice/**/*.swift)",
+      "Bash(mv MenuBar/History/HistoryPanelView.swift History/)",
+      "Bash(mv MenuBar/History/HistoryRowView.swift History/)",
+      "Bash(mv MenuBar/History/HistoryEmptyStateView.swift History/)",
+      "Bash(mv MenuBar/MainMenu/HistoryEntryRowView.swift History/)",
+      "Bash(/usr/bin/find /Users/spadgett/dev/work/athenavoice/athenavoice -name \"*.swift\")",
+      "Bash(git rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(git mv:*)",
+      "Bash(/usr/bin/find athenavoice:*)",
+      "Bash(xcodebuild -scheme athenavoice -configuration Debug build)",
+      "Bash(xcodebuild -scheme athenavoice -destination 'platform=macOS' build)",
+      "Bash(ls:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:github.com)",
+      "mcp__pencil"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enabledPlugins": {},
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "statusLine": {
+    "type": "command",
+    "command": "python3 /Users/spadgett/.claude/statusline.py"
+  }
+}

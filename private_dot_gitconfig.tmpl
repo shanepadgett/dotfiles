@@ -1,5 +1,9 @@
 {{- $email := .email_home -}}
-{{- if eq .chezmoi.hostname .work_hostname -}}
+{{- if .email -}}
+{{- $email = .email -}}
+{{- else if eq .profile "work" -}}
+{{- $email = .email_work -}}
+{{- else if eq .chezmoi.hostname .work_hostname -}}
 {{- $email = .email_work -}}
 {{- end -}}
 

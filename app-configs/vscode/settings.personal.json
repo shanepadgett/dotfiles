@@ -1,0 +1,7 @@
+{
+  "workbench.activityBar.location": "top",
+  "editor.minimap.enabled": false,
+  "window.restoreWindows": "none",
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay"
+}

@@ -1,0 +1,16 @@
+suppress_unstable_features_warning = true
+personality = "pragmatic"
+model = "gpt-5.5"
+model_reasoning_effort = "low"
+sandbox_mode = "workspace-write"
+service_tier = "default"
+
+[features]
+responses_websockets_v2 = true
+js_repl = false
+
+[tui]
+notifications = true
+
+[sandbox_workspace_write]
+network_access = true

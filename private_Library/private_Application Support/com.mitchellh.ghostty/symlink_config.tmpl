@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/ghostty/config.work
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/ghostty/config.personal
+{{- end -}}

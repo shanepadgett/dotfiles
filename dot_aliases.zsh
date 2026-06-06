@@ -25,7 +25,7 @@ alias cmap="chezmoi -v apply"
 alias cmu="chezmoi update"
 alias cz="cme ~/.zshrc"
 alias cmeo="cmes ~/.config/opencode/opencode.json"
-alias cmeg="cme '/Users/shanepadgett/Library/Application Support/com.mitchellh.ghostty/config'"
+alias cmeg='cme "$HOME/Library/Application Support/com.mitchellh.ghostty/config"'
 
 # Directory Nav
 alias ..='cd ..'

@@ -1,1 +1,11 @@
 .chezmoi_symlinks/**
+app-configs/**
+skills/**
+
+{{- if ne .profile "work" }}
+.bitbucket_token
+.confluence_token
+.jira_token
+.jenkins_token_pxjnk_nonprod
+.config/work/**
+{{- end }}

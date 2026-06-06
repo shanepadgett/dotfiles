@@ -1,0 +1,29 @@
+# --- FONT ---
+font-family = "MonoLisa"
+font-size = 16
+font-feature = -calt
+
+# --- THEME ---
+theme = Twilight
+
+# --- CURSOR ---
+cursor-style = block
+cursor-style-blink = true
+
+# --- MOUSE ---
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 3
+
+# --- SPLITS ---
+split-divider-color = #3c3f4e
+
+# --- SCROLLBACK ---
+scrollback-limit = 10000
+
+# --- WINDOW LAYOUT ---
+window-width = 200
+window-height = 45
+window-save-state = always
+working-directory = $HOME
+
+command = /bin/zsh -l

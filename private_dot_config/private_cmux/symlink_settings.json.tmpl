@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/cmux/settings.work.json
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/cmux/settings.personal.json
+{{- end -}}

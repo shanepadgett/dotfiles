@@ -1,0 +1,13 @@
+{{- if eq .profile "work" }}
+export BITBUCKET_USER="{{ onepasswordRead "op://Shane Work/Bitbucket/username" }}"
+export BITBUCKET_PERSONAL_TOKEN="{{ onepasswordRead "op://Shane Work/Bitbucket/credential" }}"
+
+export CONFLUENCE_USER="{{ onepasswordRead "op://Shane Work/Confluence/username" }}"
+export CONFLUENCE_PERSONAL_TOKEN="{{ onepasswordRead "op://Shane Work/Confluence/credential" }}"
+
+export JIRA_USER="{{ onepasswordRead "op://Shane Work/Jira/username" }}"
+export JIRA_PERSONAL_TOKEN="{{ onepasswordRead "op://Shane Work/Jira/credential" }}"
+
+export JENKINS_USER="{{ onepasswordRead "op://Shane Work/PX Jenkins/username" }}"
+export JENKINS_PERSONAL_TOKEN="{{ onepasswordRead "op://Shane Work/PX Jenkins/credential" }}"
+{{- end }}
