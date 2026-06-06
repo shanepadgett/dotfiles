@@ -1,0 +1,34 @@
+{
+  "extensions": {
+    "statusTable": {
+      "enabled": true,
+      "mode": "minimal",
+      "visibleBlocks": [
+        "git",
+        "model",
+        "caveman",
+        "context",
+        "tokens"
+      ]
+    },
+    "codexCompat": {
+      "fast": false
+    },
+    "caveman": {
+      "enabled": true
+    },
+    "mcp": {
+      "mcpServers": {
+        "foundry-pr6-preview": {
+          "enabled": false,
+          "lifecycle": "lazy",
+          "url": "https://foundry-pr6-preview.px.nonprod.athenahealth.com/mcp",
+          "headers": {
+            "accept": "application/json, text/event-stream",
+            "content-type": "application/json"
+          }
+        }
+      }
+    }
+  }
+}

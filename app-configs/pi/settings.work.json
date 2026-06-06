@@ -1,0 +1,30 @@
+{
+  "lastChangelogVersion": "0.78.1",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "enabledModels": [
+    "openai-codex/gpt-5.4-mini",
+    "anthropic/claude-sonnet-4-6",
+    "openai-codex/gpt-5.5",
+    "anthropic/claude-opus-4-8"
+  ],
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": true,
+  "packages": [
+    {
+      "source": "git:github.com/shanepadgett/crumbs",
+      "extensions": [
+        "-extensions/guardian/index.ts"
+      ]
+    }
+  ],
+  "transport": "auto",
+  "collapseChangelog": true,
+  "treeFilterMode": "no-tools",
+  "quietStartup": true,
+  "terminal": {
+    "imageWidthCells": 80
+  },
+  "theme": "everforest-dark-hard",
+  "shellCommandPrefix": ". \"$HOME/.config/work/env.sh\""
+}

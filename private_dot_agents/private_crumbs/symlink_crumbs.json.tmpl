@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/crumbs/crumbs.work.json
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/crumbs/crumbs.personal.json
+{{- end -}}

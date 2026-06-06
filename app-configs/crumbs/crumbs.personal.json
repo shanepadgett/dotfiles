@@ -1,0 +1,21 @@
+{
+  "extensions": {
+    "statusTable": {
+      "enabled": true,
+      "mode": "minimal",
+      "visibleBlocks": [
+        "git",
+        "model",
+        "caveman",
+        "context",
+        "tokens"
+      ]
+    },
+    "codexCompat": {
+      "fast": false
+    },
+    "caveman": {
+      "enabled": true
+    }
+  }
+}

@@ -91,6 +91,26 @@ JENKINS_PERSONAL_TOKEN
 
 Codex work config stays token-free. It references environment variables such as `${JIRA_PERSONAL_TOKEN}` instead of storing PATs.
 
+## Pi and Crumbs
+
+Pi config uses profile-specific symlink backing files:
+
+```text
+~/.pi/agent/settings.json -> app-configs/pi/settings.work.json
+```
+
+The work Pi settings may source `~/.config/work/env.sh` through `shellCommandPrefix`. Personal Pi settings omit work env setup.
+
+Crumbs config uses profile-specific symlink backing files:
+
+```text
+~/.agents/crumbs/crumbs.json -> app-configs/crumbs/crumbs.work.json
+```
+
+Do not manage `.agents/skills/agent-browser/**` or `.agents/skills/frontend-design/**`. Those are intentionally unmanaged.
+
+Do not commit Crumbs MCP API keys. Disabled test MCP servers may stay in config with `enabled: false`, but remove secret headers such as `x-api-key`.
+
 ## Drift workflow
 
 Use these commands before and after changes:

@@ -1,0 +1,5 @@
+{{- if eq .profile "work" -}}
+{{ .chezmoi.sourceDir }}/app-configs/pi/settings.work.json
+{{- else -}}
+{{ .chezmoi.sourceDir }}/app-configs/pi/settings.personal.json
+{{- end -}}
