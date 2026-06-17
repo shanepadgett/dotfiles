@@ -13,5 +13,6 @@
   "terminal": {
     "imageWidthCells": 80
   },
-  "theme": "everforest-dark-hard"
+  "theme": "everforest-dark-hard",
+  "lastChangelogVersion": "0.79.6"
 }
