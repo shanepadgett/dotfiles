@@ -82,8 +82,6 @@
   //   },
 
   //   "automation" : {
-  //     "claudeBinaryPath" : "",
-  //     "claudeCodeIntegration" : true,
   //     "portBase" : 9100,
   //     "portRange" : 10,
   //     "socketControlMode" : "cmuxOnly",

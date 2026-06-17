@@ -8,7 +8,6 @@
   "chatgpt.composerEnterBehavior": "cmdIfMultiline",
   "daedalus.specRepoPath": "/Users/spadgett/dev/work/pex-specs",
   "go.toolsManagement.autoUpdate": true,
-  "claudeCode.selectedModel": "opus[1m]",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "window.restoreWindows": "none",
   "window.zoomLevel": 2,

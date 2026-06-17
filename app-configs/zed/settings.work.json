@@ -44,15 +44,6 @@
     "use_modifier_to_send": true,
   },
   "agent_servers": {
-    "opencode": {
-      "default_mode": "plan",
-      "default_model": "opencode/gemini-3-flash",
-      "type": "extension",
-    },
-    "claude": {
-      "default_model": "opus",
-      "default_mode": "plan",
-    },
     "auggie": {
       "type": "extension",
     },

@@ -24,7 +24,6 @@ alias cmdf="chezmoi diff"
 alias cmap="chezmoi -v apply"
 alias cmu="chezmoi update"
 alias cz="cme ~/.zshrc"
-alias cmeo="cmes ~/.config/opencode/opencode.json"
 alias cmeg='cme "$HOME/Library/Application Support/com.mitchellh.ghostty/config"'
 
 # Directory Nav

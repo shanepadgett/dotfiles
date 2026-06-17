@@ -42,10 +42,7 @@ Options:
   --no-apply    Skip running 'chezmoi apply' at the end
 
 Examples:
-  $SCRIPT_NAME ~/.claude/settings.json
   $SCRIPT_NAME add ~/.config/Code/User/settings.json
-  $SCRIPT_NAME edit ~/.config/opencode/opencode.json
-  $SCRIPT_NAME remove ~/.claude/settings.json --purge
 EOF
 }
 
