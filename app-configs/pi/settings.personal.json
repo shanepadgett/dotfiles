@@ -2,17 +2,24 @@
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "enabledModels": [
-    "openai-codex/gpt-5.5"
+    "openai-codex/gpt-5.5",
+    "github-copilot/claude-opus-4.8",
+    "github-copilot/gemini-3.1-pro-preview",
+    "github-copilot/gemini-3.5-flash"
   ],
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "xhigh",
   "hideThinkingBlock": true,
-  "transport": "auto",
+  "transport": "websocket-cached",
   "collapseChangelog": true,
   "treeFilterMode": "no-tools",
-  "quietStartup": true,
+  "quietStartup": false,
   "terminal": {
-    "imageWidthCells": 80
+    "imageWidthCells": 120
   },
-  "theme": "everforest-dark-hard",
-  "lastChangelogVersion": "0.79.6"
+  "theme": "dark",
+  "lastChangelogVersion": "0.79.6",
+  "packages": [],
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "enableInstallTelemetry": false
 }

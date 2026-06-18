@@ -1,11 +1,10 @@
 suppress_unstable_features_warning = true
 personality = "pragmatic"
-model = "gpt-5.4-mini"
+model = "gpt-5.5"
 model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 service_tier = "default"
-
-notify = ["/Users/shanepadgett/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+notify = [ "/Users/shanepadgett/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended" ]
 
 [features]
 responses_websockets_v2 = true
@@ -16,10 +15,6 @@ notifications = true
 
 [sandbox_workspace_write]
 network_access = true
-
-[mcp_servers.pencil]
-command = "/Users/shanepadgett/.pencil/mcp/visual_studio_code/out/mcp-server-darwin-arm64"
-args = [ "--app", "visual_studio_code", "--agent", "codexCLI" ]
 
 [mcp_servers.node_repl]
 args = []
@@ -32,18 +27,27 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_nod
 NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/shanepadgett/.codex"
 CODEX_HOME = "/Users/shanepadgett/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "91f532174d8502acc26a6bfc16c4276c2566619a87a8efaea01e4130bf1e7a0c"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "eb55d24cf065cd5311af6f99b16bade2b7a670790ff2db9accf60d012dd55dd1"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.611.61049"
+BROWSER_USE_CODEX_APP_VERSION = "26.611.62324"
 CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
+[mcp_servers.pencil]
+command = "/Users/shanepadgett/.pencil/mcp/visual_studio_code/out/mcp-server-darwin-arm64"
+args = [ "--app", "visual_studio_code", "--agent", "codexCLI" ]
+
 [marketplaces.openai-bundled]
-last_updated = "2026-06-17T03:02:19Z"
+last_updated = "2026-06-18T01:36:26Z"
 source_type = "local"
 source = "/Users/shanepadgett/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-06-17T03:38:26Z"
+source_type = "local"
+source = "/Users/shanepadgett/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [desktop]
 appearanceTheme = "system"
@@ -66,7 +70,6 @@ opaqueWindows = false
 surface = "#fdf6e3"
 
 [desktop.appearanceLightChromeTheme.fonts]
-
 [desktop.appearanceLightChromeTheme.semanticColors]
 diffAdded = "#8da101"
 diffRemoved = "#f85552"
@@ -80,14 +83,10 @@ opaqueWindows = false
 surface = "#232136"
 
 [desktop.appearanceDarkChromeTheme.fonts]
-
 [desktop.appearanceDarkChromeTheme.semanticColors]
 diffAdded = "#9ccfd8"
 diffRemoved = "#908caa"
 skill = "#c4a7e7"
-
-[plugins."browser@openai-bundled"]
-enabled = true
 
 [plugins."computer-use@openai-bundled"]
 enabled = true
@@ -95,5 +94,35 @@ enabled = true
 [plugins."chrome@openai-bundled"]
 enabled = true
 
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
 [projects."/Users/shanepadgett/Documents/Codex/2026-06-16/im-building-a-package-for-the"]
+trust_level = "trusted"
+
+[projects."/Users/shanepadgett/Documents/Codex/2026-06-16/ground-any-answers-you-give-me"]
+trust_level = "trusted"
+
+[projects."/Users/shanepadgett/Documents/Codex/2026-06-16/ground-any-answers-you-give-me-2"]
+trust_level = "trusted"
+
+[projects."/Users/shanepadgett/dev/open-source/design.md"]
+trust_level = "trusted"
+
+[projects."/Users/shanepadgett/Documents/Codex/2026-06-17/i-want-to-set-up-gemma"]
+trust_level = "trusted"
+
+[projects."/Users/shanepadgett/Documents/Codex/2026-06-17/as-of-today-are-there-any"]
 trust_level = "trusted"

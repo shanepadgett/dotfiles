@@ -18,7 +18,8 @@ mouse-scroll-multiplier = 3
 split-divider-color = #3c3f4e
 
 # --- SCROLLBACK ---
-scrollback-limit = 10000
+# Ghostty uses bytes, not lines; 100MB per terminal surface.
+scrollback-limit = 100000000
 
 # --- WINDOW LAYOUT ---
 window-width = 200
